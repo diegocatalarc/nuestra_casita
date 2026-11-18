@@ -1,0 +1,550 @@
+0|Algo no ha cargado bien
+1|Recargar
+2|Tu pareja
+3|📬 Tienes una carta nueva
+4|📬 Carta nueva
+5|Tu pareja te ha escrito
+6|({0}) Nuestra Casita
+7|Nuestra Casita
+8|💗 {0} está en la casita
+9|💗 Tu pareja está en línea
+10|💌 Tu pareja quiere que tengáis un bebé. Abre Familia para responder.
+11|💌 Propuesta
+12|Tu pareja quiere que tengáis un bebé
+13|Salir
+14|Efectos visuales (desactívalos si va lento)
+15|Activar sonido
+16|Silenciar
+17|Partida demo borrada
+18|Preparando vuestra casita…
+19|No se pudo guardar: 
+20|No puedo llegar hasta ahí
+21|¡Bienvenida/o de nuevo! +{0} 💗{1}
+22| · racha de {0} días
+23|🌧️ La lluvia ha regado el huerto
+24|Los hongos crecen en el suelo del bosque o en el Cobertizo de hongos
+25|Aquí no se puede plantar
+26|Ya hay algo plantado ahí
+27|La parcela está vacía. Elige 🌱 para plantar.
+28|💧 ¡crece más rápido!{0}
+29|Ya se ha recolectado. Volverá a crecer.
+30|Faltan recursos
+31|Objeto guardado (50 % de reembolso)
+32|Aún no desbloqueado
+33|Faltan corazones
+34|Necesitáis construir un Granero para esos animales
+35|El corral está lleno ({0}/{1}). Un Granero da +6 plazas.
+36|{0} ¡{1} se ha mudado a la casita!
+37|No tenéis comida. ¡Cosechad algo del huerto!
+38|{0} ñam{1}
+39|Ya respondiste esta misión
+40|💌 Misión completada: +{0} 💗{1}
+41| (¡las dos habéis respondido!)
+42|Necesitáis construir la Cocina
+43|Ya cenasteis hoy 🍝
+44|Faltan ingredientes: 3 cultivos
+45|🍝 Cena romántica: +20 💗
+46|una cena romántica
+47|Tu pareja no está conectada
+48|Acércate a tu pareja para abrazarla
+49|Ya os abrazasteis hace poco 🤗
+50|🤗 Abrazo: +3 💗
+51|🔭 Mirando las estrellas juntos: +15 💗
+52|😴 Durmiendo… pulsa cualquier tecla o "Despertar" para levantarte
+53|Necesitáis una cama: la casita tiene una, o colocad una en Decorar 🛏️
+54|☀️ Te despiertas con {0} % de energía
+55|💤 Dormir juntos: +{0} 💗
+56|🥱 Estás agotada/o: ve a dormir (botón 😴)
+57|🍽️ Tienes hambre: abre Comer
+58|Estás durmiendo 😴
+59|No tenéis de eso
+60|Eso no se come
+61|No tienes hambre 😊
+62|🍽️ Comer juntos: +{0} 💗
+63|{0} ñam +{1}
+64|Faltan ingredientes
+65|{0} ¡listo!{1}
+66|🛖 El granero ha dado de comer a {0}
+67|Aún faltan requisitos para tener un bebé (mira la lista)
+68|💌 Propuesta enviada. Vuestra pareja tiene que aceptarla.
+69|Propuesta cancelada
+70|Habéis decidido esperar un poco 💛
+71|Ya no se cumplen los requisitos
+72|🍼 ¡Estáis esperando un bebé!
+73|esperáis
+74|Bebé
+75|👶 ¡Ha nacido vuestro bebé! Ponedle nombre en Familia
+76|nació
+77|No hay comida para el peque. Las vacas dan leche 🥛
+78|{0} ¡ñam!{1}
+79|🧸 ¡jugamos!{0}
+80|Tu pareja aún no se ha unido
+81|💌 Carta enviada al buzón de tu pareja
+82|Aún no habéis llegado
+83|goalsClaimed.{0}.{1}
+84|🎯 Meta cumplida: +{0} 💗
+85|Primavera
+86|Verano
+87|Otoño
+88|Invierno
+89|Despejado
+90|Lluvia
+91|Tormenta
+92|Nieve
+93|Niebla
+94|Madera
+95|Piedra
+96|Arcilla
+97|Tela
+98|Cristales
+99|Flores
+100|Sembrado
+101|Regado
+102|Creciendo
+103|Madurado
+104|Cosechado
+105|Lechugas
+106|Zanahorias
+107|Tomates
+108|Fresas
+109|Rosas
+110|Calabazas
+111|Champiñones
+112|Seta rosa
+113|Ensalada fresca
+114|Sopa de zanahoria
+115|Tortilla
+116|Mermelada
+117|Guiso de setas
+118|Tarta de calabaza
+119|Queso
+120|Huevos
+121|Leche
+122|Árbol
+123|Roca
+124|Flores silvestres
+125|Algodón
+126|Cristal
+127|Casita
+128|Vuestro hogar.
+129|Dormitorio
+130|Dos camas, armario y alfombra. Un lugar para soñar juntos.
+131|Cocina
+132|Desbloquea la Cena romántica.
+133|Biblioteca
+134|Estanterías hasta el techo y un sillón de lectura.
+135|Terraza
+136|Una cubierta abierta con luces de fiesta.
+137|Jardín
+138|Fuente, setos y parterres floridos.
+139|Invernadero
+140|Cultivos ×1.5 de velocidad y sin penalización de estación. Se puede plantar dentro.
+141|Sala de recuerdos
+142|Fotos, mensajes, fechas y notas como objetos físicos.
+143|Granero
+144|Cobija a vacas y ovejas, +6 plazas para animales y da de comer solo a los animales hambrientos.
+145|Cobertizo de hongos
+146|Oscuro y húmedo: los hongos crecen ×1.6 más rápido. Se pueden plantar por dentro.
+147|Observatorio
+148|Mirad las estrellas juntos de noche.
+149|Sofá
+150|Mesa
+151|Lámpara
+152|Planta
+153|Cuadro
+154|Alfombra
+155|Cama
+156|Estatua
+157|Columna
+158|Estandarte
+159|Trofeo
+160|Cuna
+161|Chimenea
+162|Gallina
+163|Pepita
+164|Clara
+165|Yema
+166|Plumita
+167|Conejo
+168|Nube
+169|Bombón
+170|Trébol
+171|Copito
+172|Gato
+173|Mochi
+174|Luna
+175|Canela
+176|Miso
+177|Perro
+178|Toby
+179|Churro
+180|Ron
+181|Bimba
+182|Oveja
+183|Lana
+184|Nubecita
+185|Rizos
+186|Vaca
+187|Margarita
+188|Manchas
+189|Paca
+190|Flor
+191|Comparte tu mejor momento del día
+192|¿Qué fue lo mejor de hoy?
+193|Cuenta algo que agradezcas
+194|Algo pequeño o grande por lo que estés agradecida/o.
+195|Describe una cita soñada
+196|¿Dónde, qué haríamos, qué comeríamos?
+197|Algo que extrañas de nosotros
+198|Un gesto, un lugar, una costumbre…
+199|Una canción que te recuerda a mí
+200|Título y por qué.
+201|Un sueño para el próximo año
+202|Juntos o por separado.
+203|Envía una nota de voz
+204|Hasta 20 segundos. Di lo que te apetezca.
+205|Cuéntame tu día con tu voz
+206|Hasta 20 segundos.
+207|Comparte una fotografía
+208|Algo que hayas visto hoy.
+209|Foto de lo que tienes delante
+210|Sin filtros, tal como es.
+211|Corto
+212|Largo
+213|Moño
+214|Coletas
+215|Rebelde
+216|Ninguno
+217|Gafas
+218|Sombrero
+219|Lazo
+220|Bufanda
+221|Corona de flores
+222|Foto
+223|Mensaje
+224|Fecha importante
+225|Nota
+226|Nota de voz
+227|Gateando
+228|Peque
+229|Joven
+230|Cosechad 15 cultivos
+231|Responded 7 misiones de pareja
+232|Guardad 3 recuerdos
+233|Construid 2 edificios
+234|Abrazaos 3 veces
+235|Dormid juntos 2 noches
+236|Dad de comer a los animales 10 veces
+237|Recolectad 25 recursos
+238|Enviaos 5 cartas
+239|Buenos días, mi amor
+240|Buenas noches, que sueñes bonito
+241|Te quiero muchísimo
+242|Te extraño
+243|Pensando en ti
+244|¡Estoy orgullosa/o de ti!
+245|Este dominio no está autorizado. En Firebase: Authentication → Configuración → Dominios autorizados → añade «{0}».
+246|El inicio de sesión con Google no está activado. En Firebase: Authentication → Método de acceso → Google → Habilitar.
+247|El navegador bloqueó la ventana de Google. Permite las ventanas emergentes para esta página y vuelve a intentarlo.
+248|Se cerró la ventana de Google antes de terminar. Inténtalo de nuevo.
+249|Sin conexión con Firebase. Revisa tu internet e inténtalo otra vez.
+250|Firebase rechazó la operación (permisos). Revisa que hayas publicado las reglas de Firestore y de Realtime Database.
+251|Firestore necesita un índice. Abre el enlace del error de la consola del navegador.
+252|Falta crear la base de datos. En Firebase: Firestore Database → Crear base de datos.
+253|Revisa la URL de Realtime Database (VITE_FIREBASE_DATABASE_URL).
+254|Error desconocido
+255|Fuera del terreno
+256|Terreno no apto
+257|Hay un recurso en el camino
+258|Se solapa con otro edificio
+259|Hay objetos decorativos
+260|No se puede sobre el agua
+261|Esa tierra es para cultivar
+262|Hay algo en medio
+263|Hay otro objeto
+264|Recuerdo
+265|Amor
+266|Código no encontrado
+267|No se pudo entrar: la casita ya tiene dos habitantes o el código no es válido.
+268|Jugador
+269|No hay ninguna casita demo. Crea una en la otra pestaña.
+270|La casita ya tiene dos habitantes
+271|🐾 Animales
+272|Plazas:
+273| · 🛖 el granero da de comer solo a los hambrientos
+274| · un Granero da +6 plazas, vacas y ovejas
+275|. Haz clic en ellos para recoger, alimentar o acariciar.
+276|Produce
+277|cada
+278|min.
+279|🛖 Necesita un Granero
+280|Adoptar ·
+281|🔒 Con
+282|💗 acumulados (
+283|Vuestros animales
+284|Hambre
+285|Felicidad
+286|Producción
+287|✨ ¡Lista!
+288|✨ Crea tu personaje
+289|🧑 Tu personaje
+290|Piel
+291|Peinado
+292|Color de pelo
+293|Camiseta
+294|Pantalón
+295|Accesorio
+296|Empezar
+297|Guardar
+298|🧺 Cosechó {0} {1}
+299|cultivo
+300|cultivos
+301|🔨 Construyó {0}
+302| cosa(s)
+303|🐾 Adoptó a {0}
+304|🖼️ Guardó {0} {1} en la sala
+305|recuerdo
+306|recuerdos
+307|💌 Respondió {0} {1}
+308|misión
+309|misiones
+310|🤗 Os abrazasteis
+311|🍳 Cocinó {0}
+312|algo rico
+313|📬 Te dejó {0} {1} en el buzón
+314|carta
+315|cartas
+316|👶 ¡Novedades en la familia!
+317|🧸 Cuidó al peque
+318|💤 Dormisteis juntos
+319|🏡 Mientras no estabas…
+320|Han pasado {0} desde tu última visita.
+321|ha estado ocupada/o
+322|✨ {0} novedad(es)
+323|Os espera en la casita
+324|carta sin leer
+325|cartas sin leer
+326|cultivo listo
+327|cultivos listos
+328|para cosechar
+329|animal con hambre
+330|animales con hambre
+331|peque con hambre
+332|peques con hambre
+333|Abrir buzón
+334|¡Vamos!
+335|🔨 Construir
+336|Elige una construcción y colócala en el terreno. Verde = se puede, rojo = no.
+337|¡Vuestra casita está lista!
+338|Compartid este código con vuestra pareja para que se una:
+339|Copiar código
+340|Entrar a la casita
+341|Hola,
+342|Una casita es de dos personas. ¿Empezáis una nueva o ya te están esperando?
+343|🏡 Crear nuestra casita
+344|Genera un código de invitación para tu pareja.
+345|Crear
+346|🔑 Unirme con un código
+347|CÓDIGO
+348|Unirme
+349|Cambiar de cuenta
+350|🛋️ Decorar
+351|Elige un objeto y colócalo.
+352|rota,
+353|cambia el color,
+354|cancela.
+355|Colocar
+356|✋ Mover o quitar objetos ya colocados
+357|no
+358|Nombre
+359|Ir a cuidar a
+360|👶 Familia
+361|Un bebé llega solo cuando las dos personas lo deseáis. Cuidarlo da corazones, y crece en tiempo real.
+362|🍼 ¡Esperáis un bebé!
+363|Llegará en
+364|. Preparad la cuna y dormid juntos 💤.
+365|Propuesta enviada
+366|{0} quiere un bebé
+367|Esperando la respuesta de vuestra pareja.
+368|¿Os apetece daros esta alegría? Costará 
+369|¡Sí, queremos!
+370|Cancelar
+371|Ahora no
+372|Tener un bebé
+373|Construir un Dormitorio
+374|Colocar una Cuna 🍼 (Decorar)
+375|💗 disponibles (
+376|Hasta
+377|peques (
+378|Proponer a
+379|mi pareja
+380|Primero tiene que unirse vuestra pareja.
+381|🍽️ Comer y cocinar
+382|⚡ Energía
+383|🍽️ Saciedad
+384|Comer
+385|Cocinar
+386|Si tu pareja come a menos de 4 casillas y casi a la vez, ¡ganáis corazones juntos! Los platos saben mejor sentado a una mesa o dentro de casa (+20 %).
+387|+{0} saciedad · +{1} energía{2}
+388|No hay nada que comer. Cosechad, recoged huevos o cocinad algo.
+389|Cocinad platos con vuestra cosecha. Se guardan en la mochila compartida.
+390|⚠️ Necesitáis construir la Cocina para cocinar.
+391|saciedad · +
+392|energía
+393|Esperando a tu pareja · código
+394|está en la casita
+395|· visto hace {0}
+396|· desconectada/o
+397|🌱 Semillas
+398|{0} min · suelo del bosque o Cobertizo de hongos
+399|{0} min · {1}
+400|buena estación
+401|fuera de estación (×0.5)
+402|Hongos: suelo del bosque o Cobertizo de hongos
+403|Clic en tierra labrada
+404|· Esc para salir
+405|Clic para construir · Esc cancela
+406|🛋️ Editar decoración
+407|Clic para colocar
+408|Arrastra objetos para moverlos
+409|· R rotar · C color
+410|· X quitar
+411|· Esc salir
+412|Durmiendo… ⚡
+413|Si
+414|también duerme, ganaréis corazones 💤
+415|☀️ Despertar
+416|Día
+417|WASD o clic para moverte · Q/E girar cámara · rueda: zoom · clic en árboles, rocas y cultivos para actuar
+418|Mano
+419|Plantar
+420|Construir
+421|Decorar
+422|Dormir
+423|Familia
+424|Animales
+425|Misiones
+426|Buzón
+427|Recuerdos
+428|Mochila
+429|Avatar
+430|Ayuda
+431|Nuestra Casita · modo {0} · {1}
+432|Usuario: {0} · Casita: {1} · Miembros: {2}
+433|Pareja en línea: {0}
+434|sí
+435|Firestore: {0} (escribir {1} ms, leer {2} ms) · Realtime DB: {3}
+436|SIN conexión
+437|Prueba no ejecutada
+438|⚙️ Ayuda y conexión
+439|Estado
+440|Firebase (online)
+441|Demo local (solo este navegador)
+442|Comparte el código {0}
+443|Si ella/él está jugando y no se ve, probad la conexión de abajo
+444|Probar conexión
+445|Escribe y lee un dato de prueba en el servidor y comprueba la presencia en tiempo real.
+446|Probando…
+447|Probar ahora
+448|📋 Copiar informe
+449|escribir {0} ms · leer {1} ms
+450|sin conexión: revisa la URL de la base de datos y sus reglas
+451|Avisos
+452|Con la pestaña en segundo plano te avisamos de cartas nuevas, de que tu pareja llega y de propuestas. (Con la app cerrada no es posible sin un servidor de notificaciones.)
+453|🔔 Avisos activados
+454|Tu navegador no admite avisos.
+455|Bloqueados: actívalos en los permisos del sitio de tu navegador.
+456|🔔 Activar avisos
+457|Más
+458|🎓 Repetir tutorial
+459|⏏ Cerrar sesión
+460|🎒 Mochila compartida
+461|Todo lo que recojáis es de los dos.
+462|cosecha
+463|Un mundo para dos, aunque haya kilómetros entre vosotros.
+464|Entrar con Google
+465|Modo demo local (sin Firebase): abre el juego en dos pestañas para ser dos jugadores.
+466|Tu nombre
+467|Jugar en modo demo
+468|Borrar partida demo local
+469|Para {0}
+470|De {0}
+471| · leída ✓
+472|Toca para abrir · +2 💗
+473|📬 Buzón
+474|Recibidas
+475|Enviadas
+476|✍️ Escribir
+477|Aún no tienes cartas. Tu pareja puede dejarte una cuando quiera 💌
+478|No has enviado nada todavía.
+479|Una nota rápida para alegrarle el día:
+480|O escribe una carta:
+481|Querida/o…
+482|Enviar carta 💌
+483|Tu pareja todavía no se ha unido.
+484|💾 Recuerdo guardado
+485|🖼️ Sala de recuerdos
+486|Cada recuerdo aparece como un objeto en la sala. Haz clic en él para abrirlo.
+487|⚠️ Construye la Sala de recuerdos para verlos en las estanterías. Mientras tanto se guardan junto a la casita.
+488|Título
+489|Qué pasó ese día (opcional)
+490|Escribe…
+491|Guardar en la sala
+492|Sin título
+493|faltan {0} días
+494|hace {0} días
+495|¡es hoy!
+496|Guardado por
+497|🗑 Quitar
+498|Cerrar
+499|Tu respuesta ✅
+500|Escribe aquí…
+501|Guardar como recuerdo
+502|Enviar
+503|Ya respondió 💗 — responde tú para ver su respuesta (+
+504|💗 extra).
+505|Todavía no ha respondido.
+506|Metas de esta semana (se renuevan cada lunes). Se cuentan los avances de las dos personas.
+507|✅ Reclamada
+508|Reclamar
+509|💌 Misiones y actividades de pareja
+510|Misiones de hoy
+511|🎯 Metas semanales
+512|Actividades juntos
+513|Abrazo
+514|Acercaos a menos de 2,5 casillas y pulsa
+515|. Cada 30 minutos.
+516|Abrazar · +3 💗
+517|Cena romántica
+518|Cocinad con 3 cultivos de vuestra cosecha. Una vez al día.
+519|Ya cenasteis hoy
+520|Cocinar · +20 💗
+521|Necesita Cocina
+522|Ver las estrellas
+523|Entrad los dos al Observatorio de noche. Se premia solo.
+524|Ya visteis las estrellas hoy ✨
+525|+15 💗 al estar los dos dentro
+526|Necesita Observatorio
+527|Muévete
+528|Usa WASD o haz clic en el suelo para caminar. Q/E giran la cámara y la rueda hace zoom.
+529|Siembra algo
+530|Pulsa 🌱 Plantar, elige una semilla y haz clic en la tierra marrón del huerto.
+531|Riega tu cultivo
+532|Vuelve a ✋ Mano y haz clic en la planta para regarla. ¡Ganas corazones!
+533|Recoge recursos
+534|Haz clic en un árbol o una roca: tu personaje irá solo y los recogerá.
+535|Construye
+536|Pulsa 🔨 Construir y levanta tu primera habitación (la Terraza es barata).
+537|Primera misión de pareja
+538|Abre 💌 Misiones y responde una. Vuestra pareja verá tu respuesta.
+539|🎉 ¡Ya sabes lo básico!
+540|Mira las metas de la semana en 💌 Misiones y dejad cartas en el 📬 buzón.
+541|Saltar tutorial
+542|Procesando…
+543|Cambiar foto
+544|📷 Elegir foto
+545|No se pudo acceder al micrófono
+546|⏹ Detener (
+547|s)
+548|🎙️ Grabar de nuevo
+549|🎙️ Grabar nota de voz

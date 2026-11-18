@@ -1,0 +1,561 @@
+"Algo no ha cargado bien"  @App.jsx:67
+"Recargar"  @App.jsx:69
+"Tu pareja"  @App.jsx:93 scene/Players.jsx:87
+"📬 Tienes una carta nueva"  @App.jsx:139
+"📬 Carta nueva"  @App.jsx:140
+"Tu pareja te ha escrito"  @App.jsx:140
+"({0}) Nuestra Casita"  @App.jsx:145
+"Nuestra Casita"  @App.jsx:145 ui/LoginScreen.jsx:10
+"💗 {0} está en la casita"  @App.jsx:153
+"💗 Tu pareja está en línea"  @App.jsx:153
+"💌 Tu pareja quiere que tengáis un bebé. Abre Familia para responder."  @App.jsx:160
+"💌 Propuesta"  @App.jsx:160
+"Tu pareja quiere que tengáis un bebé"  @App.jsx:160
+"Salir"  @App.jsx:177
+"Efectos visuales (desactívalos si va lento)"  @App.jsx:178
+"Activar sonido"  @App.jsx:179
+"Silenciar"  @App.jsx:179
+"Partida demo borrada"  @App.jsx:218
+"Preparando vuestra casita…"  @App.jsx:220
+"players.{0}.energyAt"  @game/actions.js:35
+"players.{0}.fullAt"  @game/actions.js:35
+"No se pudo guardar: "  @game/actions.js:57
+"No puedo llegar hasta ahí"  @game/actions.js:89 game/actions.js:98
+"players.{0}.lastLogin"  @game/actions.js:115
+"¡Bienvenida/o de nuevo! +{0} 💗{1}"  @game/actions.js:116
+" · racha de {0} días"  @game/actions.js:116
+"🌧️ La lluvia ha regado el huerto"  @game/actions.js:129
+"Los hongos crecen en el suelo del bosque o en el Cobertizo de hongos"  @game/actions.js:137
+"Aquí no se puede plantar"  @game/actions.js:137
+"Ya hay algo plantado ahí"  @game/actions.js:139
+"La parcela está vacía. Elige 🌱 para plantar."  @game/actions.js:152
+"💧 ¡crece más rápido!{0}"  @game/actions.js:181
+"Ya se ha recolectado. Volverá a crecer."  @game/actions.js:193
+"Faltan recursos"  @game/actions.js:209 game/actions.js:225
+"Objeto guardado (50 % de reembolso)"  @game/actions.js:244
+"Aún no desbloqueado"  @game/actions.js:252
+"Faltan corazones"  @game/actions.js:253
+"Necesitáis construir un Granero para esos animales"  @game/actions.js:254
+"El corral está lleno ({0}/{1}). Un Granero da +6 plazas."  @game/actions.js:256
+"{0} ¡{1} se ha mudado a la casita!"  @game/actions.js:265
+"No tenéis comida. ¡Cosechad algo del huerto!"  @game/actions.js:294
+"{0} ñam{1}"  @game/actions.js:298
+"Ya respondiste esta misión"  @game/actions.js:323
+"💌 Misión completada: +{0} 💗{1}"  @game/actions.js:339
+" (¡las dos habéis respondido!)"  @game/actions.js:339
+"Necesitáis construir la Cocina"  @game/actions.js:346 game/actions.js:493
+"Ya cenasteis hoy 🍝"  @game/actions.js:347
+"Faltan ingredientes: 3 cultivos"  @game/actions.js:356
+"🍝 Cena romántica: +20 💗"  @game/actions.js:359
+"una cena romántica"  @game/actions.js:360
+"Tu pareja no está conectada"  @game/actions.js:367
+"Acércate a tu pareja para abrazarla"  @game/actions.js:368
+"Ya os abrazasteis hace poco 🤗"  @game/actions.js:370
+"🤗 Abrazo: +3 💗"  @game/actions.js:373
+"🔭 Mirando las estrellas juntos: +15 💗"  @game/actions.js:386
+"😴 Durmiendo… pulsa cualquier tecla o \"Despertar\" para levantarte"  @game/actions.js:409
+"Necesitáis una cama: la casita tiene una, o colocad una en Decorar 🛏️"  @game/actions.js:420
+"☀️ Te despiertas con {0} % de energía"  @game/actions.js:435
+"💤 Dormir juntos: +{0} 💗"  @game/actions.js:449
+"🥱 Estás agotada/o: ve a dormir (botón 😴)"  @game/actions.js:458
+"🍽️ Tienes hambre: abre Comer"  @game/actions.js:460
+"Estás durmiendo 😴"  @game/actions.js:466
+"No tenéis de eso"  @game/actions.js:470
+"Eso no se come"  @game/actions.js:473
+"No tienes hambre 😊"  @game/actions.js:474
+"🍽️ Comer juntos: +{0} 💗"  @game/actions.js:483
+"{0} ñam +{1}"  @game/actions.js:487
+"Faltan ingredientes"  @game/actions.js:494
+"{0} ¡listo!{1}"  @game/actions.js:497
+"🛖 El granero ha dado de comer a {0}"  @game/actions.js:524
+"Aún faltan requisitos para tener un bebé (mira la lista)"  @game/actions.js:535
+"💌 Propuesta enviada. Vuestra pareja tiene que aceptarla."  @game/actions.js:537
+"Propuesta cancelada"  @game/actions.js:544
+"Habéis decidido esperar un poco 💛"  @game/actions.js:544
+"Ya no se cumplen los requisitos"  @game/actions.js:546
+"🍼 ¡Estáis esperando un bebé!"  @game/actions.js:552
+"esperáis"  @game/actions.js:553
+"Bebé"  @game/actions.js:566 game/constants.js:192
+"👶 ¡Ha nacido vuestro bebé! Ponedle nombre en Familia"  @game/actions.js:570
+"nació"  @game/actions.js:571
+"No hay comida para el peque. Las vacas dan leche 🥛"  @game/actions.js:595
+"{0} ¡ñam!{1}"  @game/actions.js:598
+"🧸 ¡jugamos!{0}"  @game/actions.js:602
+"Tu pareja aún no se ha unido"  @game/actions.js:614
+"💌 Carta enviada al buzón de tu pareja"  @game/actions.js:619
+"Aún no habéis llegado"  @game/actions.js:638
+"goalsClaimed.{0}.{1}"  @game/actions.js:639
+"🎯 Meta cumplida: +{0} 💗"  @game/actions.js:640
+"players.{0}.lastSeenAt"  @game/actions.js:648
+"Primavera"  @game/constants.js:7
+"Verano"  @game/constants.js:8
+"Otoño"  @game/constants.js:9
+"Invierno"  @game/constants.js:10
+"Despejado"  @game/constants.js:13
+"Lluvia"  @game/constants.js:13
+"Tormenta"  @game/constants.js:13
+"Nieve"  @game/constants.js:13
+"Niebla"  @game/constants.js:13
+"Madera"  @game/constants.js:18
+"Piedra"  @game/constants.js:19
+"Arcilla"  @game/constants.js:20 game/constants.js:75
+"Tela"  @game/constants.js:21
+"Cristales"  @game/constants.js:22
+"Flores"  @game/constants.js:23
+"Sembrado"  @game/constants.js:27
+"Regado"  @game/constants.js:27
+"Creciendo"  @game/constants.js:27
+"Madurado"  @game/constants.js:27
+"Cosechado"  @game/constants.js:27
+"Lechugas"  @game/constants.js:30
+"Zanahorias"  @game/constants.js:31
+"Tomates"  @game/constants.js:32
+"Fresas"  @game/constants.js:33
+"Rosas"  @game/constants.js:34
+"Calabazas"  @game/constants.js:35
+"Champiñones"  @game/constants.js:37
+"Shiitake"  @game/constants.js:38
+"Seta rosa"  @game/constants.js:39
+"Ensalada fresca"  @game/constants.js:44
+"Sopa de zanahoria"  @game/constants.js:45
+"Tortilla"  @game/constants.js:46
+"Mermelada"  @game/constants.js:47
+"Guiso de setas"  @game/constants.js:48
+"Tarta de calabaza"  @game/constants.js:49
+"Queso"  @game/constants.js:50
+"Huevos"  @game/constants.js:56
+"Leche"  @game/constants.js:57
+"Árbol"  @game/constants.js:73
+"Roca"  @game/constants.js:74
+"Flores silvestres"  @game/constants.js:76
+"Algodón"  @game/constants.js:77 game/constants.js:119
+"Cristal"  @game/constants.js:78
+"Casita"  @game/constants.js:83
+"Vuestro hogar."  @game/constants.js:83
+"Dormitorio"  @game/constants.js:84
+"Dos camas, armario y alfombra. Un lugar para soñar juntos."  @game/constants.js:84
+"Cocina"  @game/constants.js:85
+"Desbloquea la Cena romántica."  @game/constants.js:85
+"Biblioteca"  @game/constants.js:86
+"Estanterías hasta el techo y un sillón de lectura."  @game/constants.js:86
+"Terraza"  @game/constants.js:87
+"Una cubierta abierta con luces de fiesta."  @game/constants.js:87
+"Jardín"  @game/constants.js:88
+"Fuente, setos y parterres floridos."  @game/constants.js:88
+"Invernadero"  @game/constants.js:89
+"Cultivos ×1.5 de velocidad y sin penalización de estación. Se puede plantar dentro."  @game/constants.js:89
+"Sala de recuerdos"  @game/constants.js:90
+"Fotos, mensajes, fechas y notas como objetos físicos."  @game/constants.js:90
+"Granero"  @game/constants.js:91
+"Cobija a vacas y ovejas, +6 plazas para animales y da de comer solo a los animales hambrientos."  @game/constants.js:91
+"Cobertizo de hongos"  @game/constants.js:92
+"Oscuro y húmedo: los hongos crecen ×1.6 más rápido. Se pueden plantar por dentro."  @game/constants.js:92
+"Observatorio"  @game/constants.js:93
+"Mirad las estrellas juntos de noche."  @game/constants.js:93
+"Sofá"  @game/constants.js:98
+"Mesa"  @game/constants.js:99
+"Lámpara"  @game/constants.js:100
+"Planta"  @game/constants.js:101
+"Cuadro"  @game/constants.js:102
+"Alfombra"  @game/constants.js:103
+"Cama"  @game/constants.js:104
+"Estatua"  @game/constants.js:105
+"Columna"  @game/constants.js:106
+"Estandarte"  @game/constants.js:107
+"Trofeo"  @game/constants.js:108
+"Cuna"  @game/constants.js:109
+"Chimenea"  @game/constants.js:110
+"Gallina"  @game/constants.js:115
+"Pepita"  @game/constants.js:115
+"Clara"  @game/constants.js:115
+"Yema"  @game/constants.js:115
+"Plumita"  @game/constants.js:115
+"Conejo"  @game/constants.js:116
+"Nube"  @game/constants.js:116
+"Bombón"  @game/constants.js:116
+"Trébol"  @game/constants.js:116
+"Copito"  @game/constants.js:116
+"Gato"  @game/constants.js:117
+"Mochi"  @game/constants.js:117
+"Luna"  @game/constants.js:117
+"Canela"  @game/constants.js:117
+"Miso"  @game/constants.js:117
+"Perro"  @game/constants.js:118
+"Toby"  @game/constants.js:118
+"Churro"  @game/constants.js:118
+"Ron"  @game/constants.js:118
+"Bimba"  @game/constants.js:118
+"Oveja"  @game/constants.js:119
+"Lana"  @game/constants.js:119
+"Nubecita"  @game/constants.js:119
+"Rizos"  @game/constants.js:119
+"Vaca"  @game/constants.js:120
+"Margarita"  @game/constants.js:120
+"Manchas"  @game/constants.js:120
+"Paca"  @game/constants.js:120
+"Flor"  @game/constants.js:120
+"Comparte tu mejor momento del día"  @game/constants.js:139
+"¿Qué fue lo mejor de hoy?"  @game/constants.js:139
+"Cuenta algo que agradezcas"  @game/constants.js:140
+"Algo pequeño o grande por lo que estés agradecida/o."  @game/constants.js:140
+"Describe una cita soñada"  @game/constants.js:141
+"¿Dónde, qué haríamos, qué comeríamos?"  @game/constants.js:141
+"Algo que extrañas de nosotros"  @game/constants.js:142
+"Un gesto, un lugar, una costumbre…"  @game/constants.js:142
+"Una canción que te recuerda a mí"  @game/constants.js:143
+"Título y por qué."  @game/constants.js:143
+"Un sueño para el próximo año"  @game/constants.js:144
+"Juntos o por separado."  @game/constants.js:144
+"Envía una nota de voz"  @game/constants.js:145
+"Hasta 20 segundos. Di lo que te apetezca."  @game/constants.js:145
+"Cuéntame tu día con tu voz"  @game/constants.js:146
+"Hasta 20 segundos."  @game/constants.js:146
+"Comparte una fotografía"  @game/constants.js:147
+"Algo que hayas visto hoy."  @game/constants.js:147
+"Foto de lo que tienes delante"  @game/constants.js:148
+"Sin filtros, tal como es."  @game/constants.js:148
+"Corto"  @game/constants.js:154
+"Bob"  @game/constants.js:154
+"Largo"  @game/constants.js:154
+"Moño"  @game/constants.js:154
+"Coletas"  @game/constants.js:154
+"Rebelde"  @game/constants.js:154
+"Ninguno"  @game/constants.js:158
+"Gafas"  @game/constants.js:158
+"Sombrero"  @game/constants.js:158
+"Lazo"  @game/constants.js:158
+"Bufanda"  @game/constants.js:158
+"Corona de flores"  @game/constants.js:158
+"Foto"  @game/constants.js:166
+"Mensaje"  @game/constants.js:167
+"Fecha importante"  @game/constants.js:168
+"Nota"  @game/constants.js:169
+"Nota de voz"  @game/constants.js:170
+"Gateando"  @game/constants.js:193
+"Peque"  @game/constants.js:194
+"Joven"  @game/constants.js:195
+"Cosechad 15 cultivos"  @game/constants.js:202
+"Responded 7 misiones de pareja"  @game/constants.js:203
+"Guardad 3 recuerdos"  @game/constants.js:204
+"Construid 2 edificios"  @game/constants.js:205
+"Abrazaos 3 veces"  @game/constants.js:206
+"Dormid juntos 2 noches"  @game/constants.js:207
+"Dad de comer a los animales 10 veces"  @game/constants.js:208
+"Recolectad 25 recursos"  @game/constants.js:209
+"Enviaos 5 cartas"  @game/constants.js:210
+"Buenos días, mi amor"  @game/constants.js:215
+"Buenas noches, que sueñes bonito"  @game/constants.js:216
+"Te quiero muchísimo"  @game/constants.js:217
+"Te extraño"  @game/constants.js:218
+"Pensando en ti"  @game/constants.js:219
+"¡Estoy orgullosa/o de ti!"  @game/constants.js:220
+"Este dominio no está autorizado. En Firebase: Authentication → Configuración → Dominios autorizados → añade «{0}»."  @game/errors.js:6
+"El inicio de sesión con Google no está activado. En Firebase: Authentication → Método de acceso → Google → Habilitar."  @game/errors.js:7
+"El navegador bloqueó la ventana de Google. Permite las ventanas emergentes para esta página y vuelve a intentarlo."  @game/errors.js:8
+"Se cerró la ventana de Google antes de terminar. Inténtalo de nuevo."  @game/errors.js:9
+"Sin conexión con Firebase. Revisa tu internet e inténtalo otra vez."  @game/errors.js:10
+"Firebase rechazó la operación (permisos). Revisa que hayas publicado las reglas de Firestore y de Realtime Database."  @game/errors.js:11
+"Firestore necesita un índice. Abre el enlace del error de la consola del navegador."  @game/errors.js:12
+"Falta crear la base de datos. En Firebase: Firestore Database → Crear base de datos."  @game/errors.js:13
+"Revisa la URL de Realtime Database (VITE_FIREBASE_DATABASE_URL)."  @game/errors.js:14
+"Error desconocido"  @game/errors.js:15
+"Fuera del terreno"  @game/logic.js:99 game/logic.js:124
+"Terreno no apto"  @game/logic.js:103
+"Hay un recurso en el camino"  @game/logic.js:105
+"Se solapa con otro edificio"  @game/logic.js:109
+"Hay objetos decorativos"  @game/logic.js:112
+"No se puede sobre el agua"  @game/logic.js:126
+"Esa tierra es para cultivar"  @game/logic.js:128
+"Hay algo en medio"  @game/logic.js:129
+"Hay otro objeto"  @game/logic.js:135
+"Sphere"  @scene/Animals.jsx:11 scene/Avatar.jsx:7
+"Cone"  @scene/Animals.jsx:48 scene/Animals.jsx:52
+"Cylinder"  @scene/Animals.jsx:57 scene/Animals.jsx:104
+"Box"  @scene/Animals.jsx:57 scene/Animals.jsx:75
+"Capsule"  @scene/Animals.jsx:68 scene/Animals.jsx:68
+"Torus"  @scene/Animals.jsx:92 scene/Avatar.jsx:28
+"z"  @scene/Avatar.jsx:107 scene/Avatar.jsx:107
+"Z"  @scene/Avatar.jsx:107 ui/HUD.jsx:105
+"Circle"  @scene/Avatar.jsx:173
+"{0}models/Textures/colormap.png"  @scene/Decor.jsx:19
+"Recuerdo"  @scene/Memories.jsx:68 ui/MemoriesPanel.jsx:62
+"uniform float uTime;\n"  @scene/Nature.jsx:19
+"#include <begin_vertex>\n#ifdef USE_INSTANCING\n  float ph = instanceMatrix[3].x * 0.6 + instanceMatrix[3].z * 0.8;\n  float sw = {0} * {1};\n  transformed.x += sin(uTime * 1.6 + ph) * sw + sin(uTime * 3.1 + ph * 2.0) * sw * 0.3;\n  transformed.z += cos(uTime * 1.3 + ph * 1.1) * sw * 0.7;\n#endif"  @scene/Nature.jsx:19
+"{0}models/Textures/colormap_{1}.png"  @scene/Nature.jsx:71
+"{0}Geometry"  @scene/toon.jsx:28
+".info/serverTimeOffset"  @services/backend/firebaseBackend.js:28
+"Amor"  @services/backend/firebaseBackend.js:41
+"Código no encontrado"  @services/backend/firebaseBackend.js:73 services/backend/localBackend.js:109
+"No se pudo entrar: la casita ya tiene dos habitantes o el código no es válido."  @services/backend/firebaseBackend.js:78
+"Backend no inicializado"  @services/backend/index.js:14
+"Jugador"  @services/backend/localBackend.js:87 services/backend/localBackend.js:87
+"No hay ninguna casita demo. Crea una en la otra pestaña."  @services/backend/localBackend.js:108
+"La casita ya tiene dos habitantes"  @services/backend/localBackend.js:110
+"🐾 Animales"  @ui/AnimalsPanel.jsx:18
+"Plazas:"  @ui/AnimalsPanel.jsx:19
+" · 🛖 el granero da de comer solo a los hambrientos"  @ui/AnimalsPanel.jsx:19
+" · un Granero da +6 plazas, vacas y ovejas"  @ui/AnimalsPanel.jsx:19
+". Haz clic en ellos para recoger, alimentar o acariciar."  @ui/AnimalsPanel.jsx:19
+"Produce"  @ui/AnimalsPanel.jsx:27
+"cada"  @ui/AnimalsPanel.jsx:27
+"min."  @ui/AnimalsPanel.jsx:27
+"🛖 Necesita un Granero"  @ui/AnimalsPanel.jsx:29
+"Adoptar ·"  @ui/AnimalsPanel.jsx:31
+"🔒 Con"  @ui/AnimalsPanel.jsx:32
+"💗 acumulados ("  @ui/AnimalsPanel.jsx:32 ui/FamilyPanel.jsx:73
+"Vuestros animales"  @ui/AnimalsPanel.jsx:37
+"Hambre"  @ui/AnimalsPanel.jsx:45 ui/FamilyPanel.jsx:24
+"Felicidad"  @ui/AnimalsPanel.jsx:46 ui/FamilyPanel.jsx:25
+"Producción"  @ui/AnimalsPanel.jsx:47
+"✨ ¡Lista!"  @ui/AnimalsPanel.jsx:47
+"✨ Crea tu personaje"  @ui/AvatarPanel.jsx:28
+"🧑 Tu personaje"  @ui/AvatarPanel.jsx:28
+"Piel"  @ui/AvatarPanel.jsx:38
+"Peinado"  @ui/AvatarPanel.jsx:39
+"Color de pelo"  @ui/AvatarPanel.jsx:40
+"Camiseta"  @ui/AvatarPanel.jsx:41
+"Pantalón"  @ui/AvatarPanel.jsx:42
+"Accesorio"  @ui/AvatarPanel.jsx:43
+"Empezar"  @ui/AvatarPanel.jsx:44
+"Guardar"  @ui/AvatarPanel.jsx:44
+"🧺 Cosechó {0} {1}"  @ui/AwayModal.jsx:6
+"🔨 Construyó {0}"  @ui/AwayModal.jsx:7
+"🐾 Adoptó a {0}"  @ui/AwayModal.jsx:8
+"🖼️ Guardó {0} {1} en la sala"  @ui/AwayModal.jsx:9
+"💌 Respondió {0} {1}"  @ui/AwayModal.jsx:10
+"misión"  @ui/AwayModal.jsx:10
+"🤗 Os abrazasteis"  @ui/AwayModal.jsx:11
+"🍳 Cocinó {0}"  @ui/AwayModal.jsx:12
+"📬 Te dejó {0} {1} en el buzón"  @ui/AwayModal.jsx:13
+"👶 ¡Novedades en la familia!"  @ui/AwayModal.jsx:14
+"🧸 Cuidó al peque"  @ui/AwayModal.jsx:15
+"💤 Dormisteis juntos"  @ui/AwayModal.jsx:16
+"🏡 Mientras no estabas…"  @ui/AwayModal.jsx:27
+"Han pasado"  @ui/AwayModal.jsx:28
+"desde tu última visita."  @ui/AwayModal.jsx:28
+"ha estado ocupada/o"  @ui/AwayModal.jsx:31
+"✨ {0} novedad(es)"  @ui/AwayModal.jsx:32
+"Os espera en la casita"  @ui/AwayModal.jsx:37
+"para cosechar"  @ui/AwayModal.jsx:40
+"Abrir buzón"  @ui/AwayModal.jsx:47
+"¡Vamos!"  @ui/AwayModal.jsx:48
+"🔨 Construir"  @ui/BuildPanel.jsx:11
+"Elige una construcción y colócala en el terreno. Verde = se puede, rojo = no."  @ui/BuildPanel.jsx:12
+"Construir{0}"  @ui/BuildPanel.jsx:24
+"¡Vuestra casita está lista!"  @ui/CoupleSetup.jsx:19
+"Compartid este código con vuestra pareja para que se una:"  @ui/CoupleSetup.jsx:20
+"Copiar código"  @ui/CoupleSetup.jsx:22
+"Entrar a la casita"  @ui/CoupleSetup.jsx:23
+"Hola,"  @ui/CoupleSetup.jsx:32
+"Una casita es de dos personas. ¿Empezáis una nueva o ya te están esperando?"  @ui/CoupleSetup.jsx:33
+"🏡 Crear nuestra casita"  @ui/CoupleSetup.jsx:36
+"Genera un código de invitación para tu pareja."  @ui/CoupleSetup.jsx:37
+"Crear"  @ui/CoupleSetup.jsx:38
+"🔑 Unirme con un código"  @ui/CoupleSetup.jsx:41
+"CÓDIGO"  @ui/CoupleSetup.jsx:42
+"Unirme"  @ui/CoupleSetup.jsx:43
+"Cambiar de cuenta"  @ui/CoupleSetup.jsx:47
+"🛋️ Decorar"  @ui/DecorPanel.jsx:9
+"Elige un objeto y colócalo."  @ui/DecorPanel.jsx:10
+"R"  @ui/DecorPanel.jsx:10
+"rota,"  @ui/DecorPanel.jsx:10
+"C"  @ui/DecorPanel.jsx:10
+"cambia el color,"  @ui/DecorPanel.jsx:10
+"Esc"  @ui/DecorPanel.jsx:10
+"cancela."  @ui/DecorPanel.jsx:10
+"Colocar"  @ui/DecorPanel.jsx:21
+"✋ Mover o quitar objetos ya colocados"  @ui/DecorPanel.jsx:28
+"Nombre"  @ui/FamilyPanel.jsx:21
+"Ir a cuidar a"  @ui/FamilyPanel.jsx:26
+"👶 Familia"  @ui/FamilyPanel.jsx:43
+"Un bebé llega solo cuando las dos personas lo deseáis. Cuidarlo da corazones, y crece en tiempo real."  @ui/FamilyPanel.jsx:44
+"🍼 ¡Esperáis un bebé!"  @ui/FamilyPanel.jsx:50
+"Llegará en"  @ui/FamilyPanel.jsx:51
+". Preparad la cuna y dormid juntos 💤."  @ui/FamilyPanel.jsx:51
+"Propuesta enviada"  @ui/FamilyPanel.jsx:58
+"{0} quiere un bebé"  @ui/FamilyPanel.jsx:58
+"Esperando la respuesta de vuestra pareja."  @ui/FamilyPanel.jsx:59
+"¿Os apetece daros esta alegría? Costará "  @ui/FamilyPanel.jsx:59
+"¡Sí, queremos!"  @ui/FamilyPanel.jsx:61
+"Cancelar"  @ui/FamilyPanel.jsx:62
+"Ahora no"  @ui/FamilyPanel.jsx:62
+"Tener un bebé"  @ui/FamilyPanel.jsx:69
+"Construir un Dormitorio"  @ui/FamilyPanel.jsx:71
+"Colocar una Cuna 🍼 (Decorar)"  @ui/FamilyPanel.jsx:72
+"💗 disponibles ("  @ui/FamilyPanel.jsx:74
+"Hasta"  @ui/FamilyPanel.jsx:75
+"peques ("  @ui/FamilyPanel.jsx:75
+"Proponer a"  @ui/FamilyPanel.jsx:77
+"Primero tiene que unirse vuestra pareja."  @ui/FamilyPanel.jsx:78
+"🍽️ Comer y cocinar"  @ui/FoodPanel.jsx:20
+"⚡ Energía"  @ui/FoodPanel.jsx:22
+"🍽️ Saciedad"  @ui/FoodPanel.jsx:22
+"Comer"  @ui/FoodPanel.jsx:25 ui/FoodPanel.jsx:39
+"Cocinar"  @ui/FoodPanel.jsx:26 ui/FoodPanel.jsx:57
+"Si tu pareja come a menos de 4 casillas y casi a la vez, ¡ganáis corazones juntos! Los platos saben mejor sentado a una mesa o dentro de casa (+20 %)."  @ui/FoodPanel.jsx:30
+"+{0} saciedad · +{1} energía{2}"  @ui/FoodPanel.jsx:38
+"No hay nada que comer. Cosechad, recoged huevos o cocinad algo."  @ui/FoodPanel.jsx:44
+"Cocinad platos con vuestra cosecha. Se guardan en la mochila compartida."  @ui/FoodPanel.jsx:49
+"⚠️ Necesitáis construir la Cocina para cocinar."  @ui/FoodPanel.jsx:49
+"saciedad · +"  @ui/FoodPanel.jsx:56
+"energía"  @ui/FoodPanel.jsx:56
+"Esperando a tu pareja · código"  @ui/HUD.jsx:40
+"está en la casita"  @ui/HUD.jsx:44
+"· visto hace {0}"  @ui/HUD.jsx:44
+"· desconectada/o"  @ui/HUD.jsx:44
+"🌱 Semillas"  @ui/HUD.jsx:60
+"{0} min · suelo del bosque o Cobertizo de hongos"  @ui/HUD.jsx:64
+"{0} min · {1}"  @ui/HUD.jsx:64
+"buena estación"  @ui/HUD.jsx:64
+"fuera de estación (×0.5)"  @ui/HUD.jsx:64
+"Hongos: suelo del bosque o Cobertizo de hongos"  @ui/HUD.jsx:69
+"Clic en tierra labrada"  @ui/HUD.jsx:69
+"· Esc para salir"  @ui/HUD.jsx:69
+"Clic para construir · Esc cancela"  @ui/HUD.jsx:73
+"🛋️ Editar decoración"  @ui/HUD.jsx:77
+"Clic para colocar"  @ui/HUD.jsx:78
+"Arrastra objetos para moverlos"  @ui/HUD.jsx:78
+"· R rotar · C color"  @ui/HUD.jsx:78
+"· X quitar"  @ui/HUD.jsx:78
+"· Esc salir"  @ui/HUD.jsx:78
+"Durmiendo… ⚡"  @ui/HUD.jsx:106
+"Si"  @ui/HUD.jsx:107
+"también duerme, ganaréis corazones 💤"  @ui/HUD.jsx:107
+"☀️ Despertar"  @ui/HUD.jsx:108
+"Día"  @ui/HUD.jsx:144
+"WASD o clic para moverte · Q/E girar cámara · rueda: zoom · clic en árboles, rocas y cultivos para actuar"  @ui/HUD.jsx:162
+"Mano"  @ui/HUD.jsx:165
+"Plantar"  @ui/HUD.jsx:166
+"Construir"  @ui/HUD.jsx:167
+"Decorar"  @ui/HUD.jsx:168
+"Dormir"  @ui/HUD.jsx:169
+"Familia"  @ui/HUD.jsx:171
+"Animales"  @ui/HUD.jsx:172
+"Misiones"  @ui/HUD.jsx:173
+"Buzón"  @ui/HUD.jsx:174
+"Recuerdos"  @ui/HUD.jsx:175
+"Mochila"  @ui/HUD.jsx:176
+"Avatar"  @ui/HUD.jsx:177
+"Ayuda"  @ui/HUD.jsx:178
+"Nuestra Casita · modo {0} · {1}"  @ui/HelpPanel.jsx:26
+"Usuario: {0} · Casita: {1} · Miembros: {2}"  @ui/HelpPanel.jsx:27
+"Pareja en línea: {0}"  @ui/HelpPanel.jsx:28
+"sí"  @ui/HelpPanel.jsx:28
+"Firestore: {0} (escribir {1} ms, leer {2} ms) · Realtime DB: {3}"  @ui/HelpPanel.jsx:29
+"SIN conexión"  @ui/HelpPanel.jsx:29
+"Prueba no ejecutada"  @ui/HelpPanel.jsx:29
+"⚙️ Ayuda y conexión"  @ui/HelpPanel.jsx:35
+"Estado"  @ui/HelpPanel.jsx:36
+"Firebase (online)"  @ui/HelpPanel.jsx:38
+"Demo local (solo este navegador)"  @ui/HelpPanel.jsx:38
+"Comparte el código {0}"  @ui/HelpPanel.jsx:39
+"Si ella/él está jugando y no se ve, probad la conexión de abajo"  @ui/HelpPanel.jsx:40
+"Probar conexión"  @ui/HelpPanel.jsx:43
+"Escribe y lee un dato de prueba en el servidor y comprueba la presencia en tiempo real."  @ui/HelpPanel.jsx:44
+"Probando…"  @ui/HelpPanel.jsx:46
+"Probar ahora"  @ui/HelpPanel.jsx:46
+"📋 Copiar informe"  @ui/HelpPanel.jsx:47
+"escribir {0} ms · leer {1} ms"  @ui/HelpPanel.jsx:51
+"sin conexión: revisa la URL de la base de datos y sus reglas"  @ui/HelpPanel.jsx:52
+"Avisos"  @ui/HelpPanel.jsx:56
+"Con la pestaña en segundo plano te avisamos de cartas nuevas, de que tu pareja llega y de propuestas. (Con la app cerrada no es posible sin un servidor de notificaciones.)"  @ui/HelpPanel.jsx:57
+"🔔 Avisos activados"  @ui/HelpPanel.jsx:59
+"Tu navegador no admite avisos."  @ui/HelpPanel.jsx:60
+"Bloqueados: actívalos en los permisos del sitio de tu navegador."  @ui/HelpPanel.jsx:61
+"🔔 Activar avisos"  @ui/HelpPanel.jsx:62
+"Más"  @ui/HelpPanel.jsx:65
+"🎓 Repetir tutorial"  @ui/HelpPanel.jsx:67
+"⏏ Cerrar sesión"  @ui/HelpPanel.jsx:68
+"🎒 Mochila compartida"  @ui/InventoryPanel.jsx:9
+"Todo lo que recojáis es de los dos."  @ui/InventoryPanel.jsx:10
+"cosecha"  @ui/InventoryPanel.jsx:16
+"Un mundo para dos, aunque haya kilómetros entre vosotros."  @ui/LoginScreen.jsx:11
+"G"  @ui/LoginScreen.jsx:15
+"Entrar con Google"  @ui/LoginScreen.jsx:15
+"Modo demo local (sin Firebase): abre el juego en dos pestañas para ser dos jugadores."  @ui/LoginScreen.jsx:20
+"Tu nombre"  @ui/LoginScreen.jsx:21
+"Jugar en modo demo"  @ui/LoginScreen.jsx:22
+"Borrar partida demo local"  @ui/LoginScreen.jsx:25
+"Para {0}"  @ui/MailboxPanel.jsx:24
+"De {0}"  @ui/MailboxPanel.jsx:24
+" · leída ✓"  @ui/MailboxPanel.jsx:24
+"Toca para abrir · +2 💗"  @ui/MailboxPanel.jsx:27
+"📬 Buzón"  @ui/MailboxPanel.jsx:32
+"Recibidas"  @ui/MailboxPanel.jsx:34
+"Enviadas"  @ui/MailboxPanel.jsx:35
+"✍️ Escribir"  @ui/MailboxPanel.jsx:36
+"Aún no tienes cartas. Tu pareja puede dejarte una cuando quiera 💌"  @ui/MailboxPanel.jsx:38
+"No has enviado nada todavía."  @ui/MailboxPanel.jsx:39
+"Una nota rápida para alegrarle el día:"  @ui/MailboxPanel.jsx:42
+"O escribe una carta:"  @ui/MailboxPanel.jsx:44
+"Querida/o…"  @ui/MailboxPanel.jsx:45
+"Enviar carta 💌"  @ui/MailboxPanel.jsx:47
+"Tu pareja todavía no se ha unido."  @ui/MailboxPanel.jsx:48
+"💾 Recuerdo guardado"  @ui/MemoriesPanel.jsx:25
+"🖼️ Sala de recuerdos"  @ui/MemoriesPanel.jsx:29
+"Cada recuerdo aparece como un objeto en la sala. Haz clic en él para abrirlo."  @ui/MemoriesPanel.jsx:30
+"⚠️ Construye la Sala de recuerdos para verlos en las estanterías. Mientras tanto se guardan junto a la casita."  @ui/MemoriesPanel.jsx:30
+"Título"  @ui/MemoriesPanel.jsx:35
+"Qué pasó ese día (opcional)"  @ui/MemoriesPanel.jsx:39
+"Escribe…"  @ui/MemoriesPanel.jsx:39
+"Guardar en la sala"  @ui/MemoriesPanel.jsx:40
+"recuerdos"  @ui/MemoriesPanel.jsx:42
+"Sin título"  @ui/MemoriesPanel.jsx:46
+"faltan {0} días"  @ui/MemoriesPanel.jsx:65
+"hace {0} días"  @ui/MemoriesPanel.jsx:65
+"¡es hoy!"  @ui/MemoriesPanel.jsx:65
+"Guardado por"  @ui/MemoriesPanel.jsx:67
+"🗑 Quitar"  @ui/MemoriesPanel.jsx:68
+"Cerrar"  @ui/Modal.jsx:10 ui/Tutorial.jsx:41
+"Tu respuesta ✅"  @ui/QuestsPanel.jsx:42
+"Escribe aquí…"  @ui/QuestsPanel.jsx:46
+"Guardar como recuerdo"  @ui/QuestsPanel.jsx:49
+"Enviar"  @ui/QuestsPanel.jsx:51
+"Ya respondió 💗 — responde tú para ver su respuesta (+"  @ui/QuestsPanel.jsx:56
+"💗 extra)."  @ui/QuestsPanel.jsx:56
+"Todavía no ha respondido."  @ui/QuestsPanel.jsx:57
+"Metas de esta semana (se renuevan cada lunes). Se cuentan los avances de las dos personas."  @ui/QuestsPanel.jsx:68
+"✅ Reclamada"  @ui/QuestsPanel.jsx:77
+"Reclamar"  @ui/QuestsPanel.jsx:77
+"💌 Misiones y actividades de pareja"  @ui/QuestsPanel.jsx:93
+"Misiones de hoy"  @ui/QuestsPanel.jsx:95
+"🎯 Metas semanales"  @ui/QuestsPanel.jsx:96
+"Actividades juntos"  @ui/QuestsPanel.jsx:97
+"Abrazo"  @ui/QuestsPanel.jsx:103
+"Acercaos a menos de 2,5 casillas y pulsa"  @ui/QuestsPanel.jsx:103
+"H"  @ui/QuestsPanel.jsx:103
+". Cada 30 minutos."  @ui/QuestsPanel.jsx:103
+"Abrazar · +3 💗"  @ui/QuestsPanel.jsx:103
+"Cena romántica"  @ui/QuestsPanel.jsx:104
+"Cocinad con 3 cultivos de vuestra cosecha. Una vez al día."  @ui/QuestsPanel.jsx:104
+"Ya cenasteis hoy"  @ui/QuestsPanel.jsx:105
+"Cocinar · +20 💗"  @ui/QuestsPanel.jsx:105
+"Necesita Cocina"  @ui/QuestsPanel.jsx:105
+"Ver las estrellas"  @ui/QuestsPanel.jsx:106
+"Entrad los dos al Observatorio de noche. Se premia solo."  @ui/QuestsPanel.jsx:106
+"Ya visteis las estrellas hoy ✨"  @ui/QuestsPanel.jsx:107
+"+15 💗 al estar los dos dentro"  @ui/QuestsPanel.jsx:107
+"Necesita Observatorio"  @ui/QuestsPanel.jsx:107
+"Muévete"  @ui/Tutorial.jsx:8
+"Usa WASD o haz clic en el suelo para caminar. Q/E giran la cámara y la rueda hace zoom."  @ui/Tutorial.jsx:8
+"Siembra algo"  @ui/Tutorial.jsx:9
+"Pulsa 🌱 Plantar, elige una semilla y haz clic en la tierra marrón del huerto."  @ui/Tutorial.jsx:9
+"Riega tu cultivo"  @ui/Tutorial.jsx:10
+"Vuelve a ✋ Mano y haz clic en la planta para regarla. ¡Ganas corazones!"  @ui/Tutorial.jsx:10
+"Recoge recursos"  @ui/Tutorial.jsx:11
+"Haz clic en un árbol o una roca: tu personaje irá solo y los recogerá."  @ui/Tutorial.jsx:11
+"Construye"  @ui/Tutorial.jsx:12
+"Pulsa 🔨 Construir y levanta tu primera habitación (la Terraza es barata)."  @ui/Tutorial.jsx:12
+"Primera misión de pareja"  @ui/Tutorial.jsx:13
+"Abre 💌 Misiones y responde una. Vuestra pareja verá tu respuesta."  @ui/Tutorial.jsx:13
+"🎉 ¡Ya sabes lo básico!"  @ui/Tutorial.jsx:40
+"Mira las metas de la semana en 💌 Misiones y dejad cartas en el 📬 buzón."  @ui/Tutorial.jsx:40
+"Saltar tutorial"  @ui/Tutorial.jsx:41
+"Procesando…"  @ui/media.jsx:27
+"Cambiar foto"  @ui/media.jsx:27
+"📷 Elegir foto"  @ui/media.jsx:27
+"No se pudo acceder al micrófono"  @ui/media.jsx:63
+"⏹ Detener ("  @ui/media.jsx:75
+"s)"  @ui/media.jsx:75
+"🎙️ Grabar de nuevo"  @ui/media.jsx:76
+"🎙️ Grabar nota de voz"  @ui/media.jsx:76

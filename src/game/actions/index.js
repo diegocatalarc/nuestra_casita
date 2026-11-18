@@ -1,0 +1,18 @@
+// Acciones del juego, agrupadas por dominio. Los componentes importan siempre desde 'game/actions'.
+export * from './core';
+export * from './base';
+export * from './vitals';
+export * from './family';
+export * from './mailbox';
+export * from './chat';
+export * from './fishing';
+export * from './economy';
+export * from './events';
+export * from './land';
+export * from './dates';
+export * from './gifts';
+export * from './explore';
+export * from './neighbors';
+export * from './craft';
+export { HOUSE } from '../constants';
+export { dailyQuests } from '../logic';

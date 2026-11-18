@@ -1,0 +1,549 @@
+0|Something didn't load properly
+1|Reload
+2|Your partner
+3|📬 You have a new letter
+4|📬 New letter
+5|Your partner wrote to you
+6|({0}) Our Little Home
+7|Our Little Home
+8|💗 {0} is at the house
+9|💗 Your partner is online
+10|💌 Your partner would like to have a baby. Open Family to reply.
+11|💌 Proposal
+12|Your partner would like to have a baby
+13|Sign out
+14|Visual effects (turn off if it runs slowly)
+15|Turn sound on
+16|Mute
+17|Demo save deleted
+18|Getting your little home ready…
+19|Couldn't save: 
+20|I can't get there
+21|Welcome back! +{0} 💗{1}
+22| · {0}-day streak
+23|🌧️ The rain watered the garden
+24|Mushrooms grow on the forest floor or in the Mushroom Shed
+25|You can't plant here
+26|Something is already planted there
+27|The plot is empty. Pick 🌱 to plant.
+28|💧 It grows faster!{0}
+29|Already gathered. It will grow back.
+30|Not enough resources
+31|Item stored (50 % refund)
+32|Not unlocked yet
+33|Not enough hearts
+34|You need to build a Barn for those animals
+35|The pen is full ({0}/{1}). A Barn adds +6 spots.
+36|{0} {1} has moved into the house!
+37|You have no food. Harvest something from the garden!
+38|{0} yum{1}
+39|You already answered this quest
+40|💌 Quest complete: +{0} 💗{1}
+41| (you both answered!)
+42|You need to build the Kitchen
+43|You already had dinner today 🍝
+44|Missing ingredients: 3 crops
+45|🍝 Romantic dinner: +20 💗
+46|a romantic dinner
+47|Your partner isn't online
+48|Get closer to your partner to hug them
+49|You hugged a moment ago 🤗
+50|🤗 Hug: +3 💗
+51|🔭 Stargazing together: +15 💗
+52|😴 Sleeping… press any key or "Wake up" to get up
+53|You need a bed: the house has one, or place one in Decorate 🛏️
+54|☀️ You wake up with {0} % energy
+55|💤 Sleeping together: +{0} 💗
+56|🥱 You're exhausted: go to sleep (😴 button)
+57|🍽️ You're hungry: open Eat
+58|You're sleeping 😴
+59|You don't have that
+60|That isn't edible
+61|You're not hungry 😊
+62|🍽️ Eating together: +{0} 💗
+63|{0} yum +{1}
+64|Missing ingredients
+65|{0} Ready!{1}
+66|🛖 The barn fed {0}
+67|Some requirements are still missing to have a baby (see the list)
+68|💌 Proposal sent. Your partner has to accept it.
+69|Proposal cancelled
+70|You decided to wait a little 💛
+71|The requirements are no longer met
+72|🍼 You're expecting a baby!
+73|expecting
+74|Baby
+75|👶 Your baby has been born! Give them a name in Family
+76|was born
+77|No food for the little one. Cows give milk 🥛
+78|{0} Yum!{1}
+79|🧸 Playtime!{0}
+80|Your partner hasn't joined yet
+81|💌 Letter sent to your partner's mailbox
+82|You haven't reached it yet
+84|🎯 Goal complete: +{0} 💗
+85|Spring
+86|Summer
+87|Autumn
+88|Winter
+89|Clear
+90|Rain
+91|Storm
+92|Snow
+93|Fog
+94|Wood
+95|Stone
+96|Clay
+97|Cloth
+98|Crystals
+99|Flowers
+100|Planted
+101|Watered
+102|Growing
+103|Ripe
+104|Harvested
+105|Lettuce
+106|Carrots
+107|Tomatoes
+108|Strawberries
+109|Roses
+110|Pumpkins
+111|Mushrooms
+112|Pink mushroom
+113|Fresh salad
+114|Carrot soup
+115|Omelette
+116|Jam
+117|Mushroom stew
+118|Pumpkin pie
+119|Cheese
+120|Eggs
+121|Milk
+122|Tree
+123|Rock
+124|Wildflowers
+125|Cotton
+126|Crystal
+127|Little house
+128|Your home.
+129|Bedroom
+130|Two beds, a wardrobe and a rug. A place to dream together.
+131|Kitchen
+132|Unlocks the Romantic Dinner.
+133|Library
+134|Shelves up to the ceiling and a reading armchair.
+135|Terrace
+136|An open deck with string lights.
+137|Garden
+138|Fountain, hedges and flower beds.
+139|Greenhouse
+140|Crops grow ×1.5 faster with no season penalty. You can plant inside.
+141|Memory room
+142|Photos, messages, dates and notes as physical objects.
+143|Barn
+144|Shelters cows and sheep, +6 animal spots, and feeds hungry animals on its own.
+145|Mushroom shed
+146|Dark and damp: mushrooms grow ×1.6 faster. You can plant inside.
+147|Observatory
+148|Watch the stars together at night.
+149|Sofa
+150|Table
+151|Lamp
+152|Plant
+153|Painting
+154|Rug
+155|Bed
+156|Statue
+157|Column
+158|Banner
+159|Trophy
+160|Crib
+161|Fireplace
+162|Hen
+163|Penny
+164|Clara
+165|Yolk
+166|Feather
+167|Rabbit
+168|Cloud
+169|Candy
+170|Clover
+171|Snowball
+172|Cat
+173|Mochi
+174|Luna
+175|Cinnamon
+176|Miso
+177|Dog
+178|Toby
+179|Biscuit
+180|Rusty
+181|Daisy
+182|Sheep
+183|Wooly
+184|Fluffy
+185|Curly
+186|Cow
+187|Bessie
+188|Spot
+189|Betsy
+190|Blossom
+191|Share your best moment of the day
+192|What was the best part of today?
+193|Tell me something you're grateful for
+194|Something small or big you're thankful for.
+195|Describe a dream date
+196|Where, what would we do, what would we eat?
+197|Something you miss about us
+198|A gesture, a place, a habit…
+199|A song that reminds you of me
+200|Title and why.
+201|A dream for next year
+202|Together or apart.
+203|Send a voice note
+204|Up to 20 seconds. Say whatever you feel like.
+205|Tell me about your day in your voice
+206|Up to 20 seconds.
+207|Share a photo
+208|Something you saw today.
+209|A photo of what's in front of you
+210|No filters, just as it is.
+211|Short
+212|Long
+213|Bun
+214|Pigtails
+215|Messy
+216|None
+217|Glasses
+218|Hat
+219|Bow
+220|Scarf
+221|Flower crown
+222|Photo
+223|Message
+224|Important date
+225|Note
+226|Voice note
+227|Crawling
+228|Little one
+229|Teen
+230|Harvest 15 crops
+231|Answer 7 couple quests
+232|Save 3 memories
+233|Build 2 buildings
+234|Hug 3 times
+235|Sleep together 2 nights
+236|Feed the animals 10 times
+237|Gather 25 resources
+238|Send each other 5 letters
+239|Good morning, my love
+240|Good night, sweet dreams
+241|I love you so much
+242|I miss you
+243|Thinking of you
+244|I'm so proud of you!
+245|This domain isn't authorized. In Firebase: Authentication → Settings → Authorized domains → add "{0}".
+246|Google sign-in isn't enabled. In Firebase: Authentication → Sign-in method → Google → Enable.
+247|The browser blocked the Google window. Allow pop-ups for this page and try again.
+248|The Google window was closed before finishing. Try again.
+249|No connection to Firebase. Check your internet and try again.
+250|Firebase rejected the operation (permissions). Make sure you published the Firestore and Realtime Database rules.
+251|Firestore needs an index. Open the link in the browser console error.
+252|The database hasn't been created. In Firebase: Firestore Database → Create database.
+253|Check the Realtime Database URL (VITE_FIREBASE_DATABASE_URL).
+254|Unknown error
+255|Outside the land
+256|Unsuitable terrain
+257|There's a resource in the way
+258|Overlaps another building
+259|There are decorative objects
+260|Can't be placed on water
+261|That soil is for crops
+262|Something is in the way
+263|There's another object
+264|Memory
+265|Sweetheart
+266|Code not found
+267|Couldn't join: the house already has two residents or the code isn't valid.
+268|Player
+269|There's no demo house. Create one in the other tab.
+270|The house already has two residents
+271|🐾 Animals
+272|Spots:
+273| · 🛖 the barn feeds hungry animals on its own
+274| · a Barn adds +6 spots, cows and sheep
+275|. Click them to collect, feed or pet.
+276|Produces
+277|every
+278|min.
+279|🛖 Needs a Barn
+280|Adopt ·
+281|🔒 At
+282|💗 total (
+283|Your animals
+284|Hunger
+285|Happiness
+286|Production
+287|✨ Ready!
+288|✨ Create your character
+289|🧑 Your character
+290|Skin
+291|Hairstyle
+292|Hair color
+293|Shirt
+294|Pants
+295|Accessory
+296|Start
+297|Save
+298|🧺 Harvested {0} {1}
+299|crop
+300|crops
+301|🔨 Built {0}
+302| thing(s)
+303|🐾 Adopted {0}
+304|🖼️ Saved {0} {1} in the room
+305|memory
+306|memories
+307|💌 Answered {0} {1}
+308|quest
+309|quests
+310|🤗 You hugged
+311|🍳 Cooked {0}
+312|something tasty
+313|📬 Left you {0} {1} in the mailbox
+314|letter
+315|letters
+316|👶 News in the family!
+317|🧸 Took care of the little one
+318|💤 You slept together
+319|🏡 While you were away…
+320|{0} have passed since your last visit.
+321|has been busy
+322|✨ {0} new thing(s)
+323|Waiting for you at the house
+324|unread letter
+325|unread letters
+326|crop ready
+327|crops ready
+328|to harvest
+329|hungry animal
+330|hungry animals
+331|hungry little one
+332|hungry little ones
+333|Open mailbox
+334|Let's go!
+335|🔨 Build
+336|Pick a building and place it on the land. Green = OK, red = no.
+337|Your little house is ready!
+338|Share this code with your partner so they can join:
+339|Copy code
+340|Enter the house
+341|Hello,
+342|A little house is for two. Are you starting a new one, or is someone already waiting for you?
+343|🏡 Create our little house
+344|Generates an invitation code for your partner.
+345|Create
+346|🔑 Join with a code
+347|CODE
+348|Join
+349|Switch account
+350|🛋️ Decorate
+351|Pick an object and place it.
+352|rotates,
+353|changes the color,
+354|cancels.
+355|Place
+356|✋ Move or remove placed objects
+357|no
+358|Name
+359|Go take care of
+360|👶 Family
+361|A baby only arrives when you both want it. Caring for them earns hearts, and they grow in real time.
+362|🍼 You're expecting a baby!
+363|Arrives in
+364|. Get the crib ready and sleep together 💤.
+365|Proposal sent
+366|{0} would like a baby
+367|Waiting for your partner's answer.
+368|Would you like to give yourselves this joy? It will cost 
+369|Yes, we want to!
+370|Cancel
+371|Not now
+372|Having a baby
+373|Build a Bedroom
+374|Place a Crib 🍼 (Decorate)
+375|💗 available (
+376|Up to
+377|little ones (
+378|Propose to
+379|my partner
+380|Your partner has to join first.
+381|🍽️ Eat and cook
+382|⚡ Energy
+383|🍽️ Fullness
+384|Eat
+385|Cook
+386|If your partner eats within 4 tiles and at about the same time, you earn hearts together! Dishes taste better at a table or inside the house (+20 %).
+387|+{0} fullness · +{1} energy{2}
+388|There's nothing to eat. Harvest, gather eggs or cook something.
+389|Cook dishes with your harvest. They go in the shared backpack.
+390|⚠️ You need to build the Kitchen to cook.
+391|fullness · +
+392|energy
+393|Waiting for your partner · code
+394|is at the house
+395|· seen {0} ago
+396|· offline
+397|🌱 Seeds
+398|{0} min · forest floor or Mushroom Shed
+399|{0} min · {1}
+400|good season
+401|out of season (×0.5)
+402|Mushrooms: forest floor or Mushroom Shed
+403|Click on tilled soil
+404|· Esc to exit
+405|Click to build · Esc to cancel
+406|🛋️ Edit decoration
+407|Click to place
+408|Drag objects to move them
+409|· R rotate · C color
+410|· X remove
+411|· Esc exit
+412|Sleeping… ⚡
+413|If
+414|also sleeps, you'll earn hearts 💤
+415|☀️ Wake up
+416|Day
+417|WASD or click to move · Q/E rotate camera · wheel: zoom · click trees, rocks and crops to act
+418|Hand
+419|Plant
+420|Build
+421|Decorate
+422|Sleep
+423|Family
+424|Animals
+425|Quests
+426|Mailbox
+427|Memories
+428|Backpack
+429|Avatar
+430|Help
+431|Our Little Home · {0} mode · {1}
+432|User: {0} · House: {1} · Members: {2}
+433|Partner online: {0}
+434|yes
+435|Firestore: {0} (write {1} ms, read {2} ms) · Realtime DB: {3}
+436|NOT connected
+437|Test not run
+438|⚙️ Help and connection
+439|Status
+440|Firebase (online)
+441|Local demo (this browser only)
+442|Share the code {0}
+443|If they're playing and you can't see them, run the connection test below
+444|Test connection
+445|Writes and reads a test value on the server and checks real-time presence.
+446|Testing…
+447|Test now
+448|📋 Copy report
+449|write {0} ms · read {1} ms
+450|not connected: check the database URL and its rules
+451|Alerts
+452|With the tab in the background we alert you about new letters, your partner arriving and proposals. (With the app closed this isn't possible without a notification server.)
+453|🔔 Alerts on
+454|Your browser doesn't support alerts.
+455|Blocked: enable them in your browser's site permissions.
+456|🔔 Turn on alerts
+457|More
+458|🎓 Repeat tutorial
+459|⏏ Sign out
+460|🎒 Shared backpack
+461|Everything you gather belongs to both of you.
+462|harvest
+463|A world for two, even with miles between you.
+464|Sign in with Google
+465|Local demo mode (no Firebase): open the game in two tabs to be two players.
+466|Your name
+467|Play in demo mode
+468|Delete local demo save
+469|To {0}
+470|From {0}
+471| · read ✓
+472|Tap to open · +2 💗
+473|📬 Mailbox
+474|Received
+475|Sent
+476|✍️ Write
+477|You have no letters yet. Your partner can leave you one any time 💌
+478|You haven't sent anything yet.
+479|A quick note to brighten their day:
+480|Or write a letter:
+481|Dear…
+482|Send letter 💌
+483|Your partner hasn't joined yet.
+484|💾 Memory saved
+485|🖼️ Memory room
+486|Each memory appears as an object in the room. Click it to open it.
+487|⚠️ Build the Memory room to see them on the shelves. Meanwhile they are kept next to the house.
+488|Title
+489|What happened that day (optional)
+490|Write…
+491|Save in the room
+492|Untitled
+493|{0} days to go
+494|{0} days ago
+495|It's today!
+496|Saved by
+497|🗑 Remove
+498|Close
+499|Your answer ✅
+500|Write here…
+501|Save as a memory
+502|Send
+503|They already answered 💗 — answer to see their reply (+
+504|💗 extra).
+505|They haven't answered yet.
+506|This week's goals (they renew every Monday). Progress from both of you counts.
+507|✅ Claimed
+508|Claim
+509|💌 Couple quests and activities
+510|Today's quests
+511|🎯 Weekly goals
+512|Activities together
+513|Hug
+514|Get within 2.5 tiles and press
+515|. Every 30 minutes.
+516|Hug · +3 💗
+517|Romantic dinner
+518|Cook with 3 crops from your harvest. Once a day.
+519|You already had dinner today
+520|Cook · +20 💗
+521|Needs Kitchen
+522|Stargazing
+523|Both go into the Observatory at night. It rewards itself.
+524|You already stargazed today ✨
+525|+15 💗 when you're both inside
+526|Needs Observatory
+527|Move around
+528|Use WASD or click on the ground to walk. Q/E rotate the camera and the wheel zooms.
+529|Plant something
+530|Press 🌱 Plant, pick a seed and click on the brown soil in the garden.
+531|Water your crop
+532|Go back to ✋ Hand and click the plant to water it. You earn hearts!
+533|Gather resources
+534|Click a tree or a rock: your character will walk over and gather it.
+535|Build
+536|Press 🔨 Build and put up your first room (the Terrace is cheap).
+537|First couple quest
+538|Open 💌 Quests and answer one. Your partner will see your answer.
+539|🎉 You know the basics!
+540|Check this week's goals in 💌 Quests and leave letters in the 📬 mailbox.
+541|Skip tutorial
+542|Processing…
+543|Change photo
+544|📷 Choose photo
+545|Couldn't access the microphone
+546|⏹ Stop (
+547|s)
+548|🎙️ Record again
+549|🎙️ Record voice note
