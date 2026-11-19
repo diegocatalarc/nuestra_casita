@@ -60,6 +60,11 @@ Leyenda: ✅ mantener · 🔀 fusionar/ocultar hasta que haga falta · ✂️ re
 | 10 | ✂️ Valorar **Familia** si no la habéis tocado | Cara, tardía y solo para quien llega a 150 💗 | |
 | 11 | ✂️ Valorar que **comer/dormir** deje de ser obligatorio (solo bonificación) | No queda claro el castigo | |
 
+## 5b. Uso real declarado por la persona usuaria (2026-11-19)
+- **Usan mayormente:** pedidos/venta por encargo (Tablón y Mercado) y sembrar.
+- **No usan:** el crafteo (Taller). Del resto (pesca, animales, citas, exploración, familia…) no han dicho nada: **[POR CONFIRMAR]**.
+- Lectura: el bucle central es *sembrar → cosechar → vender por encargo*. El crafteo se pidió como función, pero no está conectado a ese bucle ni se presenta en el tutorial.
+
 ## 6. Qué necesito de vosotros para cerrar el recorte
 1. Qué sistemas habéis usado de verdad, y cuáles ni habéis abierto.
 2. Si en el iPad se puede rotar/acercar de alguna forma que yo no haya visto.
