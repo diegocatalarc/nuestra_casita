@@ -38,10 +38,13 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Por qué:** pocas escrituras y un solo documento; descubrir es cosa de la pareja, no individual. (Motivo exacto frente a alternativas **[POR CONFIRMAR]**; no se probó otra.)
 - **Petición del usuario que originó esto:** "pueblo más grande, mapa que se descubre al avanzar, cosas en el camino" → pueblo al este (`TOWN`), 15 POIs, mapa 🧭.
 
-## Niebla: rendimiento
-- **Problema (usuario):** la niebla hacía el juego "ir a tirones".
-- **Causas probables y arreglo:** (1) 1.600 nubes con material PBR con luces → ahora 1.200, `MeshBasicMaterial` con sombreado horneado en vértices (`scene/Fog.jsx`); (2) se dibujaban todas aunque estuvieran fuera de cámara o ya descubiertas → solo se dibujan las visibles (frustum) y se compactan en `instanceMatrix`; (3) el descubrimiento ocurría 1 vez/s en bloques → ahora `markCircle` a 5 Hz dentro de `Fog` (la escritura a Firestore sigue en `exploreTick` cada 3,5 s); (4) todos los `Reveal` se re-renderizaban en cada cambio de niebla → ahora cada uno se suscribe a un booleano.
-- **Medición:** Playwright con swiftshader (CPU, no GPU real), 1 pasada por variante, ruidosa: sin niebla ≈787 ms/frame, niebla nueva ≈833, niebla vieja ≈1181. Solo indica la tendencia; **[POR CONFIRMAR en un móvil/GPU real]**. Comparar con `?nofog`.
+## Niebla: rendimiento (2 intentos)
+- **Problema (usuario, dos veces):** la niebla hacía el juego ir a tirones; sin ella iba mucho más fluido.
+- **Intento 1 (insuficiente):** seguían siendo ~1.200 nubes 3D instanciadas; se les quitó la iluminación, se hizo culling y se descubrió a 5 Hz. Mejoró (≈ +50 % → +6 % en swiftshader) pero el usuario seguía notándolo en su dispositivo real.
+- **Elegimos (versión actual, `scene/Fog.jsx`):** 1 plano (calidad baja) o 2 (calidad alta) con shader. Una textura diminuta CH×CH guarda qué celdas están sin descubrir (se sube solo cuando cambia); el contorno se deforma con ruido y se suaviza en el shader; cada plano muestrea la máscara en el punto del suelo que tapa (`uF`, dirección de cámara) para corregir la perspectiva isométrica; si todo está descubierto no se dibuja. Coste fijo, sin objetos 3D por celda.
+- **Cuidado:** el material es un `ShaderMaterial` con `#include <tonemapping_fragment>` y `<colorspace_fragment>` para verse igual con y sin postproceso. Los colores se mantienen por debajo del umbral del Bloom (0,82) para que la niebla no brille.
+- **Medición:** swiftshader, caminata de 9 s: con niebla 768–783 ms/imagen, sin niebla 769 (calidad baja); 1212 vs 1194 (calidad alta). Dentro del ruido. **[POR CONFIRMAR en el dispositivo del usuario]**.
+- **Posible fuente de tirones restante:** al descubrir un lugar se montan de golpe sus mallas (pueblo, POIs) y se suben a la GPU; no se ha medido. Si persiste, precargar los lugares antes de que se despeje la niebla.
 
 ## Props del pueblo viejo vs. terreno del jugador
 - **Problema (usuario):** una fuente apareció encima de un invernadero ya construido. El pueblo viejo (`VILLAGE`) está sobre terreno construible y `validateBuilding` no sabía de sus props.
