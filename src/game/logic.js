@@ -1,5 +1,5 @@
 // Lógica pura del juego: todo se deriva de marcas de tiempo (simulación perezosa).
-import { CROPS, ANIMALS, NODE_DEFS, BUILDINGS, DECOR, TILE, MAP, QUEST_POOL, HOUSE, VITALS, FAMILY, GOALS, FISH, FISHING, PRICES, DEMAND_MULT, NEIGHBORS, VISITORS, AVATAR_LOCKS, lockKey, skillLevel, UPGRADES, FESTIVALS, DIG, COLLECT, COLLECT_ITEMS, FRIEND_LEVELS, BOND_LEVELS, PET_TRAITS, MINE, RECIPES, STATIONS, CRAFT } from './constants';
+import { CROPS, ANIMALS, NODE_DEFS, BUILDINGS, DECOR, TILE, MAP, QUEST_POOL, HOUSE, VITALS, FAMILY, GOALS, FISH, DISHES, FISHING, PRICES, DEMAND_MULT, NEIGHBORS, VISITORS, AVATAR_LOCKS, lockKey, skillLevel, UPGRADES, FESTIVALS, DIG, COLLECT, COLLECT_ITEMS, FRIEND_LEVELS, BOND_LEVELS, PET_TRAITS, MINE, RECIPES, STATIONS, CRAFT } from './constants';
 import { TIME_SCALE } from './time';
 import { tileAt, idx, ISLAND } from './worldGen';
 import { clamp, hashStr, mulberry32 } from './rng';
@@ -315,24 +315,72 @@ const ORDER_FISH = ['minnow', 'shrimp', 'carp', 'trout', 'catfish', 'crab'];
 const ORDER_DISH = ['salad', 'carrotsoup', 'omelette', 'jam', 'pie', 'fishsoup', 'grilled'];
 const EXCLUSIVES = Object.keys(AVATAR_LOCKS).filter((k) => AVATAR_LOCKS[k].visitor);
 
-export function dailyOrders(seed, day) {
+/** Cultivos de la lista que se pueden sembrar en la estación (sin estación = todos). Invierno: lechuga + champiñón. */
+const inSeason = (list, season) => (season == null ? list : list.filter((k) => CROPS[k]?.shade || CROPS[k]?.seasons.includes(season)));
+const SEASON_CROPS = [...ORDER_CROPS, 'mushroom'];
+
+/** 4 pedidos del día. `season` (0..3) es opcional: con ella los cultivos pedidos son de temporada. */
+export function dailyOrders(seed, day, season) {
   const r = mulberry32(hashStr('orders' + seed + day));
+  const cropPool = season == null ? ORDER_CROPS : inSeason(SEASON_CROPS, season);
+  const visitorCrops = season == null ? ['rose', 'pumpkin', 'strawberry'] : inSeason(['rose', 'pumpkin', 'strawberry'], season);
   const pick = (a) => a[Math.floor(r() * a.length)];
   const qty = (lo, hi) => lo + Math.floor(r() * (hi - lo + 1));
   const take = (list, n, lo, hi) => { const pool = [...list], out = {}; for (let i = 0; i < n; i++) out[pool.splice(Math.floor(r() * pool.length), 1)[0]] = qty(lo, hi); return out; };
   const value = (need) => Object.entries(need).reduce((a, [k, n]) => a + (PRICES[k] || 5) * n, 0);
   const reward = (need, mult, hearts) => ({ coins: Math.round((value(need) * mult) / 5) * 5, hearts });
   const orders = [];
-  let need = take(ORDER_CROPS, 2, 2, 5);
+  let need = take(cropPool, 2, 2, 5);
   orders.push({ slot: 0, npc: NEIGHBORS[0], line: Math.floor(r() * 3), need, ...reward(need, 1.5, 3) });
   need = take(ORDER_FISH, 2, 1, 3);
   orders.push({ slot: 1, npc: NEIGHBORS[1], line: Math.floor(r() * 3), need, ...reward(need, 1.5, 3) });
   need = r() < 0.5 ? { [pick(ORDER_DISH)]: qty(1, 2) } : { egg: qty(2, 4), flower: qty(3, 6) };
   orders.push({ slot: 2, npc: NEIGHBORS[2], line: Math.floor(r() * 3), need, kitchen: Object.keys(need).some((k) => PRICES[k] >= 30), ...reward(need, 1.6, 4) });
   const v = pick(VISITORS);
-  need = { ...take(['rose', 'pumpkin', 'strawberry', 'trout', 'catfish', 'crab'], 2, 1, 3), ...(r() < 0.4 ? { [pick(['goldfish', 'koi'])]: 1 } : {}) };
+  need = { ...take([...visitorCrops, 'trout', 'catfish', 'crab'], 2, 1, 3), ...(r() < 0.4 ? { [pick(['goldfish', 'koi'])]: 1 } : {}) };
   orders.push({ slot: 3, npc: v, visitor: true, line: Math.floor(r() * 3), need, cos: pick(EXCLUSIVES), ...reward(need, 2.2, 6) });
   return orders;
+}
+
+// --- Pedido grande semanal (cooperativo): misma semana UTC + seed = mismo pedido ---
+export const WEEKLY_MULT = 1.8, WEEKLY_HEARTS = 12, DAILY_BONUS = { coins: 50, hearts: 5 };
+/** Clave dentro de couple.orders donde se guarda el progreso de la semana (los de día son números) */
+export const weeklyOrderKey = (now) => 'w' + weekIdx(now);
+export function weeklyOrder(seed, now, season) {
+  const r = mulberry32(hashStr('weekorder' + seed + weekIdx(now)));
+  const pool = season == null ? ORDER_CROPS : inSeason(SEASON_CROPS, season);
+  const need = {};
+  for (let i = 0; i < 2; i++) need[pool.splice(Math.floor(r() * pool.length), 1)[0]] = 6 + Math.floor(r() * 5); // 6..10
+  const extra = ['egg', 'trout', 'carp', 'crab', 'flower'];
+  need[extra[Math.floor(r() * extra.length)]] = 4 + Math.floor(r() * 4); // 4..7
+  const value = Object.entries(need).reduce((a, [k, n]) => a + (PRICES[k] || 5) * n, 0);
+  return { key: weeklyOrderKey(now), need, coins: Math.round((value * WEEKLY_MULT) / 5) * 5, hearts: WEEKLY_HEARTS };
+}
+/** Estado del pedido semanal: usa la lista guardada al primer aporte (la estación puede cambiar a mitad de semana). */
+export function weeklyStatus(couple, now, season) {
+  const w = weeklyOrder(couple.seed, now, season);
+  const saved = couple.orders?.[w.key] || {};
+  const need = saved.need || w.need;
+  const players = couple.members || Object.keys(couple.players || {});
+  const given = {};
+  for (const k of Object.keys(need)) given[k] = players.reduce((a, u) => a + (saved[u]?.[k] || 0), 0);
+  const mine = (uid) => saved[uid] || {};
+  const complete = Object.keys(need).every((k) => given[k] >= need[k]);
+  return { ...w, need, given, mine, complete, claimed: !!saved.claimed };
+}
+
+/** Pista corta de dónde conseguir un ingrediente (null si no hay) */
+export function sourceHint(item, season) {
+  if (CROPS[item]) {
+    const ok = CROPS[item].shade || season == null || CROPS[item].seasons.includes(season);
+    return { emoji: '🌱', text: ok ? t("Sembrar {0}", [CROPS[item].label]) : t("Sembrar {0} (fuera de temporada)", [CROPS[item].label]) };
+  }
+  if (FISH[item]) return { emoji: '🎣', text: t("Pescar en el río") };
+  if (DISHES[item]) return { emoji: '🍳', text: t("Cocinar en la Cocina") };
+  if (item === 'egg') return { emoji: '🐔', text: t("Gallinas del gallinero") };
+  if (item === 'milk') return { emoji: '🐄', text: t("Vacas del establo") };
+  if (item === 'flower') return { emoji: '🌸', text: t("Flores del campo o rosas") };
+  return null;
 }
 
 // ---------- Eventos del mundo (idénticos para las dos personas: dependen de seed + día UTC) ----------

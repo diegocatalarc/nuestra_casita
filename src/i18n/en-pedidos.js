@@ -1,0 +1,22 @@
+// Traducciones: Pedidos 2.0 (src/ui/OrdersPanel.jsx, game/logic.js, game/actions/economy.js)
+export default {
+  "Cada día hay 4 pedidos nuevos, de temporada e iguales para los dos. Entregad con la mochila compartida.": "Every day there are 4 new orders, seasonal and the same for both of you. Deliver using the shared backpack.",
+  "Pedido grande de la semana": "Big order of the week",
+  "Entre los dos · pagan más": "Together · pays more",
+  "Tú: {0}": "You: {0}",
+  "Aportar {0}": "Give {0}",
+  "✅ ¡Completado entre los dos!": "✅ Completed together!",
+  "✅ Bonus del día cobrado": "✅ Daily bonus collected",
+  "Completad los 4 y ganad +{0} 🪙 +{1} 💗": "Complete all 4 and earn +{0} 🪙 +{1} 💗",
+  " ¡Bonus del día: +{0} 🪙 +{1} 💗!": " Daily bonus: +{0} 🪙 +{1} 💗!",
+  "No tenéis más de eso para aportar": "You have no more of that to give",
+  "🎁 ¡Pedido grande completado entre los dos! +{0} 🪙 +{1} 💗": "🎁 Big order completed together! +{0} 🪙 +{1} 💗",
+  "Aportado: {0} × {1}": "Given: {0} × {1}",
+  "Sembrar {0}": "Plant {0}",
+  "Sembrar {0} (fuera de temporada)": "Plant {0} (out of season)",
+  "Pescar en el río": "Fish in the river",
+  "Cocinar en la Cocina": "Cook in the Kitchen",
+  "Gallinas del gallinero": "Hens in the coop",
+  "Vacas del establo": "Cows in the barn",
+  "Flores del campo o rosas": "Wild flowers or roses",
+};
