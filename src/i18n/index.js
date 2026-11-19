@@ -1,9 +1,10 @@
 // Idiomas: español (base, las claves del código) e inglés. Se detecta el idioma del dispositivo.
 // Cambiar de idioma recarga la página (así todo el contenido se evalúa en el idioma elegido).
 import enBase from './en.js';
-import extra from './en-extra.js';
+// Todos los ficheros src/i18n/en-*.js se fusionan solos: cada tema puede traer su propio diccionario sin tocar los demás.
+const extras = import.meta.glob('./en-*.js', { eager: true });
 
-const en = { ...enBase, ...extra };
+const en = Object.assign({}, enBase, ...Object.values(extras).map((m) => m.default));
 
 const STORAGE = 'nc_lang';
 export const LANGS = [{ id: 'es', label: 'Español' }, { id: 'en', label: 'English' }];

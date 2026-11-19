@@ -100,3 +100,11 @@ describe('props del pueblo viejo', () => {
     expect(touchesVillageProp(10, 10, 5, 4)).toBe(false);
   });
 });
+
+import { t } from '../src/i18n';
+describe('i18n', () => {
+  it('fusiona los diccionarios en-*.js (en inglés el idioma por defecto del test)', () => {
+    // en el entorno de test no hay navegador: idioma 'en'
+    expect(t('Texto de prueba i18n')).toBe('i18n test text');
+  });
+});
