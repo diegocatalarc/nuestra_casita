@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "smoke": "node tests/e2e/smoke.mjs",
+    "bench": "node tests/e2e/bench.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",
@@ -24,6 +26,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^9.39.5",
+    "playwright": "^1.63.0",
     "vite": "^5.4.10",
     "vitest": "^2.1.9"
   }
