@@ -44,6 +44,7 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
 
   return (
     <Modal title={t("⚙️ Ayuda y conexión")} wide>
+      <button className="btn" style={{ marginBottom: 8 }} onClick={() => useGame.getState().set({ newsOpen: true, panel: null })}>{t("🆕 Ver novedades")}</button>
       <h3>{t("Estado")}</h3>
       <ul className="checks">
         <Row ok={s.mode === 'cloud' ? true : undefined} label={t('Modo')}>{s.mode === 'cloud' ? t("Firebase (online)") : t("Demo local (solo este navegador)")}</Row>

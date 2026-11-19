@@ -59,7 +59,7 @@ export default function ChatPanel() {
       </div>
       <div className="chat-quick">{QUICK.map((e) => <button key={e} onClick={() => send(e)} disabled={!other}>{e}</button>)}</div>
       <form className="chat-input" onSubmit={(e) => { e.preventDefault(); send(); }}>
-        <input value={text} maxLength={400} placeholder={other ? t("Escribe un mensaje…") : t("Esperando a tu pareja…")} disabled={!other} onChange={(e) => setText(e.target.value)} autoComplete="off" />
+        <input autoFocus value={text} maxLength={400} placeholder={other ? t("Escribe un mensaje…") : t("Esperando a tu pareja…")} disabled={!other} onChange={(e) => setText(e.target.value)} autoComplete="off" />
         <button className="btn primary" disabled={!other || !text.trim()}>➤</button>
       </form>
     </div>

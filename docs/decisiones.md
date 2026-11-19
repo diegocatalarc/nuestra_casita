@@ -55,6 +55,15 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Sigue abierto:** si ambas personas cosechan la misma planta en el mismo instante, los `inc` de ambas se suman. **[POR CONFIRMAR si importa]**
 - **Probado:** con 3 s de latencia simulada y 6 clics en 1,5 s: 1 escritura de cosecha y +1 lechuga.
 
+## Chat fuera del menú y menús con descripciones
+- **Petición del usuario:** el menú no era intuitivo y el chat debía estar fuera y a mano.
+- **Elegimos:** botón flotante fijo (`ChatFab`) con vista previa del último mensaje sin leer y atajo Enter; menús como lista con una línea de descripción por opción; "Ayuda" deja de ser grupo (queda el ⚙️ en el rincón junto a sonido/efectos). Se renombró "Casita" a "Hogar" y se movió Eventos y Mapa dentro de Mundo.
+- **Descartamos:** dejar el chat en "Pareja" con un badge (seguía a dos clics).
+
+## Detalle visual y rendimiento
+- **Textura de grano del terreno:** con `anisotropy = 4` costaba ≈ +20 % de tiempo por imagen en la prueba con swiftshader; con `anisotropy = 1` el coste desaparece en la medición (ruido ≈ ±5 %). **No volver a subir la anisotropía sin medir** (`?nofog` y `bench` en una sesión de pruebas; el script de medición no está en el repo).
+- Todo lo añadido usa instancias o una textura; no se añadieron mallas sueltas.
+
 ## Producto y diseño
 
 ## Cada función nueva lleva aviso en el juego

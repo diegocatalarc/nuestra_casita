@@ -25,6 +25,7 @@ import ExplorePanel from './ExplorePanel';
 import MinePanel from './MinePanel';
 import CraftPanel from './CraftPanel';
 import MapPanel from './MapPanel';
+import ChatFab from './ChatFab';
 import { jobList } from '../game/logic';
 import { respondDate, dateCondition } from '../game/actions';
 import { warmth } from '../game/logic';
@@ -256,47 +257,42 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
   const inv = couple?.inventory || {};
   const open = (p) => () => set({ panel: panel === p ? null : p });
   const hl = useGame((s) => s.tutorialHl);
-  const unread = useGame((s) => Object.values(s.mailbox).filter((m) => m.to === s.user.uid && !m.readAt).length);
   const chatOpen = useGame((s) => s.chatOpen);
-  const chatNew = useGame((s) => { const seen = s.couple?.players?.[s.user.uid]?.chatSeen || 0; return Object.values(s.chat).filter((m) => m.from !== s.user.uid && m.at > seen).length; });
+  const unread = useGame((s) => Object.values(s.mailbox).filter((m) => m.to === s.user.uid && !m.readAt).length);
   const tb = (id, icon, label, on, active) => (
-    <button key={id} className={`tb ${active ? 'on' : ''} ${hl === id ? 'hl' : ''}`} onClick={() => { if (isNewTab(id)) { markTab(id); } on(); }} title={label}><span>{icon}{isNewTab(id) ? <em className="badge new">🆕</em> : null}{id === 'mail' && unread > 0 ? <em className="badge">{unread}</em> : null}{id === 'chat' && chatNew > 0 && !chatOpen ? <em className="badge">{chatNew}</em> : null}</span><small>{label}</small></button>
+    <button key={id} className={`tb ${active ? 'on' : ''} ${hl === id ? 'hl' : ''}`} onClick={() => { if (isNewTab(id)) { markTab(id); } on(); }} title={label}><span>{icon}{isNewTab(id) ? <em className="badge new">🆕</em> : null}{id === 'mail' && unread > 0 ? <em className="badge">{unread}</em> : null}</span><small>{label}</small></button>
   );
 
   const [menu, setMenu] = useState(null);
   useEffect(() => { const k = (e) => { if (e.code === 'Escape') setMenu(null); }; window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, []);
   const G = useGame.getState;
+  // [id, icono, nombre, acción, activo, descripción corta]
   const GROUPS = [
-    { id: 'home', icon: '🏡', short: t("Casita"), label: t("🏡 Casita"), items: [
-      ['sleep', '😴', t("Dormir"), goSleep, false],
-      ['craft', '🛠️', t("Taller"), () => G().set({ panel: panel === 'craft' ? null : 'craft', craftTab: 'bench' }), panel === 'craft'],
-      ['food', '🍽️', t("Comer"), open('food'), panel === 'food'],
-      ['family', '👶', t("Familia"), open('family'), panel === 'family'],
-      ['animals', '🐾', t("Animales"), open('animals'), panel === 'animals'],
-      ['inv', '🎒', t("Mochila"), open('inventory'), panel === 'inventory'],
-      ['avatar', '👗', t("Vestidor"), open('avatar'), panel === 'avatar'],
+    { id: 'home', icon: '🏡', short: t("Hogar"), label: t("🏡 Hogar"), items: [
+      ['sleep', '😴', t("Dormir"), goSleep, false, t("Recupera energía en una cama")],
+      ['food', '🍽️', t("Comer"), open('food'), panel === 'food', t("Cocina y come para no tener hambre")],
+      ['inv', '🎒', t("Mochila"), open('inventory'), panel === 'inventory', t("Todo lo que lleváis")],
+      ['craft', '🛠️', t("Taller"), () => G().set({ panel: panel === 'craft' ? null : 'craft', craftTab: 'bench' }), panel === 'craft', t("Fabrica muebles, ropa y mejoras")],
+      ['animals', '🐾', t("Animales"), open('animals'), panel === 'animals', t("Cuida y recoge sus productos")],
+      ['family', '👶', t("Familia"), open('family'), panel === 'family', t("Vuestros peques")],
+      ['avatar', '👗', t("Vestidor"), open('avatar'), panel === 'avatar', t("Cambia tu aspecto")],
     ] },
     { id: 'love', icon: '💞', short: t("Pareja"), label: t("💞 Pareja"), items: [
-      ['chat', '💬', t("Chat"), () => G().set({ chatOpen: !chatOpen }), chatOpen],
-      ['quests', '💌', t("Misiones"), open('quests'), panel === 'quests'],
-      ['mail', '📬', t("Buzón"), open('mailbox'), panel === 'mailbox'],
-      ['dates', '💞', t("Citas"), open('dates'), panel === 'dates'],
-      ['mem', '🖼️', t("Recuerdos"), open('memories'), panel === 'memories'],
+      ['quests', '💌', t("Misiones"), open('quests'), panel === 'quests', t("Preguntas y retos del día")],
+      ['mail', '📬', t("Buzón"), open('mailbox'), panel === 'mailbox', t("Cartas para vuestra pareja")],
+      ['dates', '💞', t("Citas"), open('dates'), panel === 'dates', t("Planes para hacer juntos")],
+      ['mem', '🖼️', t("Recuerdos"), open('memories'), panel === 'memories', t("Vuestra sala de fotos y notas")],
     ] },
     { id: 'world', icon: '🌍', short: t("Mundo"), label: t("🌍 Mundo"), items: [
-      ['explore', '🧭', t("Explorar"), () => G().set({ panel: panel === 'explore' ? null : 'explore', exploreTab: null, neighborFocus: null }), panel === 'explore'],
-      ['fish', '🎣', t("Pescar"), open('fishing'), tool === 'fish' || panel === 'fishing'],
-      ['map', '🧭', t("Mapa"), open('map'), panel === 'map'],
-      ['land', '🗺️', t("Terreno"), open('land'), panel === 'land'],
-      ['events', '🎪', t("Eventos"), open('events'), panel === 'events'],
+      ['explore', '🧭', t("Explorar"), () => G().set({ panel: panel === 'explore' ? null : 'explore', exploreTab: null, neighborFocus: null }), panel === 'explore', t("Excavar, mina, vecinos y mascotas")],
+      ['map', '🗺️', t("Mapa"), open('map'), panel === 'map', t("Lo descubierto y los lugares por encontrar")],
+      ['fish', '🎣', t("Pescar"), open('fishing'), tool === 'fish' || panel === 'fishing', t("Caña, bote y diario de peces")],
+      ['land', '📐', t("Terreno"), open('land'), panel === 'land', t("Ampliar la parcela y arar")],
+      ['events', '🎪', t("Eventos"), open('events'), panel === 'events', t("Festivales y visitantes")],
     ] },
     { id: 'trade', icon: '🏪', short: t("Comercio"), label: t("🏪 Comercio"), items: [
-      ['orders', '📋', t("Pedidos"), open('orders'), panel === 'orders'],
-      ['market', '🏪', t("Mercado"), open('market'), panel === 'market'],
-    ] },
-    { id: 'help', icon: '⚙️', short: t("Ayuda"), label: t("⚙️ Ayuda"), items: [
-      ['help', '⚙️', t("Ajustes y ayuda"), open('help'), panel === 'help'],
-      ['news', '🆕', t("Novedades"), () => G().set({ newsOpen: true, panel: null }), false],
+      ['orders', '📋', t("Pedidos"), open('orders'), panel === 'orders', t("Encargos de los vecinos")],
+      ['market', '🏪', t("Mercado"), open('market'), panel === 'market', t("Vende cosecha y compra semillas")],
     ] },
   ];
   return (
@@ -329,20 +325,26 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       {hint && <div className="helper">{t("WASD o clic para moverte · Q/E girar cámara · rueda: zoom · clic en árboles, rocas y cultivos para actuar")}</div>}
 
       {menu && <div className="menu-catch" onClick={() => setMenu(null)} />}
-      {menu && (
-        <div className="menu-pop" style={{ '--n': GROUPS.find((g) => g.id === menu).items.length }}>
-          <div className="menu-title">{GROUPS.find((g) => g.id === menu).label}</div>
-          <div className="menu-grid">{GROUPS.find((g) => g.id === menu).items.map(([id, icon, label, on, active]) => tb(id, icon, label, () => { setMenu(null); on(); }, active))}</div>
+      {menu && (() => { const g = GROUPS.find((x) => x.id === menu); return (
+        <div className="menu-pop">
+          <div className="menu-title">{g.label}</div>
+          <div className="menu-list">{g.items.map(([id, icon, label, on, active, desc]) => (
+            <button key={id} className={`mrow ${active ? 'on' : ''} ${hl === id ? 'hl' : ''}`} onClick={() => { setMenu(null); if (isNewTab(id)) markTab(id); on(); }}>
+              <span className="mi">{icon}{id === 'mail' && unread > 0 ? <em className="badge">{unread}</em> : isNewTab(id) ? <em className="badge new">🆕</em> : null}</span>
+              <span className="mt"><b>{label}</b><small>{desc}</small></span>
+            </button>
+          ))}</div>
         </div>
-      )}
+      ); })()}
       <div className="toolbar">
         {tb('hand', '✋', t("Mano"), () => { setMenu(null); useGame.getState().setTool('interact', { panel: null }); }, tool === 'interact')}
         {tb('plant', '🌱', t("Plantar"), () => { setMenu(null); useGame.getState().setTool('plant', { panel: null }); }, tool === 'plant')}
         {tb('build', '🔨', t("Construir"), () => { setMenu(null); open('build')(); }, tool === 'build' || panel === 'build')}
         {tb('decor', '🛋️', t("Decorar"), () => { setMenu(null); open('decor')(); }, tool === 'decor' || panel === 'decor')}
+        <span className="tb-sep" />
         {GROUPS.map((g) => {
           const ids = g.items.map((i) => i[0]);
-          const badge = g.items.reduce((n, [id]) => n + (id === 'mail' ? unread : id === 'chat' && !chatOpen ? chatNew : 0) + (isNewTab(id) ? 1 : 0), 0);
+          const badge = g.items.reduce((n, [id]) => n + (id === 'mail' ? unread : 0) + (isNewTab(id) ? 1 : 0), 0);
           const act = g.items.some((i) => i[4]);
           return (
             <button key={g.id} className={`tb group ${menu === g.id || act ? 'on' : ''} ${ids.includes(hl) ? 'hl' : ''}`} onClick={() => setMenu(menu === g.id ? null : g.id)} title={g.label}>
@@ -373,6 +375,8 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       <GiftFoundModal />
       <NewsModal />
       {chatOpen && <ChatPanel />}
+      <ChatFab />
+      <button className="signout gear" onClick={open('help')} title={t("Ajustes y ayuda")}>⚙️</button>
       <ActionBar />
       {panel === 'help' && <HelpPanel onSignOut={onSignOut} onSwitchHouse={onSwitchHouse} />}
       <Tutorial />

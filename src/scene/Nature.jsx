@@ -73,7 +73,7 @@ export default function Nature() {
   }), []);
   const kMat = useMemo(() => swayMaterial(0.08, true, { map: treeMaps[1] }), [treeMaps]);
   useLayoutEffect(() => { kMat.map = treeMaps[season]; kMat.needsUpdate = true; }, [season, kMat, treeMaps]);
-  const r = { trunk: useRef(), kpine: useRef(), round: useRef(), rock: useRef(), crystal: useRef(), clay: useRef(), flower: useRef(), stem: useRef(), cotton: useRef(), tuft: useRef() };
+  const r = { trunk: useRef(), kpine: useRef(), round: useRef(), rock: useRef(), crystal: useRef(), clay: useRef(), flower: useRef(), stem: useRef(), cotton: useRef(), tuft: useRef(), round2: useRef(), wild: useRef(), wildStem: useRef() };
 
   const groups = useMemo(() => {
     const g = { tree: [], rock: [], crystal: [], clay: [], flower: [], cotton: [] };
@@ -96,24 +96,27 @@ export default function Nature() {
         // pino de Kenney (incluye tronco)
         put(r.kpine.current, i, x, 0, z, 1.15 * sc, 1.15 * sc, 1.15 * sc, ry);
         put(r.trunk.current, i, x, -5, z, 0.001, 0.001, 0.001);
-        put(r.round.current, i, x, -5, z, 0.001, 0.001, 0.001);
+        put(r.round.current, i, x, -5, z, 0.001, 0.001, 0.001); put(r.round2.current, i, x, -5, z, 0.001, 0.001, 0.001);
         r.kpine.current.setColorAt(i, col.setRGB(1, 1, 1).multiplyScalar(0.9 + n.v * 0.2));
       } else if (alive) {
         put(r.kpine.current, i, x, -5, z, 0.001, 0.001, 0.001);
         put(r.trunk.current, i, x, 0.45 * sc, z, sc, sc, sc, ry);
         put(r.round.current, i, x, 1.35 * sc, z, sc, sc, sc, ry);
         r.round.current.setColorAt(i, col.set(leaf));
+        put(r.round2.current, i, x + Math.cos(ry) * 0.3 * sc, 1.72 * sc, z + Math.sin(ry) * 0.3 * sc, 0.72 * sc, 0.72 * sc, 0.72 * sc, ry); // segunda copa más clara: copa menos esférica
+        r.round2.current.setColorAt(i, col.set(leaf).offsetHSL(0.01, 0.02, 0.06));
       } else {
         // talado: solo queda el tocón
         put(r.kpine.current, i, x, -5, z, 0.001, 0.001, 0.001);
-        put(r.round.current, i, x, -5, z, 0.001, 0.001, 0.001);
+        put(r.round.current, i, x, -5, z, 0.001, 0.001, 0.001); put(r.round2.current, i, x, -5, z, 0.001, 0.001, 0.001);
         put(r.trunk.current, i, x, 0.15, z, sc, 0.3, sc, ry);
       }
       r.trunk.current.setColorAt(i, col.set('#8a5e3c'));
       if (!r.kpine.current.instanceColor) r.kpine.current.setColorAt(i, col.setRGB(1, 1, 1));
       if (!r.round.current.instanceColor) r.round.current.setColorAt(i, col.set(leaf));
+      if (!r.round2.current.instanceColor) r.round2.current.setColorAt(i, col.set(leaf));
     });
-    ['trunk', 'kpine', 'round'].forEach((k) => upd(r[k].current));
+    ['trunk', 'kpine', 'round', 'round2'].forEach((k) => upd(r[k].current));
 
     const simple = (list, ref, y, sx, sy, sz) => list.forEach((n, i) => {
       const alive = nodeAlive(n, nodesState, now);
@@ -154,8 +157,21 @@ export default function Nature() {
       m.setColorAt(i, col.set(SEASON_COLORS.grass[season]).offsetHSL(0, 0, -0.07 + (i % 5) * 0.01));
     });
     m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true;
+    // florecillas silvestres: una de cada 7 matas lleva una flor
+    const WILD = ['#f7a8c4', '#fff6c4', '#ffffff', '#cbb2f2', '#ffb48a'];
+    let n = 0;
+    world.tufts.forEach((t, i) => {
+      if (i % 7 || n >= wildMax) return;
+      const sc = 0.9 + (i % 3) * 0.15;
+      put(r.wildStem.current, n, t.x + 0.07, 0.11 * sc, t.z, 0.02, 0.22 * sc, 0.02);
+      put(r.wild.current, n, t.x + 0.07, 0.25 * sc, t.z, 0.06 * sc, 0.06 * sc, 0.06 * sc);
+      r.wild.current.setColorAt(n, col.set(WILD[i % 5])); r.wildStem.current.setColorAt(n, col.set('#6aa552')); n++;
+    });
+    r.wild.current.count = n; r.wildStem.current.count = n;
+    for (const k of ['wild', 'wildStem']) { r[k].current.instanceMatrix.needsUpdate = true; if (r[k].current.instanceColor) r[k].current.instanceColor.needsUpdate = true; }
   }, [world, season]);
 
+  const wildMax = Math.ceil(world.tufts.length / 7);
   const flat = (c) => <meshStandardMaterial color={c} roughness={1} flatShading />;
   const vc = <meshStandardMaterial roughness={1} flatShading />;
   const trees = groups.tree;
@@ -164,6 +180,7 @@ export default function Nature() {
       <Layer list={trees} refCb={r.trunk} onPick={gatherNode} geo={<cylinderGeometry args={[0.1, 0.15, 0.9, 6]} />} mat={vc} />
       <Layer list={trees} refCb={r.kpine} onPick={gatherNode} geo={<primitive object={treeGeo} attach="geometry" />} mat={<primitive object={kMat} attach="material" />} />
       <Layer list={trees} refCb={r.round} onPick={gatherNode} geo={<icosahedronGeometry args={[0.55, 1]} />} mat={<primitive object={swayTree} attach="material" />} />
+      <instancedMesh ref={r.round2} args={[null, null, Math.max(1, trees.length)]} castShadow><icosahedronGeometry args={[0.55, 1]} /><primitive object={swayTree} attach="material" /></instancedMesh>
       <Layer list={groups.rock} refCb={r.rock} onPick={gatherNode} geo={<dodecahedronGeometry args={[0.6, 0]} />} mat={vc} />
       <Layer list={groups.crystal} refCb={r.crystal} onPick={gatherNode} geo={<octahedronGeometry args={[0.7, 0]} />} mat={<meshStandardMaterial roughness={0.2} metalness={0.2} emissive="#6a8cff" emissiveIntensity={0.55} flatShading vertexColors={false} />} />
       <Layer list={groups.clay} refCb={r.clay} onPick={gatherNode} geo={<cylinderGeometry args={[0.6, 0.9, 1, 8]} />} mat={vc} />
@@ -173,6 +190,8 @@ export default function Nature() {
       <instancedMesh ref={r.tuft} args={[null, null, world.tufts.length]} receiveShadow>
         <coneGeometry args={[1, 1.4, 4]} /><primitive object={swayGrass} attach="material" />
       </instancedMesh>
+      <instancedMesh ref={r.wildStem} args={[null, null, Math.max(1, wildMax)]}><cylinderGeometry args={[1, 1, 1, 4]} /><primitive object={swayGrass} attach="material" /></instancedMesh>
+      <instancedMesh ref={r.wild} args={[null, null, Math.max(1, wildMax)]}><icosahedronGeometry args={[1, 0]} /><primitive object={swayGrass} attach="material" /></instancedMesh>
       <Fence />
     </group>
   );
@@ -192,11 +211,16 @@ function Fence() {
     ref.current.instanceMatrix.needsUpdate = true;
   }, [posts]);
   const rails = [[16.5, 24.55, 11, 0.07], [16.5, 29.45, 11, 0.07]];
+  const sides = [11, 22]; // travesaños de los laterales (antes solo estaban los postes)
   return (
     <group>
       <instancedMesh ref={ref} args={[null, null, posts.length]} castShadow>
         <boxGeometry args={[0.1, 0.44, 0.1]} /><meshStandardMaterial color="#a8764c" roughness={1} flatShading />
       </instancedMesh>
+      {sides.map((x) => <mesh key={x} position={[x, 0.3, 27]} castShadow><boxGeometry args={[0.05, 0.06, 4.9]} /><meshStandardMaterial color="#b98254" roughness={1} flatShading /></mesh>)}
+      {rails.map(([x, z], i) => ( // travesaño bajo
+        <mesh key={'l' + i} position={[x + 0.5, 0.14, z]} castShadow><boxGeometry args={[11, 0.05, 0.05]} /><meshStandardMaterial color="#a8764c" roughness={1} flatShading /></mesh>
+      ))}
       {rails.map(([x, z, w], i) => (
         <mesh key={i} position={[x + 0.5, 0.3, z]} castShadow><boxGeometry args={[w, 0.06, 0.05]} /><meshStandardMaterial color="#b98254" roughness={1} flatShading /></mesh>
       ))}

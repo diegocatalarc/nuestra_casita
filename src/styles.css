@@ -270,3 +270,39 @@ h2 { margin: 0 0 6px; } h3 { margin: 0; }
 .job { display: flex; align-items: center; gap: 10px; background: var(--cream); border-radius: 12px; padding: 8px 10px; width: 100%; } .job .grow { flex: 1; min-width: 0; } .job .npc { font-size: 28px; }
 .warn { background: #fff3c9; border: 2px solid #f2c94c; border-radius: 12px; padding: 8px 12px; font-size: 14px; }
 .mapwrap { display: flex; justify-content: center; margin-bottom: 8px; } .mapwrap canvas { width: min(100%, 480px); aspect-ratio: 1; border-radius: 16px; border: 3px solid #fff; box-shadow: var(--shadow); image-rendering: pixelated; background: #e8eef3; }
+
+/* ---- Menú: lista con descripciones, chat siempre a mano ---- */
+.tb-sep { width: 2px; align-self: stretch; margin: 4px 4px; border-radius: 2px; background: var(--line); }
+.menu-pop { width: min(300px, calc(100vw - 20px)); }
+.menu-list { display: flex; flex-direction: column; gap: 3px; max-height: min(56vh, 420px); overflow-y: auto; }
+.mrow { display: flex; align-items: center; gap: 10px; border: 2px solid transparent; background: transparent; border-radius: 14px; padding: 6px 10px; text-align: left; width: 100%; }
+.mrow:hover { background: var(--cream); } .mrow.on { background: var(--peach); border-color: var(--rose); }
+.mrow.hl { animation: hl 1.1s ease-in-out infinite; border-color: var(--rose); background: #ffe3ea; }
+.mrow .mi { position: relative; font-size: 24px; width: 34px; text-align: center; flex: none; }
+.mrow .mt { display: flex; flex-direction: column; min-width: 0; } .mrow .mt b { font-size: 14px; } .mrow .mt small { font-size: 11.5px; color: var(--ink-l); font-weight: 600; }
+.signout.gear { left: 150px; }
+.chatfab-wrap { position: absolute; right: 14px; bottom: 14px; z-index: 22; display: flex; align-items: flex-end; gap: 8px; pointer-events: none; }
+.chatfab-wrap > * { pointer-events: auto; }
+.chatfab { position: relative; width: 62px; height: 62px; border-radius: 50%; border: 3px solid #fff; background: linear-gradient(145deg, #ff9db4, #f2748f); color: #fff; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; transition: transform .12s; }
+.chatfab:hover { transform: scale(1.06); } .chatfab.on { background: var(--paper); color: var(--ink); }
+.chatfab .emo { font-size: 26px; } .chatfab small { font-size: 10px; font-weight: 800; margin-top: 1px; }
+.chatfab .dot { position: absolute; left: 4px; top: 4px; width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; background: #b7b2ad; } .chatfab .dot.on { background: #58c26b; }
+.chatfab .badge { position: absolute; right: -4px; top: -4px; }
+.chatfab.ring { animation: chatring 1.6s ease-in-out infinite; } @keyframes chatring { 50% { box-shadow: 0 0 0 8px rgba(242, 116, 143, .35); } }
+.chatfab-preview { max-width: min(240px, 52vw); background: var(--paper); border-radius: 16px 16px 4px 16px; padding: 8px 12px; box-shadow: var(--shadow); text-align: left; border: 0; display: flex; flex-direction: column; margin-bottom: 8px; animation: pop .2s ease-out; }
+.chatfab-preview b { font-size: 12px; color: var(--rose-d, #d9607c); } .chatfab-preview span { font-size: 13px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.chatdock { bottom: 90px; }
+@media (max-width: 700px) {
+  .chatfab { width: 52px; height: 52px; } .chatfab small { display: none; }
+  .chatfab-wrap { right: 10px; bottom: 84px; }
+  .chatdock { bottom: 146px; right: 10px; height: min(430px, calc(100vh - 380px)); }
+  .signout, .signout.sound, .signout.fxbtn, .signout.gear { left: 10px; right: auto; width: 32px; height: 32px; font-size: 14px; }
+  .signout { bottom: 84px; } .signout.sound { bottom: 122px; } .signout.fxbtn { bottom: 160px; } .signout.gear { bottom: 198px; }
+}
+.chatfab-wrap { flex-direction: column; align-items: flex-end; gap: 6px; }
+.chatfab-preview { margin-bottom: 0; max-width: min(250px, calc(100vw - 100px)); }
+.menu-list { max-height: calc(100vh - 140px); } .mrow { padding: 4px 10px; }
+@media (max-width: 700px) {
+  .signout, .signout.sound, .signout.fxbtn, .signout.gear { left: auto; right: 10px; bottom: auto; }
+  .signout { top: 196px; } .signout.sound { top: 234px; } .signout.fxbtn { top: 272px; } .signout.gear { top: 310px; }
+}

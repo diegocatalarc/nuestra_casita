@@ -68,6 +68,14 @@ export const NEWS = [
       { emoji: '🏙️', text: t("¡Un pueblo mucho más grande al este! Plaza Mayor con fuente, ayuntamiento, torre del reloj, panadería, tienda, café, escuela, capilla, molino y vecinos paseando por la Calle Mayor.") },
     ],
   },
+  {
+    v: 9, title: t("Chat a mano y un mundo con más detalle"),
+    items: [
+      { emoji: '💬', text: t("El chat ya no está en un menú: tienes un botón siempre visible abajo a la derecha, con aviso de mensajes nuevos y vista previa. Pulsa Enter para abrirlo.") },
+      { emoji: '🧭', text: t("Menús renovados: cada opción explica para qué sirve. Los ajustes están en el ⚙️ de abajo a la izquierda.") },
+      { emoji: '🌿', text: t("Más detalle en el mapa: hierba con textura, florecillas silvestres, árboles con copas más ricas, surcos continuos en el huerto y valla completa.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

@@ -135,3 +135,8 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 - **`game/actions/`** ya no es un fichero de 1.500 líneas: está dividido por dominio (`core`, `base`, `vitals`, `family`, `mailbox`, `chat`, `fishing`, `economy`, `events`, `land`, `dates`, `gifts`, `explore`, `neighbors`, `craft`). Se sigue importando desde `game/actions`.
 - Datos de exploración en `game/exploreData.js` (reexportado por `constants.js`).
 - **CI** de GitHub (`.github/workflows/ci.yml`): lint + tests + build en cada push.
+
+## Chat a mano, menús claros y más detalle visual
+- **Chat siempre visible:** botón flotante 💬 abajo a la derecha (`ui/ChatFab.jsx`) con contador, punto de conexión de la pareja, vista previa del último mensaje sin leer y atajo **Enter**. Ya no está dentro de un menú.
+- **Menús:** la barra separa herramientas (Mano, Plantar, Construir, Decorar) de menús (Hogar, Pareja, Mundo, Comercio). Cada menú es una lista con una descripción por opción. Ajustes y novedades pasaron al ⚙️ (abajo a la izquierda).
+- **Detalle del mapa sin coste de rendimiento:** textura de grano repetida sobre el terreno (una sola muestra de textura), florecillas silvestres y segunda copa en árboles redondos (instancias), surcos continuos en el huerto y travesaños laterales en la valla.

@@ -21,6 +21,28 @@ const vnoise = (x, z) => {
   return a + (b - a) * fx + (c - a) * fz + (a - b - c + d) * fx * fz;
 };
 
+/** Textura de grano que se repite sobre todo el terreno: briznas, motas y granos. Da detalle fino sin geometría ni coste por frame. */
+function detailTexture() {
+  const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
+  const g = c.getContext('2d');
+  g.fillStyle = '#f2f2f2'; g.fillRect(0, 0, S, S);
+  let a = 12345; const rnd = () => { a = (a * 1664525 + 1013904223) >>> 0; return a / 4294967296; };
+  const wrap = (x, y, f) => { for (const dx of [-S, 0, S]) for (const dy of [-S, 0, S]) f(x + dx, y + dy); }; // sin costuras al repetir
+  for (let i = 0; i < 1400; i++) { // briznas
+    const x = rnd() * S, y = rnd() * S, len = 3 + rnd() * 6, ang = -Math.PI / 2 + (rnd() - 0.5) * 1.1, dark = rnd() < 0.62;
+    g.strokeStyle = dark ? `rgba(150,150,150,${0.25 + rnd() * 0.3})` : `rgba(255,255,255,${0.5 + rnd() * 0.4})`; g.lineWidth = 1 + rnd() * 0.8;
+    wrap(x, y, (px, py) => { g.beginPath(); g.moveTo(px, py); g.lineTo(px + Math.cos(ang) * len, py + Math.sin(ang) * len); g.stroke(); });
+  }
+  for (let i = 0; i < 260; i++) { // motas
+    const x = rnd() * S, y = rnd() * S, r = 1 + rnd() * 2.4;
+    g.fillStyle = rnd() < 0.5 ? 'rgba(120,120,120,0.16)' : 'rgba(255,255,255,0.35)';
+    wrap(x, y, (px, py) => { g.beginPath(); g.arc(px, py, r, 0, 7); g.fill(); });
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(MAP / 4, MAP / 4); t.anisotropy = 1; t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
 const tmp = new THREE.Color();
 function baseColor(t, season, out) {
   const g = SEASON_COLORS.grass[season];
@@ -67,6 +89,7 @@ function buildTerrain(world, season) {
     // variación de color a dos escalas (manchas + grano)
     const patch = (vnoise(px * 0.18, pz * 0.18) - 0.5) * 0.09 + (vnoise(px * 0.9, pz * 0.9) - 0.5) * 0.05;
     tmp.offsetHSL(0, 0, patch);
+    tmp.multiplyScalar(1.07); // compensa el tono medio de la textura de grano
     // franja de espuma / arena mojada junto al agua
     const foam = sm(-0.36, -0.27, h) * (1 - sm(-0.27, -0.2, h));
     if (foam > 0) tmp.lerp(cA.set('#f6f3e8'), foam * 0.75);
@@ -116,6 +139,7 @@ export default function Terrain() {
 
   const terrain = useMemo(() => buildTerrain(world, season), [world, season]);
   const skirt = useMemo(() => buildSkirt(terrain), [terrain]);
+  const grain = useMemo(detailTexture, []);
 
   const { planks, rails, water } = useMemo(() => {
     const planks = [], rails = [], water = [];
@@ -197,7 +221,7 @@ export default function Terrain() {
   return (
     <group>
       <mesh geometry={terrain} receiveShadow castShadow>
-        <meshStandardMaterial ref={landMat} vertexColors roughness={1} />
+        <meshStandardMaterial ref={landMat} vertexColors map={grain} roughness={1} />
       </mesh>
       <mesh geometry={skirt}>
         <meshStandardMaterial vertexColors roughness={1} side={THREE.DoubleSide} />

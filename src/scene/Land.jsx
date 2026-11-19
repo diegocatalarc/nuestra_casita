@@ -19,9 +19,9 @@ function Furrows({ tiles }) {
       for (let r = 0; r < 3; r++) {
         {
           const h = H(x, z, r + 1);
-          d.position.set(x + 0.5 + (h - 0.5) * 0.08, 0.03, z + 0.17 + r * 0.33);
-          d.scale.set(0.5, 0.042 + h * 0.012, 0.082); d.rotation.y = 0; d.updateMatrix();
-          m.setMatrixAt(i, d.matrix); m.setColorAt(i, c.set('#7c5439').offsetHSL(0, 0, (h - 0.45) * 0.03)); i++;
+          d.position.set(x + 0.5, 0.03, z + 0.17 + r * 0.33);
+          d.scale.set(0.56, 0.05 + h * 0.008, 0.1); // caballón continuo: enlaza con el de la casilla vecina d.rotation.y = 0; d.updateMatrix();
+          m.setMatrixAt(i, d.matrix); m.setColorAt(i, c.set(r === 1 ? '#6f4a32' : '#7c5439').offsetHSL(0, 0, (h - 0.45) * 0.02)); i++;
         }
       }
     }
@@ -29,7 +29,7 @@ function Furrows({ tiles }) {
   }, [tiles]);
   return (
     <instancedMesh ref={ref} args={[null, null, 6 * 1200]} frustumCulled={false} castShadow receiveShadow>
-      <sphereGeometry args={[1, 8, 5]} /><meshStandardMaterial roughness={1} />
+      <sphereGeometry args={[1, 10, 5]} /><meshStandardMaterial roughness={1} />
     </instancedMesh>
   );
 }
