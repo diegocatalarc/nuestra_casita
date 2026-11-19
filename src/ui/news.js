@@ -110,6 +110,12 @@ export const NEWS = [
       { emoji: '🗺️', text: t("Arrastra con un dedo para mover la cámara por el mapa y toca 🎯 para volver a tu personaje. Además, tu personaje ya no se ralentiza en iPad y los toques en el suelo funcionan siempre.") },
     ],
   },
+  {
+    v: 15, title: t("Taller sencillo"),
+    items: [
+      { emoji: '🛠️', text: t("El Taller ahora es mucho más fácil: pocas recetas con materiales básicos, sin estaciones ni niveles y con un solo botón. Lo fabricado llega solo a la mochila. Lo de antes sigue disponible en «recetas avanzadas».") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

@@ -1,5 +1,7 @@
 // Traducciones: novedades v13
 export default {
+  "Taller sencillo": "Simple Workshop",
+  "El Taller ahora es mucho más fácil: pocas recetas con materiales básicos, sin estaciones ni niveles y con un solo botón. Lo fabricado llega solo a la mochila. Lo de antes sigue disponible en «recetas avanzadas».": "The Workshop is now much easier: a few recipes with basic materials, no stations or levels and a single button. Crafted items go to your backpack by themselves. The old system is still available under 'advanced recipes'.",
   "Centrar en mi personaje": "Center on my character",
   "Arrastra con un dedo para mover la cámara por el mapa y toca 🎯 para volver a tu personaje. Además, tu personaje ya no se ralentiza en iPad y los toques en el suelo funcionan siempre.": "Drag with one finger to move the camera around the map and tap 🎯 to return to your character. Your character also no longer slows down on iPad and taps on the ground always work.",
   "Arreglos para iPad y mover la cámara": "iPad fixes and camera panning",
