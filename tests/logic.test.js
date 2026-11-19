@@ -108,3 +108,15 @@ describe('i18n', () => {
     expect(t('Texto de prueba i18n')).toBe('i18n test text');
   });
 });
+
+import { DECOR, LOVE_ITEMS } from '../src/game/constants';
+describe('decoración del corazón', () => {
+  it('cada objeto tiene modelo, coste en corazones y no gasta recursos', () => {
+    expect(LOVE_ITEMS.length).toBeGreaterThanOrEqual(6);
+    for (const it of LOVE_ITEMS) { const d = DECOR[it.id]; expect(d.parts.length).toBeGreaterThan(2); expect(d.heartCost).toBeGreaterThan(0); expect(Object.keys(d.cost)).toHaveLength(0); expect(d.colors.length).toBeGreaterThan(0); }
+  });
+  it('los corazones tienen un sumidero grande y repetible', () => {
+    const total = LOVE_ITEMS.reduce((a, i) => a + i.heartCost, 0);
+    expect(total).toBeGreaterThan(500);
+  });
+});

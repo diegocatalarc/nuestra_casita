@@ -1,5 +1,6 @@
 import { t } from '../i18n';
 import { CRAFT_DEF } from './craftParts';
+import { LOVE_PARTS } from './loveParts';
 
 // Todas las "reglas" del juego en datos. Cambiar el balance = editar este archivo.
 
@@ -400,6 +401,16 @@ Object.assign(DECOR, {
   d_aquarium: CR(t("Acuario"), '🐠', 1.6, 0.7, [['b', [0, 0.35, 0], [1.5, 0.7, 0.6], '#6a4630'], ['b', [0, 0.95, 0], [1.4, 0.55, 0.5], '#8fe0f0'], ['o', [-0.3, 0.95, 0], [0.09, 1.6, 1, 0.6], '#ff9a3c'], ['o', [0.25, 1.05, 0.05], [0.07, 1.6, 1, 0.6], 'v'], ['o', [0.1, 0.72, 0], [0.12], '#5fae55']], ['#ffd23a', '#f48aa8', '#9fb4ff']),
 });
 for (const [k, d] of Object.entries(CRAFT_DEF)) { if (DECOR[k]) { DECOR[k].parts = d.parts; if (d.colors) DECOR[k].colors = d.colors; } }
+// Decoración "del corazón": se compra con 💗 (sumidero principal de corazones). Los modelos viven en loveParts.js.
+export const LOVE_ITEMS = [
+  { id: 'lovebench', label: t("Banco de dos"), emoji: '💺', w: 1.6, d: 0.6, heartCost: 40 },
+  { id: 'floralarch', label: t("Arco de flores"), emoji: '🌸', w: 1.9, d: 0.6, heartCost: 70 },
+  { id: 'lanterns', label: t("Farolillos"), emoji: '🏮', w: 0.8, d: 0.6, heartCost: 90 },
+  { id: 'wishtree', label: t("Árbol de los deseos"), emoji: '🌳', w: 1.6, d: 1.6, heartCost: 140 },
+  { id: 'homefountain', label: t("Fuente del hogar"), emoji: '⛲', w: 1.9, d: 1.9, heartCost: 180 },
+  { id: 'couplestatue', label: t("Estatua de pareja"), emoji: '💞', w: 1.1, d: 0.9, heartCost: 250 },
+];
+for (const it of LOVE_ITEMS) DECOR[it.id] = { label: it.label, emoji: it.emoji, w: it.w, d: it.d, cost: {}, heartCost: it.heartCost, love: true, colors: LOVE_PARTS[it.id].colors, parts: LOVE_PARTS[it.id].parts, ...(LOVE_PARTS[it.id].light ? { light: true } : {}) };
 Object.assign(ITEMS, Object.fromEntries(Object.entries(DECOR).filter(([, d]) => d.craft).map(([k, v]) => [k, { label: v.label, emoji: v.emoji }])));
 Object.assign(PRICES, Object.fromEntries(Object.entries(DECOR).filter(([, d]) => d.craft).map(([k]) => [k, 0])));
 for (const k of Object.keys(DECOR)) if (DECOR[k].craft) { delete PRICES[k]; DECOR[k].cost = { [k]: 1 }; }

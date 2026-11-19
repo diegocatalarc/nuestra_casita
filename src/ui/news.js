@@ -83,6 +83,12 @@ export const NEWS = [
       { emoji: '🤗', text: t("Abrazar y Saludar ya están en el menú 💞 Pareja, sin necesidad de teclado.") },
     ],
   },
+  {
+    v: 11, title: t("¡Ahora los corazones se gastan!"),
+    items: [
+      { emoji: '💞', text: t("Nueva decoración del corazón en 🛋️ Decorar: banco de dos, arco de flores, farolillos, árbol de los deseos, fuente del hogar y estatua de pareja. Se pagan con 💗 (al quitarlos se devuelve la mitad).") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

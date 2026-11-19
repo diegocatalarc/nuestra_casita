@@ -159,7 +159,8 @@ export function placeDecor(type, x, z, rot, variant) {
   const v = validateDecor(s.world, s, type, x, z, rot, null, serverNow());
   if (!v.ok) return toast(v.reason);
   if (!canAfford(s.couple.inventory, def.cost)) { toast(t("Faltan recursos")); s.setTool('interact'); return; }
-  commit([...spend(def.cost), { op: 'set', col: 'decor', id: newId('d'), data: { type, x, z, rot, variant, by: s.user.uid } }]);
+  if (def.heartCost && (s.couple.hearts || 0) < def.heartCost) { toast(t("Faltan corazones")); s.setTool('interact'); return; }
+  commit([...spend(def.cost), ...(def.heartCost ? [{ op: 'inc', field: 'hearts', by: -def.heartCost }] : []), { op: 'set', col: 'decor', id: newId('d'), data: { type, x, z, rot, variant, by: s.user.uid } }]);
   fx('✨', x, z);
 }
 
@@ -212,7 +213,8 @@ export function removeDecor(id) {
   const o = st().decor[id];
   if (!o) return;
   const refund = Object.entries(DECOR[o.type].cost).map(([k, v]) => gain(k, DECOR[o.type].craft ? v : Math.floor(v / 2)));
-  commit([{ op: 'del', col: 'decor', id }, ...refund]);
+  const hr = Math.floor((DECOR[o.type].heartCost || 0) / 2); // reembolso del 50 % también en corazones
+  commit([{ op: 'del', col: 'decor', id }, ...refund, ...(hr ? [{ op: 'inc', field: 'hearts', by: hr }] : [])]);
   toast(DECOR[o.type].craft ? t("Objeto guardado en la mochila") : t("Objeto guardado (50 % de reembolso)"));
 }
 
