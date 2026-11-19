@@ -39,9 +39,26 @@ export function doAnim(name, ms) {
 export const toast = (t) => st().toast(t);
 export const fx = (t, x, z) => st().addFx(t, x, z);
 
+// Colecciones cuyas acciones dependen de "¿sigue listo?": cosechar, recolectar, ordeñar…
+// Se reflejan en el store al instante. Si no, entre el clic y el snapshot de la nube (cientos de ms o más)
+// el mismo cultivo/recurso/animal seguiría "listo" y se podría cobrar varias veces.
+const OPTIMISTIC = ['crops', 'nodes', 'animals'];
+
+function applyLocal(col, id, data) {
+  const prev = st()[col]?.[id];
+  useGame.setState((s) => ({ [col]: { ...s[col], [id]: { ...(s[col]?.[id] || { id }), ...data } } }));
+  return prev;
+}
+function revertLocal(col, id, prev) {
+  useGame.setState((s) => { const next = { ...s[col] }; if (prev) next[id] = prev; else delete next[id]; return { [col]: next }; });
+}
+
 export function commit(ops) {
   if (!ops.length) return Promise.resolve();
+  const undo = [];
+  for (const o of ops) if (o.op === 'set' && OPTIMISTIC.includes(o.col)) undo.push([o.col, o.id, applyLocal(o.col, o.id, o.data)]);
   return getBackend().write(st().coupleId, ops).catch((e) => {
+    for (const [col, id, prev] of undo.reverse()) revertLocal(col, id, prev); // no se guardó: se deshace
     console.error(e);
     toast(t("No se pudo guardar: ") + explainError(e));
   });

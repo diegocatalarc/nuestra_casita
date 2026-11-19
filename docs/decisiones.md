@@ -47,6 +47,14 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Problema (usuario):** una fuente apareció encima de un invernadero ya construido. El pueblo viejo (`VILLAGE`) está sobre terreno construible y `validateBuilding` no sabía de sus props.
 - **Elegimos:** `game/villageProps.js` con huellas de fuente/bancos/puesto/adoquines: (a) `validateBuilding` rechaza obras nuevas encima (fuente, bancos, puesto); (b) en partidas ya existentes el prop se oculta y deja de colisionar si hay un edificio del jugador encima. Las casas de los vecinos no se ocultan **[POR CONFIRMAR si también se solapan casos reales]**.
 
+## Cosechar muchas veces (carrera entre clic y snapshot)
+- **Bug (usuario):** se podía cosechar un cultivo casi infinitamente y tardaba en desaparecer.
+- **Causa:** las acciones comprueban el store ("¿está listo?"), escriben a la nube y el store solo cambiaba cuando volvía el snapshot. Durante esa latencia el cultivo seguía "listo" y cada clic cobraba otra vez (también valía para recursos y animales).
+- **Elegimos:** `commit()` aplica al instante en el store las operaciones `set` sobre `crops`, `nodes` y `animals` (actualización optimista) y las deshace si la escritura falla (`game/actions/core.js`).
+- **Descartamos:** un bloqueo por clave con temporizador (no refleja el estado real) y transacciones (más caras; siguen siendo una opción para la carrera *entre las dos personas*).
+- **Sigue abierto:** si ambas personas cosechan la misma planta en el mismo instante, los `inc` de ambas se suman. **[POR CONFIRMAR si importa]**
+- **Probado:** con 3 s de latencia simulada y 6 clics en 1,5 s: 1 escritura de cosecha y +1 lechuga.
+
 ## Producto y diseño
 
 ## Cada función nueva lleva aviso en el juego
