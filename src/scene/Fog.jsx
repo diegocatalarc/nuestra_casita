@@ -17,11 +17,13 @@ import { EXPLORE } from '../game/constants';
  */
 
 function noiseTexture(size = 128) {
-  // ruido de valor con 3 octavas, que se repite sin costuras
+  // R: ruido de valor (3 octavas). G: cúpulas tipo Worley (lóbulos). Ambos se repiten sin costuras.
   const lat = (n) => { const a = new Float32Array(n * n); for (let i = 0; i < a.length; i++) a[i] = Math.random(); return a; };
   const layers = [[4, 0.55, lat(4)], [8, 0.3, lat(8)], [16, 0.15, lat(16)]];
   const sm = (t) => t * t * (3 - 2 * t);
-  const data = new Uint8Array(size * size);
+  const K = 6, pts = []; // 6×6 celdas con un punto cada una
+  for (let j = 0; j < K; j++) for (let i = 0; i < K; i++) pts.push([i + 0.2 + Math.random() * 0.6, j + 0.2 + Math.random() * 0.6]);
+  const data = new Uint8Array(size * size * 4);
   for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
     let v = 0;
     for (const [n, w, a] of layers) {
@@ -29,9 +31,19 @@ function noiseTexture(size = 128) {
       const g = (i, j) => a[((j % n) * n) + (i % n)];
       v += w * ((g(ix, iy) * (1 - tx) + g(ix + 1, iy) * tx) * (1 - ty) + (g(ix, iy + 1) * (1 - tx) + g(ix + 1, iy + 1) * tx) * ty);
     }
-    data[y * size + x] = Math.min(255, Math.max(0, Math.round(v * 255)));
+    const px = (x / size) * K, py = (y / size) * K, ci = Math.floor(px), cj = Math.floor(py);
+    let d = 9;
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      const wi = (ci + di + K) % K, wj = (cj + dj + K) % K, q = pts[wj * K + wi];
+      const dx = ci + di + (q[0] - wi) - px, dy = cj + dj + (q[1] - wj) - py;
+      d = Math.min(d, Math.hypot(dx, dy));
+    }
+    const dome = Math.sqrt(Math.max(0, 1 - Math.min(1, d / 0.75))); // cúpula redondeada
+    const o = (y * size + x) * 4;
+    data[o] = Math.min(255, Math.max(0, Math.round(v * 255)));
+    data[o + 1] = Math.round(dome * 255); data[o + 2] = 0; data[o + 3] = 255;
   }
-  const t = new THREE.DataTexture(data, size, size, THREE.RedFormat, THREE.UnsignedByteType);
+  const t = new THREE.DataTexture(data, size, size, THREE.RGBAFormat, THREE.UnsignedByteType);
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = t.minFilter = THREE.LinearFilter; t.needsUpdate = true;
   return t;
 }
@@ -54,15 +66,17 @@ void main() {
   float m = texture2D(uMask, g / uMap).r;
   if (m < 0.01) discard;
   vec2 p = vP.xz * 0.05;
-  float n1 = texture2D(uNoise, p + vec2(uTime * 0.0035, uTime * 0.002) + uSeed).r;
-  float n2 = texture2D(uNoise, p * 2.7 - vec2(uTime * 0.005, uTime * 0.001) + uSeed * 2.3).r;
-  float n = n1 * 0.62 + n2 * 0.38;
-  float edge = m * 1.25 + (n - 0.5) * 0.7 - 0.12;
-  float a = smoothstep(0.38, 0.66, edge);
+  vec2 drift = vec2(uTime * 0.0035, uTime * 0.002) + uSeed;
+  vec4 t0 = texture2D(uNoise, p + drift);
+  float w = t0.g;                       // cúpula del lóbulo (0 valle … 1 cima)
+  float cover = m * 1.35 + (w - 0.5) * 0.8 + (t0.r - 0.5) * 0.4 - 0.2;
+  float a = smoothstep(0.47, 0.56, cover);
   if (a < 0.015) discard;
-  // luz de nube: crestas claras, valles azulados
-  vec3 lo = vec3(0.60, 0.67, 0.80), hi = vec3(0.80, 0.85, 0.92);
-  vec3 col = mix(lo, hi, smoothstep(0.30, 0.72, n));
+  // luz desde arriba-izquierda: pendiente de la cúpula → 3 tonos, como un dibujo
+  float wl = texture2D(uNoise, p + drift + vec2(-0.012, -0.018)).g;
+  float lit = floor(clamp((wl - w) * 9.0 + 0.5 + (w - 0.5) * 0.5, 0.0, 0.999) * 3.0) / 2.0;
+  vec3 shadow = vec3(0.64, 0.70, 0.85), mid = vec3(0.85, 0.89, 0.96), light = vec3(0.98, 0.99, 1.0);
+  vec3 col = lit < 0.5 ? mix(shadow, mid, lit * 2.0) : mix(mid, light, (lit - 0.5) * 2.0);
   col = mix(col, col * vec3(0.55, 0.6, 0.85), uNight);
   gl_FragColor = vec4(col, a * uAlpha);
   #include <tonemapping_fragment>
