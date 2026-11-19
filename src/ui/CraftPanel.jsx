@@ -27,9 +27,36 @@ export default function CraftPanel() {
   const lv = skillLv(couple, 'craft');
   const placed = stationPlaced(decor, tab);
   const list = Object.entries(RECIPES).filter(([, r]) => r.station === tab);
+  // Lo que se puede fabricar ahora (ingredientes y estación) va primero; el resto, en «Más recetas».
+  const cards = list.map(([id, r]) => {
+    const st = recipeStatus(couple, r), can = placed && st.ok && canAfford(inv, r.in);
+    return { id, r, st, can, ok: can && jobs.length < CRAFT.slots };
+  }).sort((a, b) => (b.can ? 1 : 0) - (a.can ? 1 : 0));
+  const readyNow = cards.filter((c) => c.can), rest = cards.filter((c) => !c.can);
+
+  const renderCard = ({ id, r, st, ok }) => {
+    const info = recipeInfo(id), dec = DECOR[Object.keys(r.out)[0]];
+    return (
+      <div key={id} className={`item ${st.ok ? '' : 'locked'}`}>
+        <div className="emoji">{info.emoji}</div>
+        <h3>{info.label} <small>{outText(r)}</small></h3>
+        {info.desc && <p>{info.desc}</p>}
+        {dec && <p className="hint">{t("Se coloca con 🛋️ Decorar")}</p>}
+        <div className="costs">{needChips(r.in, inv)}</div>
+        <small className="hint">⏱️ {fmtDuration(craftDur(couple, r) * 1000)}</small>
+        {st.ok ? (
+          <div className="row">
+            <button className="btn primary" disabled={!ok} onClick={() => startCraft(id)}>{t("Fabricar")}</button>
+            {pu && <button className="btn ghost" title={t("Pedírselo a tu pareja")} onClick={() => requestCraft(id)}>🙏</button>}
+          </div>
+        ) : <div className="hint">🔒 {st.why}</div>}
+      </div>
+    );
+  };
 
   return (
     <Modal title={t("🛠️ Taller")} wide>
+      <p className="sub"><b>{t("¿Para qué sirve?")}</b> {t("Convierte materiales en muebles, ropa y mejoras para el bote, el pico y el anzuelo. Los muebles se colocan luego con 🛋️ Decorar.")}</p>
       <div className="vitals-line"><span>{SKILLS.craft.emoji} {t("Artesanía nivel {0}", [lv])}</span><span>{t("Trabajos: {0}/{1}", [jobs.length, CRAFT.slots])}</span></div>
 
       {(jobs.length > 0 || requests.length > 0) && (
@@ -68,28 +95,16 @@ export default function CraftPanel() {
       <p className="sub">{STATIONS[tab].desc}</p>
       {!placed && <p className="warn">{t("⚠️ Aún no tenéis «{0}». Colócala con 🛋️ Decorar (cuesta recursos) y podréis usar sus recetas.", [STATIONS[tab].label])}</p>}
 
+      {readyNow.length > 0 && <p className="hint">{t("✅ Puedes fabricar ahora: {0}", [readyNow.length])}</p>}
       <div className="grid">
-        {list.map(([id, r]) => {
-          const info = recipeInfo(id), st = recipeStatus(couple, r), ok = placed && st.ok && canAfford(inv, r.in) && jobs.length < CRAFT.slots;
-          const dec = DECOR[Object.keys(r.out)[0]];
-          return (
-            <div key={id} className={`item ${st.ok ? '' : 'locked'}`}>
-              <div className="emoji">{info.emoji}</div>
-              <h3>{info.label} <small>{outText(r)}</small></h3>
-              {info.desc && <p>{info.desc}</p>}
-              {dec && <p className="hint">{t("Se coloca con 🛋️ Decorar")}</p>}
-              <div className="costs">{needChips(r.in, inv)}</div>
-              <small className="hint">⏱️ {fmtDuration(craftDur(couple, r) * 1000)}</small>
-              {st.ok ? (
-                <div className="row">
-                  <button className="btn primary" disabled={!ok} onClick={() => startCraft(id)}>{t("Fabricar")}</button>
-                  {pu && <button className="btn ghost" title={t("Pedírselo a tu pareja")} onClick={() => requestCraft(id)}>🙏</button>}
-                </div>
-              ) : <div className="hint">🔒 {st.why}</div>}
-            </div>
-          );
-        })}
+        {readyNow.map(renderCard)}
       </div>
+      {rest.length > 0 && (
+        <details open={rest.length <= 6} style={{ marginTop: 10 }}>
+          <summary className="hint">{t("Más recetas ({0})", [rest.length])}</summary>
+          <div className="grid">{rest.map(renderCard)}</div>
+        </details>
+      )}
     </Modal>
   );
 }

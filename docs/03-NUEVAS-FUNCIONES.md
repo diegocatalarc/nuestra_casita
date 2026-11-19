@@ -146,3 +146,7 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 - **Pedido grande semanal** (📦 arriba en el Tablón): ~3 ingredientes (2 cultivos de temporada ×6–10 + 1 de huevo/pescado/flor ×4–7). Se entrega entre los dos con botones «Aportar»; al completarse paga monedas (valor×1,8) + 12 💗. Progreso en `couple.orders.w<weekIdx>` (`{<uid>:{item:n}, need, claimed}`).
 - **Bonus diario:** completar los 4 pedidos del día da +50 🪙 +5 💗 (`couple.orders.<día>.bonus`); barra n/4 en el Tablón.
 - **Pistas** junto a lo que falta («🌱 Sembrar…», «🎣 Pescar…», «🍳 Cocinar…»).
+## El Taller entra en el bucle del jugador
+- **Hoy → 🛠️ Taller:** tarjeta que sugiere una receta fabricable con lo que hay en la mochila (`game/today.js`, `craftSuggestion`). Si no hay ninguna, indica la más cercana y el material que falta, o «Nada que fabricar hoy». El botón abre el Taller.
+- **Tutorial:** paso final opcional «Fabrica algo» (resalta 🛠️ Taller del menú Hogar). Se da por hecho al empezar o completar una fabricación propia.
+- **Taller:** arriba una línea «¿Para qué sirve?»; las recetas que se pueden fabricar ahora van primero y el resto, en «Más recetas» (colapsado si hay más de 6). Solo cambia el orden y la presentación.
