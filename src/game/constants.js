@@ -401,6 +401,28 @@ Object.assign(DECOR, {
   d_aquarium: CR(t("Acuario"), '🐠', 1.6, 0.7, [['b', [0, 0.35, 0], [1.5, 0.7, 0.6], '#6a4630'], ['b', [0, 0.95, 0], [1.4, 0.55, 0.5], '#8fe0f0'], ['o', [-0.3, 0.95, 0], [0.09, 1.6, 1, 0.6], '#ff9a3c'], ['o', [0.25, 1.05, 0.05], [0.07, 1.6, 1, 0.6], 'v'], ['o', [0.1, 0.72, 0], [0.12], '#5fae55']], ['#ffd23a', '#f48aa8', '#9fb4ff']),
 });
 for (const [k, d] of Object.entries(CRAFT_DEF)) { if (DECOR[k]) { DECOR[k].parts = d.parts; if (d.colors) DECOR[k].colors = d.colors; } }
+
+/**
+ * «Taller sencillo»: recetas con ids NUEVOS que solo usan recursos crudos (RESOURCES), se hacen en la mesa de trabajo
+ * (sin colocar estaciones), sin nivel de Artesanía y con tiempos cortos (`simple: true` → craftDur no los acorta).
+ * Producen objetos que ya existen (decoración `d_*` o prendas `unlock`), así que no hay ids nuevos en datos guardados.
+ * RECIPES queda intacto (partidas con trabajos en curso y modo Avanzado).
+ */
+const SR = (out, inn, dur, extra = {}) => ({ station: 'bench', simple: true, in: inn, out, dur, ...extra });
+export const SIMPLE_RECIPES = {
+  s_stool: SR({ d_stool: 1 }, { wood: 4 }, 20),
+  s_fence: SR({ d_fence: 2 }, { wood: 5 }, 25),
+  s_shelf: SR({ d_shelf: 1 }, { wood: 8, cloth: 1 }, 40),
+  s_rug: SR({ d_rug2: 1 }, { cloth: 4, flower: 2 }, 45),
+  s_plush: SR({ d_plush: 1 }, { cloth: 5, flower: 1 }, 45),
+  s_lamp: SR({ d_crystal_lamp: 1 }, { crystal: 2, stone: 2 }, 50),
+  s_terrarium: SR({ d_terrarium: 1 }, { crystal: 2, flower: 3, stone: 2 }, 60),
+  s_catears: SR({ unlock: 'hat:4' }, { cloth: 4, flower: 2 }, 40, { label: t("Orejas de gato"), emoji: '🐱', desc: t("Prenda para el Vestidor (cabeza).") }),
+  s_bunnyears: SR({ unlock: 'hat:5' }, { cloth: 4, flower: 2 }, 40, { label: t("Orejas de conejo"), emoji: '🐰', desc: t("Prenda para el Vestidor (cabeza).") }),
+  s_heartglasses: SR({ unlock: 'glasses:3' }, { crystal: 2, cloth: 2 }, 50, { label: t("Gafas de corazón"), emoji: '🕶️', desc: t("Prenda para el Vestidor (gafas).") }),
+};
+/** Todas las recetas (originales + sencillas): para buscar por id, p. ej. en trabajos guardados. */
+export const ALL_RECIPES = { ...RECIPES, ...SIMPLE_RECIPES };
 // Decoración "del corazón": se compra con 💗 (sumidero principal de corazones). Los modelos viven en loveParts.js.
 export const LOVE_ITEMS = [
   { id: 'lovebench', label: t("Banco de dos"), emoji: '💺', w: 1.6, d: 0.6, heartCost: 40 },

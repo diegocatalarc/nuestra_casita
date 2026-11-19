@@ -150,3 +150,9 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 - **Hoy → 🛠️ Taller:** tarjeta que sugiere una receta fabricable con lo que hay en la mochila (`game/today.js`, `craftSuggestion`). Si no hay ninguna, indica la más cercana y el material que falta, o «Nada que fabricar hoy». El botón abre el Taller.
 - **Tutorial:** paso final opcional «Fabrica algo» (resalta 🛠️ Taller del menú Hogar). Se da por hecho al empezar o completar una fabricación propia.
 - **Taller:** arriba una línea «¿Para qué sirve?»; las recetas que se pueden fabricar ahora van primero y el resto, en «Más recetas» (colapsado si hay más de 6). Solo cambia el orden y la presentación.
+
+## Taller sencillo
+- El 🛠️ Taller abre con **10 recetas básicas** (`SIMPLE_RECIPES` en `constants.js`, ids `s_*`): taburete, cerca, estantería, alfombra, peluche, lámpara de cristal, terrario y 3 prendas (orejas de gato, orejas de conejo, gafas de corazón). Solo usan madera, piedra, tela, flores y cristales; se hacen en la mesa de trabajo (sin colocar estaciones), sin nivel de Artesanía y en 20-60 s.
+- Un solo botón grande «Fabricar». Al terminar, el objeto llega **solo a la mochila** (`autoCollectCrafts`, cada segundo, solo los trabajos propios).
+- Estaciones, materiales intermedios, Artesanía y ayuda de la pareja siguen en «Mostrar recetas avanzadas» (apagado por defecto, se recuerda en `nc_craft_adv`). Los trabajos en curso y los objetos ya fabricados no cambian.
+- Hoy → Taller y el último paso del tutorial sugieren recetas sencillas.

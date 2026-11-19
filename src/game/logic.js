@@ -507,5 +507,7 @@ export function recipeStatus(couple, r, albumFn) {
   return { ok: true };
 }
 /** Duración real de una receta (la Artesanía acorta el tiempo) */
-export const craftDur = (couple, r) => Math.max(5, Math.round(r.dur * (1 - 0.04 * (skillLv(couple, 'craft') - 1))));
+export const craftDur = (couple, r) => r.simple ? r.dur : Math.max(5, Math.round(r.dur * (1 - 0.04 * (skillLv(couple, 'craft') - 1))));
+/** ¿Ya tiene la prenda que da esta receta? (las recetas de prenda no se repiten) */
+export const recipeOwned = (couple, r) => { const u = r?.out?.unlock; return !!u && ownsCosmetic(couple, u); };
 export const jobList = (crafts) => Object.values(crafts || {}).filter((j) => j.state === 'work');

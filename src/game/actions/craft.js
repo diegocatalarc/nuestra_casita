@@ -1,7 +1,7 @@
 import { partnerUid } from '../../store/gameStore';
-import { ITEMS, RECIPES, STATIONS, CRAFT, MINE, lockKey } from '../constants';
+import { ITEMS, ALL_RECIPES as RECIPES, STATIONS, CRAFT, MINE, lockKey } from '../constants';
 import { serverNow, fmtDuration } from '../time';
-import { canAfford, newId, stationPlaced, recipeStatus, craftDur, jobList } from '../logic';
+import { canAfford, newId, stationPlaced, recipeStatus, craftDur, jobList, recipeOwned } from '../logic';
 import { me } from '../runtime';
 import { sfx } from '../audio';
 import { t } from '../../i18n';
@@ -20,6 +20,7 @@ export function startCraft(id, fromRequest = null) {
   if (!r) return;
   if (!stationPlaced(s.decor, r.station)) return toast(t("Necesitas colocar «{0}» con 🛋️ Decorar", [STATIONS[r.station].label]));
   if (!recipeStatus(s.couple, r).ok) return toast(t("Receta aún bloqueada"));
+  if (recipeOwned(s.couple, r)) return toast(t("Ya tienes esta prenda"));
   if (jobList(s.crafts).length >= CRAFT.slots) return toast(t("Ya hay {0} trabajos en marcha. Recoge alguno.", [CRAFT.slots]));
   if (!canAfford(s.couple.inventory, r.in)) return toast(t("Faltan materiales"));
   const dur = craftDur(s.couple, r);
@@ -56,6 +57,18 @@ export function collectCraft(jobId) {
   sfx('harvest');
   fx(`${info.emoji} ${msg}`, me.x, me.z);
   toast(t("🛠️ {0} listo: {1}", [info.label, msg]));
+}
+
+/** Taller sencillo: recoge solo los trabajos propios ya terminados (se llama cada segundo desde App). */
+const collecting = new Set();
+export function autoCollectCrafts() {
+  const s = st(), now = serverNow();
+  for (const j of jobList(s.crafts)) {
+    if (!RECIPES[j.recipe]?.simple || j.by !== s.user.uid || now < j.end || collecting.has(j.id)) continue;
+    collecting.add(j.id);
+    setTimeout(() => collecting.delete(j.id), 8000);
+    collectCraft(j.id);
+  }
 }
 
 /** Pide a tu pareja que fabrique algo (aparece en su panel y en el chat) */

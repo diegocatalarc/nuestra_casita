@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useGame, partnerUid } from '../store/gameStore';
-import { RECIPES, STATIONS, CRAFT, ITEMS, DECOR, SKILLS } from '../game/constants';
-import { stationPlaced, recipeStatus, craftDur, jobList, canAfford, skillLv } from '../game/logic';
+import { RECIPES, SIMPLE_RECIPES, ALL_RECIPES, STATIONS, CRAFT, ITEMS, DECOR, SKILLS } from '../game/constants';
+import { stationPlaced, recipeStatus, craftDur, jobList, canAfford, skillLv, recipeOwned } from '../game/logic';
 import { startCraft, assistCraft, collectCraft, requestCraft, cancelRequest, recipeInfo } from '../game/actions';
 import { fmtDuration } from '../game/time';
 import Modal from './Modal';
@@ -10,10 +10,15 @@ import { t } from '../i18n';
 const needChips = (need, inv) => Object.entries(need).map(([k, n]) => <span key={k} className={`chip ${(inv[k] || 0) >= n ? '' : 'lack'}`}>{ITEMS[k]?.emoji} {inv[k] || 0}/{n}</span>);
 const outText = (r) => Object.entries(r.out).map(([k, v]) => (k === 'unlock' ? t("👗 prenda") : k === 'upgrade' ? t("⬆️ mejora") : `${ITEMS[k]?.emoji} ×${v}`)).join(' ');
 
+const ADV_KEY = 'nc_craft_adv';
+const readAdv = () => { try { return localStorage.getItem(ADV_KEY) === '1'; } catch { return false; } };
+
 /** Taller: mesa de trabajo y estaciones, cola de trabajos compartida, ayuda y peticiones. */
 export default function CraftPanel() {
   const tab0 = useGame((s) => s.craftTab) || 'bench';
   const [tab, setTab] = useState(tab0);
+  const [adv, setAdv] = useState(readAdv);
+  const toggleAdv = (v) => { setAdv(v); try { localStorage.setItem(ADV_KEY, v ? '1' : '0'); } catch { /* noop */ } };
   const couple = useGame((s) => s.couple);
   const decor = useGame((s) => s.decor);
   const crafts = useGame((s) => s.crafts);
@@ -33,6 +38,25 @@ export default function CraftPanel() {
     return { id, r, st, can, ok: can && jobs.length < CRAFT.slots };
   }).sort((a, b) => (b.can ? 1 : 0) - (a.can ? 1 : 0));
   const readyNow = cards.filter((c) => c.can), rest = cards.filter((c) => !c.can);
+
+  // Taller sencillo: todas las recetas básicas, las que se pueden hacer ahora primero.
+  const simple = Object.entries(SIMPLE_RECIPES).map(([id, r]) => {
+    const owned = recipeOwned(couple, r), can = !owned && canAfford(inv, r.in);
+    return { id, r, can, owned, ok: can && jobs.length < CRAFT.slots };
+  }).sort((a, b) => (b.can ? 1 : 0) - (a.can ? 1 : 0) || (a.owned ? 1 : 0) - (b.owned ? 1 : 0));
+  const renderSimple = ({ id, r, owned, ok }) => {
+    const info = recipeInfo(id);
+    return (
+      <div key={id} className={`item ${owned ? 'locked' : ''}`}>
+        <div className="emoji">{info.emoji}</div>
+        <h3>{info.label} <small>{outText(r)}</small></h3>
+        <div className="costs">{needChips(r.in, inv)}</div>
+        <small className="hint">⏱️ {fmtDuration(r.dur * 1000)}</small>
+        {owned ? <div className="hint">✅ {t("Ya la tienes")}</div>
+          : <button className="btn primary big" disabled={!ok} onClick={() => startCraft(id)}>{t("Fabricar")}</button>}
+      </div>
+    );
+  };
 
   const renderCard = ({ id, r, st, ok }) => {
     const info = recipeInfo(id), dec = DECOR[Object.keys(r.out)[0]];
@@ -56,8 +80,8 @@ export default function CraftPanel() {
 
   return (
     <Modal title={t("🛠️ Taller")} wide>
-      <p className="sub"><b>{t("¿Para qué sirve?")}</b> {t("Convierte materiales en muebles, ropa y mejoras para el bote, el pico y el anzuelo. Los muebles se colocan luego con 🛋️ Decorar.")}</p>
-      <div className="vitals-line"><span>{SKILLS.craft.emoji} {t("Artesanía nivel {0}", [lv])}</span><span>{t("Trabajos: {0}/{1}", [jobs.length, CRAFT.slots])}</span></div>
+      <p className="sub">{t("Elige algo, toca «Fabricar» y espera. Al terminar llega solo a la mochila. Los muebles se colocan con 🛋️ Decorar y la ropa está en el Vestidor.")}</p>
+      <div className="vitals-line">{adv && <span>{SKILLS.craft.emoji} {t("Artesanía nivel {0}", [lv])}</span>}<span>{t("Trabajos: {0}/{1}", [jobs.length, CRAFT.slots])}</span></div>
 
       {(jobs.length > 0 || requests.length > 0) && (
         <div className="evcard">
@@ -76,7 +100,8 @@ export default function CraftPanel() {
             );
           })}
           {requests.map((q) => {
-            const info = recipeInfo(q.recipe), mine = q.by === uid, r = RECIPES[q.recipe];
+            const info = recipeInfo(q.recipe), mine = q.by === uid, r = ALL_RECIPES[q.recipe];
+            if (!r) return null;
             return (
               <div className="job" key={q.id}>
                 <span className="npc">🙏</span>
@@ -89,6 +114,15 @@ export default function CraftPanel() {
         </div>
       )}
 
+      <div className="grid">{simple.map(renderSimple)}</div>
+
+      <label className="row" style={{ marginTop: 14, gap: 8, cursor: 'pointer' }}>
+        <input type="checkbox" checked={adv} onChange={(e) => toggleAdv(e.target.checked)} style={{ width: 22, height: 22 }} />
+        <span>{t("Mostrar recetas avanzadas")}</span>
+      </label>
+      {adv && (
+        <div style={{ marginTop: 8 }}>
+          <p className="hint">{t("Estaciones, materiales intermedios, nivel de Artesanía y ayuda de tu pareja.")}</p>
       <div className="tabs">
         {Object.entries(STATIONS).map(([id, s]) => <button key={id} className={tab === id ? 'on' : ''} onClick={() => setTab(id)}>{s.emoji} {s.label}</button>)}
       </div>
@@ -104,6 +138,8 @@ export default function CraftPanel() {
           <summary className="hint">{t("Más recetas ({0})", [rest.length])}</summary>
           <div className="grid">{rest.map(renderCard)}</div>
         </details>
+      )}
+        </div>
       )}
     </Modal>
   );
