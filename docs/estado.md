@@ -11,6 +11,9 @@
 - Calidad: 23 tests Vitest pasan, `npm run lint` sin errores (12 avisos de directivas eslint-disable sin uso), build OK, test de humo manual con Playwright OK en la última sesión.
 - `game/actions/` dividido por dominio; datos de exploración en `game/exploreData.js`.
 
+## Pedidos 2.0 (rama feature/pedidos-2)
+Hecho: pedidos de temporada, pedido grande semanal cooperativo, bonus diario con barra n/4 y pistas de origen. Verificado en demo (entrega, aporte, bonus). Pendiente: pasar `env.season` en TodayPanel, entrada en `news.js`, probar con Firebase real el `inc` anidado `orders.w<N>.<uid>.<item>`.
+
 ## A medio hacer / sin verificar
 - **Firebase real nunca probado desde estas sesiones** (auth Google, reglas desplegadas, latencia, RTDB). Solo `localBackend`. **[POR CONFIRMAR si la persona usuaria lo probó por su cuenta con `bri-game`.]**
 - CI de GitHub (`.github/workflows/ci.yml`) escrito pero **no ejecutado**; además el directorio no es un repo git.

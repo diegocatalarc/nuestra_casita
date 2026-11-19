@@ -118,3 +118,8 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 
 ## Ideas descartadas o aplazadas
 - **Aplazadas (el usuario aún no las eligió):** minijuego cooperativo de cocina, aniversarios/cápsula del tiempo, mover/eliminar edificios (decoración sí se puede), notificaciones push con la app cerrada (hoy solo con la pestaña abierta).
+
+## Pedidos 2.0 (pedido semanal)
+- La estación puede cambiar a mitad de semana (`SEASON_MS`), pero el pedido grande se guarda (`orders.w<N>.need`) en el primer aporte para que no cambie bajo los pies de la pareja; mientras nadie aporta se recalcula con la estación actual.
+- El progreso vive en `couple.orders` con clave `w<weekIdx>` (no choca con las claves de día ni activa el paso de tutorial «completa un pedido», que busca un uid como valor directo).
+- `TodayPanel.jsx` (no tocado) sigue llamando `dailyOrders(seed, day)` sin estación: solo cuenta huecos entregados, así que el contador es correcto; conviene pasarle `env.season` y el bonus cuando se integre.

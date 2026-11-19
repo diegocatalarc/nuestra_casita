@@ -140,3 +140,9 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 - **Chat siempre visible:** botón flotante 💬 abajo a la derecha (`ui/ChatFab.jsx`) con contador, punto de conexión de la pareja, vista previa del último mensaje sin leer y atajo **Enter**. Ya no está dentro de un menú.
 - **Menús:** la barra separa herramientas (Mano, Plantar, Construir, Decorar) de menús (Hogar, Pareja, Mundo, Comercio). Cada menú es una lista con una descripción por opción. Ajustes y novedades pasaron al ⚙️ (abajo a la izquierda).
 - **Detalle del mapa sin coste de rendimiento:** textura de grano repetida sobre el terreno (una sola muestra de textura), florecillas silvestres y segunda copa en árboles redondos (instancias), surcos continuos en el huerto y travesaños laterales en la valla.
+
+## Pedidos 2.0
+- **De temporada:** `dailyOrders(seed, day, season)` (season opcional): los cultivos pedidos se pueden sembrar en la estación actual (en invierno: lechuga y champiñón). Sin `season` se comporta como antes.
+- **Pedido grande semanal** (📦 arriba en el Tablón): ~3 ingredientes (2 cultivos de temporada ×6–10 + 1 de huevo/pescado/flor ×4–7). Se entrega entre los dos con botones «Aportar»; al completarse paga monedas (valor×1,8) + 12 💗. Progreso en `couple.orders.w<weekIdx>` (`{<uid>:{item:n}, need, claimed}`).
+- **Bonus diario:** completar los 4 pedidos del día da +50 🪙 +5 💗 (`couple.orders.<día>.bonus`); barra n/4 en el Tablón.
+- **Pistas** junto a lo que falta («🌱 Sembrar…», «🎣 Pescar…», «🍳 Cocinar…»).
