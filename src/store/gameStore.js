@@ -41,7 +41,8 @@ export const useGame = create((set, get) => ({
   away: null, // resumen "mientras no estabas"
   tutorialSkip: false,
   tutorialHl: null,
-  quality: (() => { try { return localStorage.getItem('nc_fx') !== '0'; } catch { return true; } })(),
+  // efectos: en táctil (iPad/móvil) empiezan apagados salvo que la persona los active con ✨
+  quality: (() => { try { const v = localStorage.getItem('nc_fx'); if (v === '0') return false; if (v === '1') return true; return !(window.matchMedia('(pointer: coarse)').matches); } catch { return true; } })(),
 
   set: (patch) => set(patch),
 

@@ -73,6 +73,12 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Elegimos:** pellizco = zoom y giro de dos dedos = girar cámara (listeners de puntero en el canvas, `scene/CameraRig.jsx`); botones en pantalla ＋ － ↺ ↻ (`ui/TouchControls.jsx`, solo en pantallas táctiles); estado de cámara compartido en `game/cameraControl.js`; Abrazar y Saludar pasaron al menú Pareja. Tras un gesto de dos dedos se ignoran 350 ms los toques sueltos para no caminar al soltar.
 - **Probado:** emulación táctil en Chromium (CDP): botón ＋, pellizco, giro; el jugador no se mueve. **[POR CONFIRMAR en un iPad real / Safari]**: rendimiento, gestos y conflicto con los gestos del sistema.
 
+## Fallos de iPad reportados por la persona usuaria (v14)
+- **«Solo me muevo si toco algo, no el suelo» y «no puedo plantar»:** el toque en el suelo se ignoraba mientras `gesture.until` estuviera en el futuro. Se contaban los dedos con eventos de puntero; un `pointerup` perdido dejaba dedos «fantasma» y el gesto quedaba activo hasta 60 s. Los objetos (gallina) no pasaban por esa comprobación, por eso sí respondían. **Arreglo:** eventos `touch` (`e.touches` refleja los dedos reales) y la ventana del gesto caduca sola (≤ 400 ms tras la última actividad). No volver a contar dedos a mano ni usar ventanas largas.
+- **«Mi personaje va muy lento»:** el movimiento usaba `dt = min(dt, 0.05)`: por debajo de 20 fps el juego iba a cámara lenta. Ahora el movimiento usa el tiempo real (hasta 0,5 s) en subpasos de ≤ 50 ms. Además, en pantallas táctiles los efectos (postproceso) empiezan apagados y el `dpr` máximo es 1,5; se activan con ✨.
+- **Mover la cámara por el mapa:** un dedo arrastrando (solo con Mano/Plantar/Pesca, no en Construir/Decorar) o dos dedos; la cámara vuelve sola al caminar y el botón 🎯 la recentra. Estado en `camTarget.px/pz`.
+- **Pruebas:** `tests/e2e/touch.mjs` ahora comprueba toque en el suelo, toque tras un gesto, arrastre y plantar. **[POR CONFIRMAR en iPad real]**.
+
 ## Producto y diseño
 
 ## Cada función nueva lleva aviso en el juego

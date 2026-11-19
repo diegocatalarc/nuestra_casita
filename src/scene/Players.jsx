@@ -73,25 +73,30 @@ function LocalPlayer() {
       if (g.current) { g.current.position.set(me.x, 0, me.z); g.current.rotation.y = me.rot; }
       return;
     }
-    let dx = 0, dz = 0;
-    if (fwd || rgt) {
-      dx = -Math.sin(yaw) * fwd + Math.cos(yaw) * rgt;
-      dz = -Math.cos(yaw) * fwd - Math.sin(yaw) * rgt;
-      me.path = []; me.pending = null;
-    } else if (me.path.length) {
-      const t = me.path[0];
-      const vx = t.x - me.x, vz = t.z - me.z, d = Math.hypot(vx, vz);
-      if (d < 0.12) me.path.shift();
-      else { dx = vx / d; dz = vz / d; }
-    }
-    const len = Math.hypot(dx, dz);
-    me.moving = len > 0.01;
-    if (me.moving) {
+    // El movimiento se calcula con el tiempo real (hasta 250 ms) en pasos de ≤ 50 ms: con pocos fotogramas
+    // por segundo (iPad, móviles) el personaje no se ralentiza, y las colisiones siguen funcionando.
+    const total = Math.min(rawDt, 0.5), nSteps = Math.max(1, Math.ceil(total / 0.05)), h = total / nSteps;
+    me.moving = false;
+    for (let i = 0; i < nSteps; i++) {
+      let dx = 0, dz = 0;
+      if (fwd || rgt) {
+        dx = -Math.sin(yaw) * fwd + Math.cos(yaw) * rgt;
+        dz = -Math.cos(yaw) * fwd - Math.sin(yaw) * rgt;
+        me.path = []; me.pending = null;
+      } else if (me.path.length) {
+        const t = me.path[0];
+        const vx = t.x - me.x, vz = t.z - me.z, d = Math.hypot(vx, vz);
+        if (d < 0.12) me.path.shift();
+        else { dx = vx / d; dz = vz / d; }
+      }
+      const len = Math.hypot(dx, dz);
+      if (len <= 0.01) break;
+      me.moving = true;
       dx /= len; dz /= len;
       const sp = me.boat ? BOAT.speed * boatSpeedMult(useGame.getState().couple) : me.tired ? SPEED * 0.6 : SPEED;
-      const moved = tryMove(me.x + dx * sp * dt, me.z + dz * sp * dt);
-      if (!moved) { me.path = []; me.pending = null; me.moving = false; }
-      else me.rot += angDiff(me.rot, Math.atan2(dx, dz)) * Math.min(1, dt * 14);
+      const moved = tryMove(me.x + dx * sp * h, me.z + dz * sp * h);
+      if (!moved) { me.path = []; me.pending = null; me.moving = false; break; }
+      me.rot += angDiff(me.rot, Math.atan2(dx, dz)) * Math.min(1, h * 14);
     }
     // llegada → ejecutar acción pendiente
     if (!me.path.length && me.pending && !(fwd || rgt)) {

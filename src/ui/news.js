@@ -104,6 +104,12 @@ export const NEWS = [
       { emoji: '📲', text: t("En iPad puedes instalarla en la pantalla de inicio y jugar a pantalla completa (Compartir → Añadir a pantalla de inicio).") },
     ],
   },
+  {
+    v: 14, title: t("Arreglos para iPad y mover la cámara"),
+    items: [
+      { emoji: '🗺️', text: t("Arrastra con un dedo para mover la cámara por el mapa y toca 🎯 para volver a tu personaje. Además, tu personaje ya no se ralentiza en iPad y los toques en el suelo funcionan siempre.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

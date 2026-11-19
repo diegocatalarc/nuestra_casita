@@ -65,6 +65,43 @@ export async function runTouch(browser, url, check) {
   const moved = Math.hypot(s3.x - s2.x, s3.z - s2.z);
   check(moved < 0.01, `el jugador no camina al soltar los gestos (desplazamiento ${moved.toFixed(4)})`);
 
+  // --- Toque en el suelo vacío (regresión: tras un gesto, los toques en el suelo dejaron de funcionar) ---
+  const send = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y], id) => ({ x, y, id })) });
+  const toScreen = (x, z) => page.evaluate(([x, z]) => { const c = window.__cam; const v = c.position.clone().set(x, 0, z).project(c); return [(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight]; }, [x, z]);
+  await page.evaluate(() => { const r = window.__nc.runtime; r.me.x = 17; r.me.z = 22; r.me.path = []; });
+  await page.waitForTimeout(1500);
+  const a0 = await state();
+  await send('touchStart', [await toScreen(a0.x + 4, a0.z + 1)]); await page.waitForTimeout(60); await send('touchEnd', []);
+  await page.waitForTimeout(2500);
+  const a1 = await state();
+  check(Math.hypot(a1.x - a0.x, a1.z - a0.z) > 0.5, 'tocar el suelo vacío mueve al personaje');
+
+  await twoFingers(cdp, pair(100), pair(140)); // un gesto…
+  await page.waitForTimeout(700);
+  const a2 = await state();
+  await send('touchStart', [await toScreen(a2.x - 4, a2.z - 1)]); await page.waitForTimeout(60); await send('touchEnd', []);
+  await page.waitForTimeout(2500);
+  const a3 = await state();
+  check(Math.hypot(a3.x - a2.x, a3.z - a2.z) > 0.5, 'tocar el suelo vuelve a funcionar tras un gesto de dos dedos');
+
+  // --- Arrastrar con un dedo = mover la cámara por el mapa ---
+  await page.evaluate(() => { const r = window.__nc.runtime; r.me.path = []; r.me.pending = null; });
+  await page.waitForTimeout(800);
+  await send('touchStart', [[500, 400]]);
+  for (let k = 1; k <= 8; k++) { await send('touchMove', [[500 - k * 20, 400 + k * 5]]); await page.waitForTimeout(30); }
+  await send('touchEnd', []);
+  await page.waitForTimeout(400);
+  const pan = await page.evaluate(() => ({ px: window.__camTarget.px, pz: window.__camTarget.pz, path: window.__nc.runtime.me.path.length }));
+  check(Math.abs(pan.px) + Math.abs(pan.pz) > 0.8 && pan.path === 0, `arrastrar con un dedo mueve la cámara sin caminar (px ${pan.px.toFixed(2)}, pz ${pan.pz.toFixed(2)})`);
+
+  // --- Plantar tocando la tierra ---
+  await page.evaluate(() => { window.__camTarget.px = 0; window.__camTarget.pz = 0; const r = window.__nc.runtime; r.me.x = 17; r.me.z = 24; window.__nc.useGame.getState().setTool('plant', {}); window.__nc.useGame.setState({ seedSel: 'lettuce' }); });
+  await page.waitForTimeout(2500);
+  await send('touchStart', [await toScreen(14.5, 26.5)]); await page.waitForTimeout(60); await send('touchEnd', []);
+  await page.waitForTimeout(3500);
+  const crops = await page.evaluate(() => Object.keys(window.__nc.useGame.getState().crops).length);
+  check(crops >= 1, `plantar tocando la tierra funciona (cultivos: ${crops})`);
+
   check(errors.length === 0, `sin errores en la sesión táctil (${errors.length})`);
   if (errors.length) console.log(errors.map((e) => `   - ${e}`).join('\n'));
   await ctx.close();

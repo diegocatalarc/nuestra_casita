@@ -47,7 +47,7 @@ export default function GameCanvas() {
     <Canvas
       shadows={{ type: THREE.PCFSoftShadowMap }}
       orthographic
-      dpr={[1, 2]}
+      dpr={typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches ? [1, 1.5] : [1, 2]}
       camera={{ zoom: 46, position: [40, 40, 40], near: 0.1, far: 1000 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       onCreated={({ camera }) => { if (location.search.includes('debug')) window.__cam = camera; }}

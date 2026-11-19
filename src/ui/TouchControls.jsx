@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { keys } from '../game/input';
-import { zoomBy } from '../game/cameraControl';
+import { zoomBy, recenter } from '../game/cameraControl';
 import { t } from '../i18n';
 
 export const isTouchDevice = () => { try { return window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window; } catch { return false; } };
@@ -22,6 +22,7 @@ export default function TouchControls() {
   });
   return (
     <div className="touchctl" aria-label={t("Cámara")}>
+      <button onClick={recenter} aria-label={t("Centrar en mi personaje")}>🎯</button>
       <button onClick={() => zoomBy(1.25)} aria-label={t("Acercar")}>＋</button>
       <button onClick={() => zoomBy(0.8)} aria-label={t("Alejar")}>－</button>
       <button {...hold('KeyQ')} aria-label={t("Girar a la izquierda")}>↺</button>
