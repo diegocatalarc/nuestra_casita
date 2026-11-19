@@ -89,6 +89,13 @@ export const NEWS = [
       { emoji: '💞', text: t("Nueva decoración del corazón en 🛋️ Decorar: banco de dos, arco de flores, farolillos, árbol de los deseos, fuente del hogar y estatua de pareja. Se pagan con 💗 (al quitarlos se devuelve la mitad).") },
     ],
   },
+  {
+    v: 12, title: t("Hoy y un tutorial más completo"),
+    items: [
+      { emoji: '☀️', text: t("Nuevo botón ☀️ Hoy: misiones, meta semanal, pedidos y evento del día en un solo sitio, con botones para ir a cada uno.") },
+      { emoji: '🎓', text: t("El tutorial ahora también enseña el Mercado, los pedidos, la pesca, comer y para qué sirven los corazones.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

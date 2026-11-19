@@ -49,13 +49,13 @@ Leyenda: ✅ mantener · 🔀 fusionar/ocultar hasta que haga falta · ✂️ re
 | # | Propuesta | Por qué | Decidido |
 |---|---|---|---|
 | 1 | ✅ **Hecho (v10)** ➕ **Controles táctiles** (pellizco para zoom, dos dedos para girar, botones Abrazo/Saludo/Rotar) | El iPad no puede rotar ni acercar | |
-| 2 | ➕ **Panel "Hoy"** (misión del día, meta semanal, pedidos, evento) | Un solo sitio para "¿qué hago?" | |
-| 3 | ➕ Tutorial ampliado y opcional: pedidos/mercado, pesca, para qué sirven los 💗 y comer/dormir | Son los sistemas que sostienen la economía | |
+| 2 | ➕ **Panel "Hoy"** (misión del día, meta semanal, pedidos, evento) | Un solo sitio para "¿qué hago?" | ✅ Hecho (v12); el chip de meta semanal se retiró del HUD |
+| 3 | ➕ Tutorial ampliado y opcional: pedidos/mercado, pesca, para qué sirven los 💗 y comer/dormir | Son los sistemas que sostienen la economía | ✅ Hecho: 11 pasos |
 | 4 | 🔀 Dar uso real a los 💗 (opción b) o mostrarlos como progreso (opción a) | No se pueden gastar tras pocos días | ✅ Hecho (b): decoración del corazón, 6 objetos, 770 💗 en total y repetibles |
 | 5 | 🔀 Fusionar **Explorar + Mapa** en un solo menú | Mismo tema, dos entradas | ✅ Hecho: el mapa se abre desde Explorar |
 | 6 | 🔀 Fusionar **Eventos + Citas** en una pestaña de "Planes juntos" | Se solapan | ⏸ Descartado de momento: Eventos (mundo) y Citas (pareja) viven en menús distintos |
 | 7 | 🔀 Ocultar **Terreno** hasta que haya algo que comprar (sureste) | Hoy casi no tiene función | |
-| 8 | 🔀 Reducir los chips: mostrar solo el más importante y agrupar el resto | Saturación visual, sobre todo en iPad | |
+| 8 | 🔀 Reducir los chips: mostrar solo el más importante y agrupar el resto | Saturación visual, sobre todo en iPad | ✅ Parcial: sin chip de meta semanal (está en Hoy) |
 | 9 | ✂️ Valorar **habilidades y mejoras** si nadie las usa | Bonos pequeños y escondidos en Mercado | |
 | 10 | ✂️ Valorar **Familia** si no la habéis tocado | Cara, tardía y solo para quien llega a 150 💗 | |
 | 11 | ✂️ Valorar que **comer/dormir** deje de ser obligatorio (solo bonificación) | No queda claro el castigo | |

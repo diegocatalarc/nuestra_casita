@@ -1,5 +1,9 @@
 // Traducciones: decoración del corazón
 export default {
+  "Hoy": "Today",
+  "Hoy y un tutorial más completo": "Today and a fuller tutorial",
+  "Nuevo botón ☀️ Hoy: misiones, meta semanal, pedidos y evento del día en un solo sitio, con botones para ir a cada uno.": "New ☀️ Today button: missions, weekly goal, orders and today's event in one place, with buttons to jump to each.",
+  "El tutorial ahora también enseña el Mercado, los pedidos, la pesca, comer y para qué sirven los corazones.": "The tutorial now also teaches the Market, orders, fishing, eating and what hearts are for.",
   "Mapa, excavar, mina, vecinos y mascotas": "Map, dig, mine, neighbours and pets",
   "Banco de dos": "Bench for two",
   "Arco de flores": "Flower arch",

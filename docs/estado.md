@@ -38,7 +38,7 @@
 - No hay otros secretos en `src/`.
 
 ## Próximos pasos (por prioridad)
-0. **Auditoría de sistemas** (`docs/auditoria-sistemas.md`): decidir la tabla de recortes. Hecho: controles táctiles (v10). En curso en ramas auxiliares: panel «Hoy» (`feature/panel-hoy`) y tutorial ampliado (`feature/tutorial-ampliado`).
+0. **Auditoría de sistemas** (`docs/auditoria-sistemas.md`): decidir la tabla de recortes. Hecho: controles táctiles (v10). Hecho también: panel «Hoy» (v12), tutorial ampliado (11 pasos), corazones con sumidero real (decoración del corazón, v11) y Mapa dentro de Explorar. En curso: pulido de modelos `feature/pulir-love-parts`.
 1. **Inicializar/recuperar el repo git** y dejar CI funcionando (rama `main` protegida, trabajo en `feature/*`).
 2. **Probar con Firebase real** (dos cuentas, dos dispositivos) y desplegar reglas; anotar fallos aquí.
 3. **Reglas de Firestore con validación de campos** (rangos de `coins`/`hearts`, tamaños) y/o Cloud Functions para recompensas.

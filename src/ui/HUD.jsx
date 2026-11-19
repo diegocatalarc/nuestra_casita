@@ -27,6 +27,7 @@ import CraftPanel from './CraftPanel';
 import MapPanel from './MapPanel';
 import ChatFab from './ChatFab';
 import TouchControls, { isTouchDevice } from './TouchControls';
+import TodayPanel from './TodayPanel';
 import { jobList } from '../game/logic';
 import { respondDate, dateCondition } from '../game/actions';
 import { warmth } from '../game/logic';
@@ -307,7 +308,6 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
           <span>{WEATHER_EMOJI[env.weather]} {WEATHER_LABEL[env.weather]}</span>
         </div>
         <PartnerChip />
-        <GoalChip />
         <EventChip />
         <DateChip />
         <GiftChip />
@@ -344,6 +344,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
         {tb('build', '🔨', t("Construir"), () => { setMenu(null); open('build')(); }, tool === 'build' || panel === 'build')}
         {tb('decor', '🛋️', t("Decorar"), () => { setMenu(null); open('decor')(); }, tool === 'decor' || panel === 'decor')}
         <span className="tb-sep" />
+        {tb('today', '☀️', t("Hoy"), open('today'), panel === 'today')}
         {GROUPS.map((g) => {
           const ids = g.items.map((i) => i[0]);
           const badge = g.items.reduce((n, [id]) => n + (id === 'mail' ? unread : 0) + (isNewTab(id) ? 1 : 0), 0);
@@ -374,6 +375,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       {panel === 'mine' && <MinePanel />}
       {panel === 'craft' && <CraftPanel />}
       {panel === 'map' && <MapPanel />}
+      {panel === 'today' && <TodayPanel />}
       <GiftFoundModal />
       <NewsModal />
       {chatOpen && <ChatPanel />}

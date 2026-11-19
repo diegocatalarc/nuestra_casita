@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { me } from '../game/runtime';
 import { SPAWN } from '../game/constants';
+import { isTouchDevice } from './TouchControls';
 import { t } from '../i18n';
 
 /** Pasos del tutorial. `done` se calcula del estado del mundo: no escribe nada. */
 const STEPS = [
-  { id: 'move', hl: null, title: t("Muévete"), text: t("Usa WASD o haz clic en el suelo para caminar. Q/E giran la cámara y la rueda hace zoom."), done: (s, ctx) => ctx.moved },
+  { id: 'move', hl: null, title: t("Muévete"), text: isTouchDevice() ? t("Toca el suelo para caminar. Pellizca para acercar o alejar, y gira dos dedos para mover la cámara.") : t("Usa WASD o haz clic en el suelo para caminar. Q/E giran la cámara y la rueda hace zoom."), done: (s, ctx) => ctx.moved },
   { id: 'plant', hl: 'plant', title: t("Siembra algo"), text: t("Pulsa 🌱 Plantar, elige una semilla y haz clic en la tierra marrón del huerto."), done: (s) => Object.values(s.crops).some((c) => c.by === s.user.uid) },
   { id: 'water', hl: 'hand', title: t("Riega tu cultivo"), text: t("Vuelve a ✋ Mano y haz clic en la planta para regarla. ¡Ganas corazones!"), done: (s) => Object.values(s.crops).some((c) => c.wateredAt) },
   { id: 'gather', hl: 'hand', title: t("Recoge recursos"), text: t("Haz clic en un árbol o una roca: tu personaje irá solo y los recogerá."), done: (s) => Object.keys(s.nodes).length > 0 },
@@ -17,7 +18,7 @@ const STEPS = [
   { id: 'order', hl: 'orders', title: t("Completa un pedido"), text: t("Entrega lo que piden los vecinos en 📋 Pedidos (Comercio): da 🪙 y 💗."), done: (s) => Object.values(s.couple?.orders || {}).some((day) => Object.values(day || {}).includes(s.user.uid)) },
   { id: 'fish', hl: 'fish', title: t("Pesca un pez"), text: t("En 🎣 Pescar (Mundo) pesca en el agua. Cada especie queda anotada en el diario."), done: (s) => Object.keys(s.couple?.fishLog || {}).length > 0 },
   { id: 'eat', hl: 'food', title: t("Come algo"), text: t("Come en 🍽️ Comer (Hogar). Con hambre, la ⚡ energía se gasta el doble; con poca, andas más lento."), done: (s) => !!s.couple?.players?.[s.user.uid]?.lastEatAt },
-  { id: 'hearts', hl: null, title: t("Tus 💗 corazones"), text: t("Se ganan con casi todo y se gastan en animales e hijos. Al llegar a 50 💗 se desbloquean más animales."), done: (s) => (s.couple?.heartsTotal || 0) >= 50 },
+  { id: 'hearts', hl: null, title: t("Tus 💗 corazones"), text: t("Se ganan con casi todo y se gastan en decoración del corazón, animales e hijos. Al llegar a 50 💗 se desbloquean más animales."), done: (s) => (s.couple?.heartsTotal || 0) >= 50 },
 ];
 export const currentTutorialStep = (s, moved) => STEPS.find((st) => !st.done(s, { moved }));
 
