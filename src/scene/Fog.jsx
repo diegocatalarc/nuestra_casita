@@ -94,7 +94,7 @@ export default function Fog() {
   const mats = useMemo(() => layers.map((l) => new THREE.ShaderMaterial({
     uniforms: { uMask: { value: mask }, uNoise: { value: noise }, uTime: { value: 0 }, uMap: { value: MAP }, uH: { value: l.h }, uSeed: { value: l.seed }, uAlpha: { value: l.alpha }, uNight: { value: 0 }, uF: { value: new THREE.Vector3(0, -1, 0) } },
     vertexShader: VERT, fragmentShader: FRAG, transparent: true, depthWrite: false,
-  })), [quality]); // eslint-disable-line
+  })), [quality]);
   const fwd = useMemo(() => new THREE.Vector3(), []);
   const grp = useRef();
 

@@ -28,7 +28,7 @@ export default function Tutorial() {
   }, []);
   useEffect(() => { if (!s.tutorialSkip) return; setSkip(false); }, [s.tutorialSkip]);
 
-  const step = useMemo(() => currentTutorialStep(s, moved), [s.crops, s.nodes, s.buildings, s.questLog, moved]); // eslint-disable-line
+  const step = useMemo(() => currentTutorialStep(s, moved), [s.crops, s.nodes, s.buildings, s.questLog, moved]);
   const idx = step ? STEPS.indexOf(step) : STEPS.length;
   useEffect(() => { useGame.setState({ tutorialHl: skip ? null : step?.hl || null }); }, [step, skip]);
   useEffect(() => { if (!step && !skip && !closing.current) { closing.current = true; setTimeout(() => { try { localStorage.setItem(`nc_tut_${uid}`, '1'); } catch { /* noop */ } setSkip(true); }, 6000); } }, [step, skip, uid]);

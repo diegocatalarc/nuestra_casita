@@ -30,7 +30,7 @@ export default function CatchGame({ fest, onDone }) {
     }, 520);
     const setScoreAndFinish = () => setScore((sc) => { setTimeout(() => onDone(sc), 0); return sc; });
     return () => { clearInterval(tick); clearInterval(spawn); };
-  }, [started]); // eslint-disable-line
+  }, [started]);
 
   const hit = (it) => {
     setItems((l) => l.filter((i) => i.id !== it.id));
