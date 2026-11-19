@@ -1,0 +1,11 @@
+/* Panel "Hoy": tarjetas cortas, botones grandes para el dedo (iPad) */
+.today { display: flex; flex-direction: column; gap: 12px; }
+.today .t-card { background: #fff; border: 2px solid var(--line); border-radius: var(--r); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.today .t-card.ok { background: #f3fbea; border-color: #b9e08f; }
+.today .t-card.hot { background: #fff8e1; border-color: #f2c94c; }
+.today .t-top { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.today .t-top b { font-size: 16px; }
+.today .t-do { margin: 0; font-size: 15px; }
+.today .t-state { margin: 0; font-size: 13px; color: var(--ink-l); }
+.today .t-go { min-height: 48px; font-size: 16px; width: 100%; }
+.today .t-none { text-align: center; color: var(--ink-l); padding: 8px; }
