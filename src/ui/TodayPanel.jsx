@@ -1,20 +1,21 @@
 import { useGame, partnerUid } from '../store/gameStore';
 import { dailyQuests, weeklyGoals, weekKey, dailyOrders, eventsFor, dayUTC } from '../game/logic';
 import { dateKey } from '../game/time';
-import { questsStatus, currentGoal, ordersStatus, todayEvent } from '../game/today';
+import { questsStatus, currentGoal, ordersStatus, todayEvent, craftSuggestion, recipeName } from '../game/today';
+import { ITEMS } from '../game/constants';
 import Modal from './Modal';
 import { t } from '../i18n';
 import './today.css';
 
 const open = (panel) => useGame.getState().set({ panel });
 
-function Card({ icon, title, doText, state, to, label, cls = '' }) {
+function Card({ icon, title, doText, state, to, label, cls = '', go }) {
   return (
     <div className={`t-card ${cls}`}>
       <div className="t-top"><b>{icon} {title}</b></div>
       <p className="t-do">{doText}</p>
       {state && <p className="t-state">{state}</p>}
-      {to && <button className="btn primary t-go" onClick={() => open(to)}>{label}</button>}
+      {(to || go) && <button className="btn primary t-go" onClick={go || (() => open(to))}>{label}</button>}
     </div>
   );
 }
@@ -27,6 +28,7 @@ export default function TodayPanel() {
   const questLog = useGame((s) => s.questLog);
   const now = useGame((s) => s.now);
   const env = useGame((s) => s.env);
+  const decor = useGame((s) => s.decor);
   const players = couple.players || {};
   const partner = (other && players[other]?.name) || t("Tu pareja");
   const day = dayUTC(now);
@@ -61,6 +63,23 @@ export default function TodayPanel() {
       state={t("{0}/{1} entregados", [o.done, o.total])} />
   );
 
+  // 3b) Taller: una receta fabricable con la mochila, o la más cercana (y lo que falta)
+  const sug = craftSuggestion(couple, decor);
+  const goCraft = () => useGame.getState().set({ panel: 'craft', craftTab: 'bench' });
+  const craft = (() => {
+    if (sug.kind === 'ready') {
+      const r = recipeName(sug.id);
+      return { icon: '🛠️', title: t("Taller"), cls: 'hot', doText: t("Hoy podéis fabricar: {0}. ¡Ya tenéis los materiales!", [`${r.emoji} ${r.label}`]), state: null, label: t("Ir al Taller") };
+    }
+    if (sug.kind === 'close') {
+      const r = recipeName(sug.id);
+      const lack = sug.lack.map((x) => `${x.short} ${ITEMS[x.key]?.emoji || ''} ${ITEMS[x.key]?.label || x.key}`).join(' · ');
+      return { icon: '🛠️', title: t("Taller"), cls: '', doText: t("Lo más cercano: {0}.", [`${r.emoji} ${r.label}`]), state: t("Te faltan: {0}", [lack]), label: t("Ir al Taller") };
+    }
+    return { icon: '🛠️', title: t("Taller"), cls: '', doText: t("Nada que fabricar hoy"), state: t("Consigue materiales (cultivos, pesca, recolección) y vuelve a mirar."), label: t("Ir al Taller") };
+  })();
+  const workshop = <Card icon={craft.icon} title={craft.title} go={goCraft} label={craft.label} doText={craft.doText} state={craft.state} cls={craft.cls} />;
+
   // 4) Evento de hoy
   const e = todayEvent(eventsFor(couple.seed, now, env.season), env.hour, couple.events?.[day]?.wish?.[uid]);
   let ev = null;
@@ -75,6 +94,7 @@ export default function TodayPanel() {
         {quests}
         {goal}
         {orders}
+        {workshop}
         {ev ? <Card icon={ev.icon} title={ev.title} to="events" label={ev.label} doText={ev.doText} state={ev.state} cls={ev.cls} />
           : <div className="t-card"><div className="t-top"><b>🎪 {t("Evento de hoy")}</b></div><p className="t-none">{t("Nada hoy")}</p></div>}
       </div>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { questsStatus, currentGoal, ordersStatus, todayEvent } from '../src/game/today';
+import { questsStatus, currentGoal, ordersStatus, todayEvent, craftSuggestion } from '../src/game/today';
 
 describe('today', () => {
   const quests = [{ id: 'a', title: 'A' }, { id: 'b', title: 'B' }, { id: 'c', title: 'C' }];
@@ -28,5 +28,29 @@ describe('today', () => {
     expect(todayEvent({ festival: null, meteor: true, visitor: { emoji: 'V', name: 'N' } }, 22, false)).toMatchObject({ kind: 'meteor', night: true });
     expect(todayEvent({ festival: null, meteor: false, visitor: { emoji: 'V', name: 'N' } }, 12, false)).toMatchObject({ kind: 'visitor', open: true });
     expect(todayEvent({ festival: null, meteor: false, visitor: null }, 12, false)).toBeNull();
+  });
+  it('craftSuggestion: receta fabricable con la mochila, si no la más cercana, si no nada', () => {
+    const recipes = {
+      plank: { station: 'bench', in: { wood: 3 }, out: { plank: 2 } },
+      brick: { station: 'bench', in: { clay: 3, stone: 1 }, out: { brick: 2 } },
+      locked: { station: 'bench', in: { wood: 1 }, out: { x: 1 }, unlock: { lv: 9 } },
+      carp: { station: 'carpentry', in: { wood: 1 }, out: { y: 1 } },
+    };
+    // Con 3 madera se puede fabricar la tabla
+    expect(craftSuggestion({ inventory: { wood: 3 } }, {}, recipes)).toEqual({ kind: 'ready', id: 'plank' });
+    // Sin nada: la más cercana (ladrillo, faltan 3 arcilla y 1 piedra = 4; tabla faltan 3) → tabla
+    expect(craftSuggestion({ inventory: { wood: 1 } }, {}, recipes)).toEqual({ kind: 'close', id: 'plank', lack: [{ key: 'wood', need: 3, have: 1, short: 2 }] });
+    // Ladrillo más cercano que la tabla si tiene casi todo
+    const near = craftSuggestion({ inventory: { clay: 3 } }, {}, recipes);
+    expect(near).toMatchObject({ kind: 'close', id: 'brick' });
+    expect(near.lack).toEqual([{ key: 'stone', need: 1, have: 0, short: 1 }]);
+    // Sin inventario ni recetas posibles: nada
+    expect(craftSuggestion({}, {}, { locked: recipes.locked })).toEqual({ kind: 'none' });
+    expect(craftSuggestion(null, null, {})).toEqual({ kind: 'none' });
+  });
+  it('craftSuggestion ignora estaciones sin colocar', () => {
+    const recipes = { carp: { station: 'carpentry', in: { wood: 1 }, out: { y: 1 } } };
+    expect(craftSuggestion({ inventory: { wood: 5 } }, {}, recipes)).toEqual({ kind: 'none' });
+    expect(craftSuggestion({ inventory: { wood: 5 } }, { a: { type: 'st_carpentry' } }, recipes)).toEqual({ kind: 'ready', id: 'carp' });
   });
 });

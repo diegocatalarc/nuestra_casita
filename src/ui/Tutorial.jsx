@@ -19,6 +19,8 @@ const STEPS = [
   { id: 'fish', hl: 'fish', title: t("Pesca un pez"), text: t("En 🎣 Pescar (Mundo) pesca en el agua. Cada especie queda anotada en el diario."), done: (s) => Object.keys(s.couple?.fishLog || {}).length > 0 },
   { id: 'eat', hl: 'food', title: t("Come algo"), text: t("Come en 🍽️ Comer (Hogar). Con hambre, la ⚡ energía se gasta el doble; con poca, andas más lento."), done: (s) => !!s.couple?.players?.[s.user.uid]?.lastEatAt },
   { id: 'hearts', hl: null, title: t("Tus 💗 corazones"), text: t("Se ganan con casi todo y se gastan en decoración del corazón, animales e hijos. Al llegar a 50 💗 se desbloquean más animales."), done: (s) => (s.couple?.heartsTotal || 0) >= 50 },
+  // Paso final opcional: el Taller (crafteo) no se explicaba en ningún sitio. Se completa al fabricar (o empezar a fabricar) algo.
+  { id: 'craft', hl: 'craft', title: t("Fabrica algo"), text: t("En 🏡 Hogar → 🛠️ Taller fabrica algo con tus materiales: muebles, ropa y mejoras para el bote, el pico y el anzuelo."), done: (s) => Object.values(s.couple?.stats || {}).some((w) => (w?.craft || 0) > 0) || Object.values(s.crafts || {}).some((j) => j.by === s.user.uid) },
 ];
 export const currentTutorialStep = (s, moved) => STEPS.find((st) => !st.done(s, { moved }));
 
@@ -35,7 +37,7 @@ export default function Tutorial() {
   }, []);
   useEffect(() => { if (!s.tutorialSkip) return; setSkip(false); }, [s.tutorialSkip]);
 
-  const step = useMemo(() => currentTutorialStep(s, moved), [s.crops, s.nodes, s.buildings, s.questLog, s.couple, moved]);
+  const step = useMemo(() => currentTutorialStep(s, moved), [s.crops, s.nodes, s.buildings, s.questLog, s.couple, s.crafts, moved]);
   const idx = step ? STEPS.indexOf(step) : STEPS.length;
   useEffect(() => { useGame.setState({ tutorialHl: skip ? null : step?.hl || null }); }, [step, skip]);
   useEffect(() => { if (!step && !skip && !closing.current) { closing.current = true; setTimeout(() => { try { localStorage.setItem(`nc_tut_${uid}`, '1'); } catch { /* noop */ } setSkip(true); }, 6000); } }, [step, skip, uid]);

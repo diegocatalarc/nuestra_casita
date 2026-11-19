@@ -5,7 +5,7 @@ import { currentTutorialStep } from '../src/ui/Tutorial';
 const ME = 'me';
 const baseState = () => ({
   user: { uid: ME },
-  crops: {}, nodes: {}, buildings: {}, questLog: {},
+  crops: {}, nodes: {}, buildings: {}, questLog: {}, crafts: {},
   couple: { players: { [ME]: {} }, stats: {}, orders: {}, fishLog: {}, heartsTotal: 0 },
 });
 
@@ -21,8 +21,9 @@ const PROGRESS = {
   fish: (s) => { s.couple.fishLog = { carp: 1 }; },
   eat: (s) => { s.couple.players[ME].lastEatAt = 123; },
   hearts: (s) => { s.couple.heartsTotal = 50; },
+  craft: (s) => { s.couple.stats = { ...s.couple.stats, '2026-W47': { craft: 1 } }; },
 };
-const ORDER = ['move', 'plant', 'water', 'gather', 'build', 'quest', 'sell', 'order', 'fish', 'eat', 'hearts'];
+const ORDER = ['move', 'plant', 'water', 'gather', 'build', 'quest', 'sell', 'order', 'fish', 'eat', 'hearts', 'craft'];
 
 describe('currentTutorialStep', () => {
   it('empieza en "move" y pasa a "plant" cuando la persona se ha movido', () => {
@@ -38,7 +39,10 @@ describe('currentTutorialStep', () => {
       PROGRESS[ORDER[i]](s);
       expect(currentTutorialStep(s, true).id).toBe(ORDER[i + 1]);
     }
+    // El paso "Fabrica algo" es el último y opcional: al completarlo ya no hay pasos.
     PROGRESS.hearts(s);
+    expect(currentTutorialStep(s, true).id).toBe('craft');
+    PROGRESS.craft(s);
     expect(currentTutorialStep(s, true)).toBeUndefined();
   });
 
@@ -53,5 +57,16 @@ describe('currentTutorialStep', () => {
     expect(currentTutorialStep(s, true).id).toBe('order');
     s.couple.orders = { 20261119: { 1: 'partner' } };
     expect(currentTutorialStep(s, true).id).toBe('order');
+  });
+});
+
+describe('paso "Fabrica algo"', () => {
+  const ready = () => { const s = baseState(); for (const id of ORDER.slice(1, -1)) PROGRESS[id](s); return s; };
+  it('se da por hecho al empezar una fabricación propia, no con la de la pareja', () => {
+    const s = ready();
+    s.crafts = { k1: { by: 'partner', state: 'work' } };
+    expect(currentTutorialStep(s, true).id).toBe('craft');
+    s.crafts = { k1: { by: ME, state: 'work' } };
+    expect(currentTutorialStep(s, true)).toBeUndefined();
   });
 });
