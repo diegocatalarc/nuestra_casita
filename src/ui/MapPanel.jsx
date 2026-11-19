@@ -39,7 +39,7 @@ export default function MapPanel() {
     const dot = (x, z, col) => { g.beginPath(); g.arc(x * PX, z * PX, 5, 0, 7); g.fillStyle = '#fff'; g.fill(); g.beginPath(); g.arc(x * PX, z * PX, 3.4, 0, 7); g.fillStyle = col; g.fill(); };
     for (const o of Object.values(others)) if (o.online) dot(o.x, o.z, '#4a90e2');
     dot(me.x, me.z, '#e8527a');
-  }, [world, buildings, now, found, list.length, fog.ver]); // eslint-disable-line
+  }, [world, buildings, now, found, list.length, fog.ver]);
 
   return (
     <Modal title={t("🗺️ Mapa del mundo")} wide>

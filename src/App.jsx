@@ -119,7 +119,7 @@ function Game() {
     return () => clearInterval(id);
   }, []);
 
-  useEffect(() => { if (myEntry) dailyLogin(); }, [!!myEntry]); // eslint-disable-line
+  useEffect(() => { if (myEntry) dailyLogin(); }, [!!myEntry]);
 
   // --- "Mientras no estabas": se calcula una vez, con todo cargado ---
   const loaded = useGame((s) => s.loaded);
@@ -158,7 +158,7 @@ function Game() {
         sfx('pop');
       }
     }
-  }, [mailbox, loaded.mailbox]); // eslint-disable-line
+  }, [mailbox, loaded.mailbox]);
 
   // --- eventos del día: un aviso por día y persona ---
   useEffect(() => {
@@ -169,14 +169,14 @@ function Game() {
     try { localStorage.setItem('nc_evday', ev.day); } catch { /* noop */ }
     const msg = ev.festival ? t("🎪 ¡Hoy es el {0}! Abre 🎪 Eventos para jugar.", [ev.festival.name]) : ev.visitor ? t("{0} {1} ha llegado a la plaza con un regalo.", [ev.visitor.emoji, ev.visitor.name]) : t("🌠 Esta noche hay lluvia de estrellas. ¡Pedid un deseo!");
     setTimeout(() => { useGame.getState().toast(msg); notify(t("🎪 Hoy en la casita"), msg); }, 2500);
-  }, [!!couple?.seed]); // eslint-disable-line
+  }, [!!couple?.seed]);
 
   // --- citas: invitación de tu pareja ---
   const dateKeyNow = couple?.date ? `${couple.date.by}${couple.date.at}${couple.date.state}` : '';
   useEffect(() => {
     const d = couple?.date;
     if (d && d.by !== user.uid && d.state === 'invited') { useGame.getState().toast(t("💞 {0} te invita a una cita", [useGame.getState().partner.name])); sfx('love'); notify(t("💞 Invitación a una cita"), t("Tu pareja quiere pasar un rato contigo")); }
-  }, [dateKeyNow]); // eslint-disable-line
+  }, [dateKeyNow]);
 
   // --- regalos: tu pareja encontró el que escondiste ---
   const gifts = useGame((s) => s.gifts);
@@ -186,7 +186,7 @@ function Game() {
     const found = new Set(Object.values(gifts).filter((g) => g.from === user.uid && g.foundBy).map((g) => g.id));
     if (knownGifts.current === null) { knownGifts.current = found; return; }
     for (const id of found) if (!knownGifts.current.has(id)) { knownGifts.current.add(id); useGame.getState().toast(t("🎁 ¡{0} ha encontrado tu regalo!", [useGame.getState().partner.name])); sfx('love'); notify(t("🎁 Regalo encontrado"), t("Tu pareja ha encontrado tu regalo escondido")); }
-  }, [gifts, loaded.gifts]); // eslint-disable-line
+  }, [gifts, loaded.gifts]);
 
   // --- taller: avisa cuando termina un trabajo tuyo ---
   const notifiedJobs = useRef(new Set());
@@ -223,13 +223,13 @@ function Game() {
         notify(t("💬 {0}", [who]), m.text.slice(0, 80));
       }
     }
-  }, [chat, loaded.chat]); // eslint-disable-line
+  }, [chat, loaded.chat]);
   useEffect(() => {
     const letters = Object.values(mailbox).filter((m) => m.to === user.uid && !m.readAt).length;
     const msgs = Object.values(chat).filter((m) => m.from !== user.uid && m.at > chatSeen).length;
     const n = letters + msgs;
     document.title = n ? t("({0}) Nuestra Casita", [n]) : t("Nuestra Casita");
-  }, [mailbox, chat, chatSeen]); // eslint-disable-line
+  }, [mailbox, chat, chatSeen]);
 
   // --- tu pareja llega ---
   const pOnline = useGame((s) => s.partner.online);
@@ -238,13 +238,13 @@ function Game() {
   useEffect(() => {
     if (wasOnline.current === false && pOnline) { useGame.getState().toast(t("💗 {0} está en la casita", [pName])); notify(t("💗 Tu pareja está en línea"), `${pName} acaba de entrar a la casita`); }
     wasOnline.current = pOnline;
-  }, [pOnline]); // eslint-disable-line
+  }, [pOnline]);
 
   // Propuesta de bebé de la pareja
   const plan = couple?.family?.plan;
   useEffect(() => {
     if (plan && plan.by !== user.uid) { useGame.getState().toast(t("💌 Tu pareja quiere que tengáis un bebé. Abre Familia para responder.")); notify(t("💌 Propuesta"), t("Tu pareja quiere que tengáis un bebé")); }
-  }, [plan?.at]); // eslint-disable-line
+  }, [plan?.at]);
 
   // Abrazo: ambas personas reaccionan cuando cambia couple.lastHug
   useEffect(() => {
