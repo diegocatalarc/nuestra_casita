@@ -54,7 +54,7 @@ export default function TodayPanel() {
   );
 
   // 3) Pedidos
-  const o = ordersStatus(dailyOrders(couple.seed, day), couple.orders?.[day]);
+  const o = ordersStatus(dailyOrders(couple.seed, day, env.season), couple.orders?.[day]);
   const orders = (
     <Card icon="📋" title={t("Pedidos del tablón")} to="orders"
       cls={o.all ? 'ok' : ''}

@@ -96,6 +96,14 @@ export const NEWS = [
       { emoji: '🎓', text: t("El tutorial ahora también enseña el Mercado, los pedidos, la pesca, comer y para qué sirven los corazones.") },
     ],
   },
+  {
+    v: 13, title: t("Pedidos más vivos y la casita en tu iPad"),
+    items: [
+      { emoji: '📦', text: t("Pedidos de temporada, un pedido grande cada semana que entregáis entre los dos, un bonus por completar los 4 del día y pistas de dónde conseguir lo que falta.") },
+      { emoji: '🛠️', text: t("El Taller te sugiere en ☀️ Hoy qué puedes fabricar ahora, y el panel pone primero lo que ya puedes hacer.") },
+      { emoji: '📲', text: t("En iPad puedes instalarla en la pantalla de inicio y jugar a pantalla completa (Compartir → Añadir a pantalla de inicio).") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 
