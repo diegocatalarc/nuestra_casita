@@ -311,3 +311,56 @@ h2 { margin: 0 0 6px; } h3 { margin: 0; }
 .touchctl { position: absolute; right: 14px; top: 46%; transform: translateY(-50%); z-index: 12; display: flex; flex-direction: column; gap: 8px; }
 .touchctl button { width: 52px; height: 52px; border-radius: 50%; border: 2px solid #fff; background: var(--paper); box-shadow: var(--shadow); font-size: 24px; font-weight: 800; color: var(--ink); touch-action: none; -webkit-user-select: none; user-select: none; opacity: .92; }
 .touchctl button:active { background: var(--peach); transform: scale(.94); }
+
+/* ======================================================================
+   iPad / PWA — áreas seguras, sin rebote ni selección (ver docs/ipad.md).
+   Bloque añadido al final: no cambia el aspecto en escritorio (los insets valen 0 allí).
+   ====================================================================== */
+html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+html, body, #root { height: 100vh; height: 100dvh; }
+.game { height: 100vh; height: 100dvh; }
+.game, .game canvas, .hud, .toolbar, .touchctl, .chatfab-wrap, .signout { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.game canvas { touch-action: none; }
+.toolbar, .tb, .mrow, .chatfab, .touchctl button { touch-action: manipulation; }
+input, textarea, .chatdock, .modal-body, .menu-list { -webkit-user-select: text; user-select: text; }
+.modal-body, .menu-list, .screen, .chatdock .msgs { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+.hud .top-left { top: calc(12px + env(safe-area-inset-top, 0px)); left: calc(12px + env(safe-area-inset-left, 0px)); }
+.top-right { top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); }
+.toolbar { bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: calc(100vw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)); }
+.menu-pop { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+.touchctl { right: calc(14px + env(safe-area-inset-right, 0px)); }
+.chatfab-wrap { right: calc(14px + env(safe-area-inset-right, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+.chatdock { right: calc(12px + env(safe-area-inset-right, 0px)); bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
+.signout { left: calc(12px + env(safe-area-inset-left, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+.signout.sound { left: calc(58px + env(safe-area-inset-left, 0px)); }
+.signout.fxbtn { left: calc(104px + env(safe-area-inset-left, 0px)); }
+.signout.gear { left: calc(150px + env(safe-area-inset-left, 0px)); }
+.screen { padding: calc(16px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) calc(16px + env(safe-area-inset-left, 0px)); }
+.modal { max-height: calc(100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
+
+@media (max-width: 700px) {
+  .chatfab-wrap { right: calc(10px + env(safe-area-inset-right, 0px)); bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  .chatdock { right: calc(10px + env(safe-area-inset-right, 0px)); bottom: calc(146px + env(safe-area-inset-bottom, 0px)); }
+  .signout, .signout.sound, .signout.fxbtn, .signout.gear { left: auto; right: calc(10px + env(safe-area-inset-right, 0px)); bottom: auto; }
+  .signout { top: calc(196px + env(safe-area-inset-top, 0px)); } .signout.sound { top: calc(234px + env(safe-area-inset-top, 0px)); }
+  .signout.fxbtn { top: calc(272px + env(safe-area-inset-top, 0px)); } .signout.gear { top: calc(310px + env(safe-area-inset-top, 0px)); }
+}
+
+.tutorial { left: calc(12px + env(safe-area-inset-left, 0px)); bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+
+/* iPad (puntero táctil, >700 px): los botones redondos pasan a una fila bajo los recursos (arriba a la
+   derecha), porque abajo solapaban la barra y el chat. */
+@media (pointer: coarse) and (min-width: 701px) {
+  .signout, .signout.sound, .signout.fxbtn, .signout.gear { left: auto; bottom: auto; width: 34px; height: 34px; font-size: 15px; top: calc(176px + env(safe-area-inset-top, 0px)); }
+  .signout { right: calc(10px + env(safe-area-inset-right, 0px)); }
+  .signout.sound { right: calc(50px + env(safe-area-inset-right, 0px)); }
+  .signout.fxbtn { right: calc(90px + env(safe-area-inset-right, 0px)); }
+  .signout.gear { right: calc(130px + env(safe-area-inset-right, 0px)); }
+  .chatdock { height: min(430px, calc(100dvh - 350px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))); }
+}
+/* iPad en vertical: la barra casi ocupa el ancho y el botón del chat la tapaba; se alinea a la izquierda dejándole sitio. */
+@media (pointer: coarse) and (min-width: 701px) and (orientation: portrait) {
+  .toolbar { left: calc(12px + env(safe-area-inset-left, 0px)); transform: none; gap: 2px; max-width: calc(100vw - 100px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)); overflow-x: auto; scrollbar-width: none; }
+  .toolbar::-webkit-scrollbar { display: none; }
+}
