@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Icono de Nuestra Casita: casita con corazón. Contenido dentro del 66 % central (zona segura maskable). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe8cf"/>
+      <stop offset="0.6" stop-color="#fbd0c4"/>
+      <stop offset="1" stop-color="#e6b8d0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- cuerpo -->
+  <rect x="150" y="238" width="212" height="148" rx="14" fill="#fffaf2"/>
+  <!-- tejado -->
+  <path d="M120 250 L256 128 L392 250 Z" fill="#d9697f" stroke="#d9697f" stroke-width="16" stroke-linejoin="round"/>
+  <!-- chimenea -->
+  <rect x="318" y="140" width="32" height="64" rx="6" fill="#8c7666"/>
+  <!-- puerta -->
+  <rect x="226" y="304" width="60" height="82" rx="30 30 6 6" fill="#9ec58a"/>
+  <circle cx="274" cy="348" r="4.5" fill="#fffaf2"/>
+  <!-- corazón -->
+  <path d="M256 250 C256 250 226 232 226 212 C226 198 238 190 248 192 C252 193 255 195 256 198 C257 195 260 193 264 192 C274 190 286 198 286 212 C286 232 256 250 256 250 Z" fill="#fffaf2"/>
+  <!-- suelo -->
+  <rect x="130" y="384" width="252" height="14" rx="7" fill="#6a9d5a"/>
+</svg>
