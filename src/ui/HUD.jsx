@@ -26,6 +26,7 @@ import MinePanel from './MinePanel';
 import CraftPanel from './CraftPanel';
 import MapPanel from './MapPanel';
 import ChatFab from './ChatFab';
+import TouchControls, { isTouchDevice } from './TouchControls';
 import { jobList } from '../game/logic';
 import { respondDate, dateCondition } from '../game/actions';
 import { warmth } from '../game/logic';
@@ -39,7 +40,7 @@ import Tutorial from './Tutorial';
 import AwayModal from './AwayModal';
 import { weeklyGoals, weekKey } from '../game/logic';
 import { goalProgress } from '../game/actions';
-import { goSleep, wake, reelIn, cancelFish, leaveBoat, rotateDecor, recolorDecor, startMoveDecor, deleteSelectedDecor } from '../game/actions';
+import { hug, wave, goSleep, wake, reelIn, cancelFish, leaveBoat, rotateDecor, recolorDecor, startMoveDecor, deleteSelectedDecor } from '../game/actions';
 import { vitals } from '../game/logic';
 import { t } from '../i18n';
 
@@ -278,6 +279,8 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       ['avatar', '👗', t("Vestidor"), open('avatar'), panel === 'avatar', t("Cambia tu aspecto")],
     ] },
     { id: 'love', icon: '💞', short: t("Pareja"), label: t("💞 Pareja"), items: [
+      ['hug', '🤗', t("Abrazar"), hug, false, t("Si estáis cerca, +3 💗 (cada 30 min)")],
+      ['wave', '👋', t("Saludar"), wave, false, t("Dile hola a tu pareja")],
       ['quests', '💌', t("Misiones"), open('quests'), panel === 'quests', t("Preguntas y retos del día")],
       ['mail', '📬', t("Buzón"), open('mailbox'), panel === 'mailbox', t("Cartas para vuestra pareja")],
       ['dates', '💞', t("Citas"), open('dates'), panel === 'dates', t("Planes para hacer juntos")],
@@ -322,7 +325,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
 
       <ModeBar />
       <Toast />
-      {hint && <div className="helper">{t("WASD o clic para moverte · Q/E girar cámara · rueda: zoom · clic en árboles, rocas y cultivos para actuar")}</div>}
+      {hint && <div className="helper">{isTouchDevice() ? t("Toca el suelo para moverte · pellizca para el zoom · gira dos dedos para la cámara · toca árboles, rocas y cultivos para actuar") : t("WASD o clic para moverte · Q/E girar cámara · rueda: zoom · clic en árboles, rocas y cultivos para actuar")}</div>}
 
       {menu && <div className="menu-catch" onClick={() => setMenu(null)} />}
       {menu && (() => { const g = GROUPS.find((x) => x.id === menu); return (
@@ -376,6 +379,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       <NewsModal />
       {chatOpen && <ChatPanel />}
       <ChatFab />
+      <TouchControls />
       <button className="signout gear" onClick={open('help')} title={t("Ajustes y ayuda")}>⚙️</button>
       <ActionBar />
       {panel === 'help' && <HelpPanel onSignOut={onSignOut} onSwitchHouse={onSwitchHouse} />}

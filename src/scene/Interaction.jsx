@@ -1,3 +1,4 @@
+import { gestureActive } from '../game/cameraControl';
 import { useEffect } from 'react';
 import { Html } from '@react-three/drei';
 import { useGame } from '../store/gameStore';
@@ -65,6 +66,7 @@ export default function Interaction() {
   };
 
   const onClick = (e) => {
+    if (gestureActive()) return; // fin de un pellizco o giro con dos dedos: no es un toque
     const g = useGame.getState();
     const tx = Math.floor(e.point.x), tz = Math.floor(e.point.z);
     if (tx < 0 || tz < 0 || tx >= MAP || tz >= MAP) return;

@@ -68,6 +68,11 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Textura de grano del terreno:** con `anisotropy = 4` costaba ≈ +20 % de tiempo por imagen en la prueba con swiftshader; con `anisotropy = 1` el coste desaparece en la medición (ruido ≈ ±5 %). **No volver a subir la anisotropía sin medir** (`?nofog` y `bench` en una sesión de pruebas; el script de medición no está en el repo).
 - Todo lo añadido usa instancias o una textura; no se añadieron mallas sueltas.
 
+## Controles táctiles (iPad)
+- **Problema:** una de las dos personas juega en iPad sin teclado; la cámara solo giraba con Q/E y hacía zoom con la rueda (ver `docs/auditoria-sistemas.md`).
+- **Elegimos:** pellizco = zoom y giro de dos dedos = girar cámara (listeners de puntero en el canvas, `scene/CameraRig.jsx`); botones en pantalla ＋ － ↺ ↻ (`ui/TouchControls.jsx`, solo en pantallas táctiles); estado de cámara compartido en `game/cameraControl.js`; Abrazar y Saludar pasaron al menú Pareja. Tras un gesto de dos dedos se ignoran 350 ms los toques sueltos para no caminar al soltar.
+- **Probado:** emulación táctil en Chromium (CDP): botón ＋, pellizco, giro; el jugador no se mueve. **[POR CONFIRMAR en un iPad real / Safari]**: rendimiento, gestos y conflicto con los gestos del sistema.
+
 ## Producto y diseño
 
 ## Cada función nueva lleva aviso en el juego

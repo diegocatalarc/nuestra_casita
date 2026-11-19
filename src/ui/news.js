@@ -76,6 +76,13 @@ export const NEWS = [
       { emoji: '🌿', text: t("Más detalle en el mapa: hierba con textura, florecillas silvestres, árboles con copas más ricas, surcos continuos en el huerto y valla completa.") },
     ],
   },
+  {
+    v: 10, title: t("Controles táctiles y más acciones en el menú"),
+    items: [
+      { emoji: '👆', text: t("En iPad y pantallas táctiles: pellizca para acercar o alejar, gira dos dedos para mover la cámara, o usa los botones ＋ － ↺ ↻ a la derecha.") },
+      { emoji: '🤗', text: t("Abrazar y Saludar ya están en el menú 💞 Pareja, sin necesidad de teclado.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 
