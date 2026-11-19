@@ -123,3 +123,10 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - La estación puede cambiar a mitad de semana (`SEASON_MS`), pero el pedido grande se guarda (`orders.w<N>.need`) en el primer aporte para que no cambie bajo los pies de la pareja; mientras nadie aporta se recalcula con la estación actual.
 - El progreso vive en `couple.orders` con clave `w<weekIdx>` (no choca con las claves de día ni activa el paso de tutorial «completa un pedido», que busca un uid como valor directo).
 - `TodayPanel.jsx` (no tocado) sigue llamando `dailyOrders(seed, day)` sin estación: solo cuenta huecos entregados, así que el contador es correcto; conviene pasarle `env.season` y el bonus cuando se integre.
+
+## Taller sencillo (crafteo demasiado complejo)
+- **Problema (usuario):** el crafteo (estaciones + cadenas de materiales + nivel + esperas) era tan complejo que no se usaba.
+- **Elegimos:** `SIMPLE_RECIPES` aparte (ids `s_*`, `simple: true`) que producen objetos/prendas ya existentes con recursos crudos, y `ALL_RECIPES` para resolver trabajos guardados. `RECIPES` queda intacto; `craftDur` no acorta las `simple`. Las prendas ya conseguidas se marcan «Ya la tienes».
+- **Recogida:** `autoCollectCrafts` (tick de 1 s) solo recoge trabajos `simple` propios; un `Set` evita doble cobro durante la latencia (misma carrera que en «Cosechar muchas veces»).
+- **Descartamos:** mutar `RECIPES` (rompería el test de datos originales y la vista avanzada) y recetas con friend/lv (la progresión se saltaría).
+- **Balance [POR CONFIRMAR]:** orejas de gato/conejo y gafas de corazón también se compran con monedas (120-150 🪙); ahora hay vía alternativa barata en materiales.

@@ -66,3 +66,7 @@ Cada una: acotada, bajo riesgo, criterio de "listo" comprobable.
 
 ## No delegar (requiere criterio o permiso)
 Cambios en `worldGen.js`, reglas de Firebase, esquema de datos, balance de economía, claves de i18n existentes.
+
+## Taller sencillo (rama feature/crafteo-simple)
+- Hecho: 10 recetas básicas por defecto, recogida automática, modo Avanzado plegado, Hoy y tutorial actualizados, tests/craft-simple.test.js, en-crafteo-simple.js. Probado en navegador (demo): taburete de principio a fin, trabajo antiguo (Tablón) con Recoger, interruptor avanzado.
+- Falta: aviso en Novedades (`news.js`, lo toca el chat principal); probar en iPad real; decidir balance de las prendas.

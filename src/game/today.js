@@ -1,6 +1,6 @@
 // Funciones puras del panel "Hoy" (sin React ni red): resumen de lo que hay por hacer.
-import { RECIPES, ITEMS } from './constants';
-import { recipeStatus, canAfford, stationPlaced } from './logic';
+import { SIMPLE_RECIPES, ALL_RECIPES, ITEMS } from './constants';
+import { recipeStatus, canAfford, stationPlaced, recipeOwned } from './logic';
 
 /** Estado de las misiones de pareja de hoy.
  *  log: questLog (clave `${fecha}_${idMisión}` → { answers: { uid: … } }). */
@@ -51,9 +51,9 @@ export function todayEvent(ev, hour, wished) {
 /** Taller de hoy: una receta fabricable con la mochila; si no hay ninguna, la más cercana y lo que falta.
  *  Solo cuentan las recetas de estaciones ya colocadas y desbloqueadas. Devuelve { kind: 'ready'|'close'|'none', id?, lack? }.
  *  lack: [{ key, need, have, short }] ordenado por lo que más falta. */
-export function craftSuggestion(couple, decor, recipes = RECIPES) {
+export function craftSuggestion(couple, decor, recipes = SIMPLE_RECIPES) {
   const inv = couple?.inventory || {};
-  const usable = Object.entries(recipes).filter(([, r]) => stationPlaced(decor, r.station) && recipeStatus(couple, r).ok);
+  const usable = Object.entries(recipes).filter(([, r]) => stationPlaced(decor, r.station) && recipeStatus(couple, r).ok && !recipeOwned(couple, r));
   const ready = usable.find(([, r]) => canAfford(inv, r.in));
   if (ready) return { kind: 'ready', id: ready[0] };
   let best = null;
@@ -69,7 +69,7 @@ export function craftSuggestion(couple, decor, recipes = RECIPES) {
 }
 
 /** Nombre y emoji de una receta (mismo criterio que recipeInfo de game/actions). */
-export function recipeName(id, recipes = RECIPES) {
+export function recipeName(id, recipes = ALL_RECIPES) {
   const r = recipes[id];
   const k = Object.keys(r.out)[0];
   return { label: r.label || ITEMS[k]?.label || id, emoji: r.emoji || ITEMS[k]?.emoji || '🛠️' };

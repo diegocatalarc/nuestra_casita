@@ -4,7 +4,7 @@ import { loadBackend, getBackend, CLOUD_CONFIGURED } from './services/backend';
 import { generateWorld, zoneKey } from './game/worldGen';
 import { computeEnv, serverNow } from './game/time';
 import { resetFog } from './game/fog';
-import { exploreTick, recipeInfo, datesTick, checkGifts, ensureHouse, dailyLogin, rainWater, checkStars, checkBirth, autoFeedAnimals, checkSleepTogether, vitalsNotices } from './game/actions';
+import { exploreTick, autoCollectCrafts, recipeInfo, datesTick, checkGifts, ensureHouse, dailyLogin, rainWater, checkStars, checkBirth, autoFeedAnimals, checkSleepTogether, vitalsNotices } from './game/actions';
 import { me, others, doAnim } from './game/runtime';
 import { startAudio, updateAudio, toggleMute, isMuted, sfx } from './game/audio';
 import { notify } from './game/notify';
@@ -111,7 +111,7 @@ function Game() {
       const old = s.partner;
       const changed = old.uid !== partner.uid || old.name !== partner.name || old.online !== partner.online || old.lastSeen !== partner.lastSeen;
       useGame.setState({ env, now, ...(changed ? { partner } : {}) });
-      exploreTick(); datesTick(); checkGifts(); rainWater(); checkStars(); ensureHouse(); checkBirth(); autoFeedAnimals(); checkSleepTogether(); vitalsNotices();
+      exploreTick(); autoCollectCrafts(); datesTick(); checkGifts(); rainWater(); checkStars(); ensureHouse(); checkBirth(); autoFeedAnimals(); checkSleepTogether(); vitalsNotices();
       updateAudio(L, me.x, me.z);
     };
     tick();

@@ -20,7 +20,7 @@ const STEPS = [
   { id: 'eat', hl: 'food', title: t("Come algo"), text: t("Come en 🍽️ Comer (Hogar). Con hambre, la ⚡ energía se gasta el doble; con poca, andas más lento."), done: (s) => !!s.couple?.players?.[s.user.uid]?.lastEatAt },
   { id: 'hearts', hl: null, title: t("Tus 💗 corazones"), text: t("Se ganan con casi todo y se gastan en decoración del corazón, animales e hijos. Al llegar a 50 💗 se desbloquean más animales."), done: (s) => (s.couple?.heartsTotal || 0) >= 50 },
   // Paso final opcional: el Taller (crafteo) no se explicaba en ningún sitio. Se completa al fabricar (o empezar a fabricar) algo.
-  { id: 'craft', hl: 'craft', title: t("Fabrica algo"), text: t("En 🏡 Hogar → 🛠️ Taller fabrica algo con tus materiales: muebles, ropa y mejoras para el bote, el pico y el anzuelo."), done: (s) => Object.values(s.couple?.stats || {}).some((w) => (w?.craft || 0) > 0) || Object.values(s.crafts || {}).some((j) => j.by === s.user.uid) },
+  { id: 'craft', hl: 'craft', title: t("Fabrica algo"), text: t("Abre 🏡 Hogar → 🛠️ Taller y toca «Fabricar» en algo sencillo, como un taburete. Llega solo a tu mochila."), done: (s) => Object.values(s.couple?.stats || {}).some((w) => (w?.craft || 0) > 0) || Object.values(s.crafts || {}).some((j) => j.by === s.user.uid) },
 ];
 export const currentTutorialStep = (s, moved) => STEPS.find((st) => !st.done(s, { moved }));
 
