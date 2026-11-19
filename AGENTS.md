@@ -75,4 +75,4 @@ Lectura obligada antes de tocar nada grande: `docs/02-ARQUITECTURA.md` (esquema 
 3. Al terminar cada sesión, **actualizar `docs/estado.md`** (qué se hizo, qué queda, bugs nuevos) y, si hubo una decisión no obvia o un intento fallido, añadirlo a `docs/decisiones.md`.
 4. No hacer commit/push/PR sin que la persona responsable lo pida.
 5. Despliegue manual: `npm run build` y subir `dist/` (o el zip de `dist`) a Netlify **[POR CONFIRMAR: sitio y proceso exactos]**; Firebase Hosting está configurado en `firebase.json` pero no sé cuál es el destino real.
-> **Nota:** a fecha de este documento el directorio **no es un repositorio git** (no hay `.git`). Hay que inicializarlo o clonarlo antes de seguir el flujo de ramas. **[POR CONFIRMAR: dónde está el repo remoto]**
+> **Nota:** el repo git se inicializó localmente (rama de trabajo `feature/fuente-y-niebla`, `main` sin commits). **[POR CONFIRMAR: dónde está el repo remoto]**
