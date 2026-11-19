@@ -287,8 +287,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       ['mem', '🖼️', t("Recuerdos"), open('memories'), panel === 'memories', t("Vuestra sala de fotos y notas")],
     ] },
     { id: 'world', icon: '🌍', short: t("Mundo"), label: t("🌍 Mundo"), items: [
-      ['explore', '🧭', t("Explorar"), () => G().set({ panel: panel === 'explore' ? null : 'explore', exploreTab: null, neighborFocus: null }), panel === 'explore', t("Excavar, mina, vecinos y mascotas")],
-      ['map', '🗺️', t("Mapa"), open('map'), panel === 'map', t("Lo descubierto y los lugares por encontrar")],
+      ['explore', '🧭', t("Explorar"), () => G().set({ panel: panel === 'explore' ? null : 'explore', exploreTab: null, neighborFocus: null }), panel === 'explore' || panel === 'map', t("Mapa, excavar, mina, vecinos y mascotas")],
       ['fish', '🎣', t("Pescar"), open('fishing'), tool === 'fish' || panel === 'fishing', t("Caña, bote y diario de peces")],
       ['land', '📐', t("Terreno"), open('land'), panel === 'land', t("Ampliar la parcela y arar")],
       ['events', '🎪', t("Eventos"), open('events'), panel === 'events', t("Festivales y visitantes")],

@@ -1,5 +1,6 @@
 // Traducciones: decoración del corazón
 export default {
+  "Mapa, excavar, mina, vecinos y mascotas": "Map, dig, mine, neighbours and pets",
   "Banco de dos": "Bench for two",
   "Arco de flores": "Flower arch",
   "Farolillos": "Little lanterns",

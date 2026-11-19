@@ -48,12 +48,12 @@ Dependencias: casi todo alimenta a **🪙** (Mercado, pedidos, descubrimientos) 
 Leyenda: ✅ mantener · 🔀 fusionar/ocultar hasta que haga falta · ✂️ recortar · ➕ añadir. Marcad en la columna "Decidido".
 | # | Propuesta | Por qué | Decidido |
 |---|---|---|---|
-| 1 | ➕ **Controles táctiles** (pellizco para zoom, dos dedos para girar, botones Abrazo/Saludo/Rotar) | El iPad no puede rotar ni acercar | |
+| 1 | ✅ **Hecho (v10)** ➕ **Controles táctiles** (pellizco para zoom, dos dedos para girar, botones Abrazo/Saludo/Rotar) | El iPad no puede rotar ni acercar | |
 | 2 | ➕ **Panel "Hoy"** (misión del día, meta semanal, pedidos, evento) | Un solo sitio para "¿qué hago?" | |
 | 3 | ➕ Tutorial ampliado y opcional: pedidos/mercado, pesca, para qué sirven los 💗 y comer/dormir | Son los sistemas que sostienen la economía | |
-| 4 | 🔀 Dar uso real a los 💗 (opción b) o mostrarlos como progreso (opción a) | No se pueden gastar tras pocos días | |
-| 5 | 🔀 Fusionar **Explorar + Mapa** en un solo menú | Mismo tema, dos entradas | |
-| 6 | 🔀 Fusionar **Eventos + Citas** en una pestaña de "Planes juntos" | Se solapan | |
+| 4 | 🔀 Dar uso real a los 💗 (opción b) o mostrarlos como progreso (opción a) | No se pueden gastar tras pocos días | ✅ Hecho (b): decoración del corazón, 6 objetos, 770 💗 en total y repetibles |
+| 5 | 🔀 Fusionar **Explorar + Mapa** en un solo menú | Mismo tema, dos entradas | ✅ Hecho: el mapa se abre desde Explorar |
+| 6 | 🔀 Fusionar **Eventos + Citas** en una pestaña de "Planes juntos" | Se solapan | ⏸ Descartado de momento: Eventos (mundo) y Citas (pareja) viven en menús distintos |
 | 7 | 🔀 Ocultar **Terreno** hasta que haya algo que comprar (sureste) | Hoy casi no tiene función | |
 | 8 | 🔀 Reducir los chips: mostrar solo el más importante y agrupar el resto | Saturación visual, sobre todo en iPad | |
 | 9 | ✂️ Valorar **habilidades y mejoras** si nadie las usa | Bonos pequeños y escondidos en Mercado | |
