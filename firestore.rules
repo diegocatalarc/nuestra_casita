@@ -6,6 +6,44 @@ service cloud.firestore {
     function couplePath(cid) { return /databases/$(database)/documents/couples/$(cid); }
     function isMember(cid) { return signedIn() && request.auth.uid in get(couplePath(cid)).data.members; }
 
+    // ---- Validaciones del documento raíz de la pareja (ver docs/seguridad.md) ----
+    // Topes por ESCRITURA (generosos: venta de todo el inventario, premios de cofre/álbum, etc.).
+    // No impiden hacer trampas poco a poco, solo las del tipo "1.000.000 de golpe".
+    function maxCoinsUp() { return 100000; }
+    function maxHeartsUp() { return 500; }
+
+    // Campo numérico entero >= 0 que sube como mucho `maxUp` (y, si `monotonic`, nunca baja).
+    function counterOk(field, maxUp, monotonic) {
+      let before = resource.data.get(field, 0);
+      let after = request.resource.data.get(field, 0);
+      return after is int && after >= 0
+        && after - before <= maxUp
+        && (!monotonic || after >= before);
+    }
+    function economyOk() {
+      let ch = request.resource.data.diff(resource.data).affectedKeys();
+      return (!ch.hasAny(['coins']) || counterOk('coins', maxCoinsUp(), false))
+        && (!ch.hasAny(['hearts']) || counterOk('hearts', maxHeartsUp(), false))
+        && (!ch.hasAny(['heartsTotal']) || counterOk('heartsTotal', maxHeartsUp(), true));
+    }
+    // Cada persona solo toca su propia entrada de `players` (también al irse: deleteField).
+    function playersOk() {
+      let ch = request.resource.data.diff(resource.data).affectedKeys();
+      return !ch.hasAny(['players'])
+        || request.resource.data.players.diff(resource.data.players).affectedKeys().hasOnly([request.auth.uid]);
+    }
+    // members solo cambia si la propia persona se va (nadie expulsa ni añade desde dentro).
+    function membersOk() {
+      let m0 = resource.data.members;
+      let m1 = request.resource.data.members;
+      return m1 == m0
+        || (m1.size() == m0.size() - 1 && !(request.auth.uid in m1) && m1.hasOnly(m0));
+    }
+    function immutableOk() {
+      return !request.resource.data.diff(resource.data).affectedKeys()
+        .hasAny(['seed', 'startedAt', 'inviteCode']);
+    }
+
     // Perfil mínimo del usuario: solo apunta a su casita.
     match /users/{uid} {
       allow read, write: if signedIn() && request.auth.uid == uid;
@@ -20,30 +58,75 @@ service cloud.firestore {
     }
 
     match /couples/{cid} {
-      // Crear: la persona creadora es el único miembro.
+      // Crear: la persona creadora es el único miembro y arranca con valores razonables.
       allow create: if signedIn()
         && request.resource.data.members.size() == 1
-        && request.resource.data.members[0] == request.auth.uid;
+        && request.resource.data.members[0] == request.auth.uid
+        && request.resource.data.get('coins', 0) is int && request.resource.data.get('coins', 0) >= 0 && request.resource.data.get('coins', 0) <= 1000
+        && request.resource.data.get('hearts', 0) is int && request.resource.data.get('hearts', 0) >= 0 && request.resource.data.get('hearts', 0) <= 100
+        && request.resource.data.get('heartsTotal', 0) is int && request.resource.data.get('heartsTotal', 0) >= 0 && request.resource.data.get('heartsTotal', 0) <= 100
+        && (!('players' in request.resource.data) || request.resource.data.players.keys().hasOnly([request.auth.uid]));
 
       allow read: if signedIn() && request.auth.uid in resource.data.members;
 
-      // Unirse: solo si hay 1 miembro y quien llega se añade (solo cambian members/players).
       allow update: if signedIn() && (
-        request.auth.uid in resource.data.members
+        // Miembros: economía acotada, solo su entrada de players, campos fijos inmutables.
+        (
+          request.auth.uid in resource.data.members
+          && economyOk() && playersOk() && membersOk() && immutableOk()
+        )
+        // Unirse: solo si hay 1 miembro y quien llega se añade (solo cambian members/players, solo su entrada).
         || (
           resource.data.members.size() == 1
           && request.resource.data.members.size() == 2
           && request.resource.data.members.hasAll(resource.data.members)
           && request.auth.uid in request.resource.data.members
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members', 'players'])
+          && request.resource.data.players.diff(resource.data.players).affectedKeys().hasOnly([request.auth.uid])
         )
       );
 
       allow delete: if false;
 
       // Todo el estado del mundo vive en subcolecciones, accesibles solo para los dos miembros.
+      // OJO: en Firestore las reglas de varios `match` se suman con OR, así que las comprobaciones
+      // por colección van DENTRO de este comodín (un `match /chat/...` aparte no restringiría nada).
+      // Las colecciones nuevas siguen funcionando: solo se exigen `by`/`from` honestos si el cliente los escribe.
       match /{collection}/{docId} {
-        allow read, write: if isMember(cid);
+        function honestAuthor(d) {
+          return d.get('by', request.auth.uid) == request.auth.uid
+            && d.get('from', request.auth.uid) == request.auth.uid;
+        }
+        function textMax(d, field, max) {
+          return !(field in d) || d[field] == null || (d[field] is string && d[field].size() <= max);
+        }
+
+        allow read: if isMember(cid);
+
+        allow create: if isMember(cid) && honestAuthor(request.resource.data)
+          && (collection != 'chat' || (request.resource.data.from == request.auth.uid
+                && request.resource.data.text is string && request.resource.data.text.size() <= 400))
+          && (collection != 'mailbox' || (request.resource.data.from == request.auth.uid
+                && textMax(request.resource.data, 'text', 800)))
+          && (collection != 'gifts' || (request.resource.data.from == request.auth.uid
+                && textMax(request.resource.data, 'note', 140) && textMax(request.resource.data, 'hint', 80)));
+
+        allow update: if isMember(cid)
+          && (collection != 'chat')  // el juego nunca edita mensajes
+          && (collection != 'mailbox'
+                // leer una carta: solo `readAt` y solo quien la recibe
+                || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readAt'])
+                    && resource.data.to == request.auth.uid))
+          && (collection != 'gifts'
+                // encontrar un regalo: solo foundBy/foundAt, no el tuyo, y que no estuviera ya encontrado
+                || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['foundBy', 'foundAt'])
+                    && request.resource.data.foundBy == request.auth.uid
+                    && resource.data.from != request.auth.uid
+                    && resource.data.get('foundBy', null) == null));
+
+        allow delete: if isMember(cid)
+          && (collection != 'chat')
+          && (collection != 'gifts' || resource.data.from == request.auth.uid);
       }
     }
   }

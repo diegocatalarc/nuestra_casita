@@ -10,7 +10,8 @@
     "test": "vitest run",
     "lint": "eslint src",
     "smoke": "node tests/e2e/smoke.mjs",
-    "bench": "node tests/e2e/bench.mjs"
+    "bench": "node tests/e2e/bench.mjs",
+    "test:rules": "npx --yes firebase-tools@13 emulators:exec --only firestore --project demo-nuestra-casita \"node --test tests/rules/firestore.rules.test.mjs\""
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",
@@ -24,6 +25,7 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
     "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^9.39.5",
     "playwright": "^1.63.0",
