@@ -149,6 +149,8 @@ export function sfx(kind, vol = 1) {
     case 'reel': burst(t, 0.2, 0.06 * v, 'bandpass', 1500, 2); break;
     case 'catch': burst(t, 0.3, 0.12 * v, 'bandpass', 1100, 0.7); [523, 659, 784].forEach((f, i) => tone(f, t + 0.12 + i * 0.1, 0.22, 0.06 * v, 'triangle')); break;
     case 'splash': burst(t, 0.3, 0.11 * v, 'bandpass', 700, 0.7); tone(220, t, 0.2, 0.04 * v, 'sine', 90); break;
+    // campana de la plaza: dos golpes con armónico
+    case 'bell': [0, 0.9].forEach((d) => { tone(1046, t + d, 2.2, 0.07 * v, 'sine'); tone(2093, t + d, 1.1, 0.025 * v, 'sine'); }); break;
     default: break;
   }
 }

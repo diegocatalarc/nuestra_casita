@@ -222,14 +222,20 @@ function pose(anim, t) {
     case 'water': p.armR = -1.3; p.armL = -0.2; p.lean = 0.2 + Math.sin(t * 8) * 0.06; break;
     case 'harvest': case 'dig': p.lean = 0.5 + Math.sin(t * 9) * 0.15; p.armL = -1.0; p.armR = -1.0; break;
     case 'build': p.armR = -1.7 + Math.sin(t * 14) * 0.9; p.armL = -0.4; p.squash = Math.sin(t * 14) * 0.03; break;
-    case 'sleep': p.lie = 1; p.armL = 0.15; p.armR = -0.15; p.bob = Math.sin(t * 1.4) * 0.012; break;
+    case 'emo_sleep': case 'sleep': p.lie = 1; p.armL = 0.15; p.armR = -0.15; p.bob = Math.sin(t * 1.4) * 0.012; break;
     case 'eat': p.armR = -2.0 + Math.sin(t * 9) * 0.3; p.armL = -0.5; p.lean = 0.1; p.bob = Math.abs(Math.sin(t * 9)) * 0.015; break;
     case 'fish': p.armR = -1.35; p.armL = -1.15; p.lean = -0.05 + Math.sin(t * 2) * 0.02; p.bob = Math.sin(t * 1.6) * 0.01; break;
     case 'reel': p.armR = -1.5 + Math.sin(t * 16) * 0.4; p.armL = -1.2; p.lean = -0.18; p.squash = Math.sin(t * 16) * 0.025; break;
     case 'row': p.armL = -0.9 + Math.sin(t * 6) * 0.7; p.armR = -0.9 - Math.sin(t * 6) * 0.7; p.legL = -1.45; p.legR = -1.45; p.lean = 0.12 + Math.sin(t * 6) * 0.08; p.sit = 1; break;
     case 'sit': p.legL = -1.45; p.legR = -1.45; p.armL = -0.5; p.armR = -0.5; p.bob = Math.sin(t * 1.5) * 0.01; p.sit = 1; break;
-    case 'wave': p.armRz = -2.6 + Math.sin(t * 12) * 0.35; p.bob = Math.abs(Math.sin(t * 6)) * 0.02; break;
-    case 'love': p.jump = Math.abs(Math.sin(t * 6)) * 0.25; p.armLz = 2.4; p.armRz = -2.4; p.squash = Math.cos(t * 12) * 0.05; break;
+    case 'wave': case 'emo_wave': p.armRz = -2.6 + Math.sin(t * 12) * 0.35; p.bob = Math.abs(Math.sin(t * 6)) * 0.02; break;
+    // Emotes (src/game/emotes.js): mismos huesos que las demás poses
+    case 'emo_dance': { const s = Math.sin(t * 6); p.bob = Math.abs(s) * 0.07; p.armLz = 1.1 + s * 0.5; p.armRz = -1.1 - s * 0.5; p.legL = s * 0.35; p.legR = -s * 0.35; p.lean = s * 0.08; break; }
+    case 'emo_clap': { const c = Math.abs(Math.sin(t * 12)); p.armL = -1.25; p.armR = -1.25; p.armLz = -(0.3 + c * 0.5); p.armRz = 0.3 + c * 0.5; p.bob = c * 0.015; break; }
+    case 'emo_hug': p.armL = -0.9; p.armR = -0.9; p.armLz = -0.5; p.armRz = 0.5; p.lean = 0.12; p.squash = Math.sin(t * 2) * 0.012; break;
+    case 'emo_laugh': { const s = Math.sin(t * 10); p.bob = Math.abs(s) * 0.05; p.squash = Math.sin(t * 20) * 0.03; p.lean = 0.1; p.armL = -0.9 + s * 0.2; p.armR = -0.9 - s * 0.2; break; }
+    case 'emo_surprise': p.jump = Math.abs(Math.sin(t * 5)) * 0.12; p.armL = -2.8; p.armR = -2.8; p.lean = -0.04; break;
+    case 'emo_heart': case 'love': p.jump = Math.abs(Math.sin(t * 6)) * 0.25; p.armLz = 2.4; p.armRz = -2.4; p.squash = Math.cos(t * 12) * 0.05; break;
     default: p.bob = Math.sin(t * 2) * 0.012; p.armL = Math.sin(t * 2) * 0.05; p.armR = -Math.sin(t * 2) * 0.05; p.squash = Math.sin(t * 2) * 0.012; p.hair = 0.015;
   }
   return p;
@@ -237,7 +243,7 @@ function pose(anim, t) {
 
 function Zzz({ getAnim }) {
   const [on, setOn] = useState(false);
-  useFrame(() => { const s = !!getAnim && getAnim() === 'sleep'; if (s !== on) setOn(s); });
+  useFrame(() => { const a = getAnim ? getAnim() : null; const s = a === 'sleep' || a === 'emo_sleep'; if (s !== on) setOn(s); });
   return on ? <Html position={[0, 1.25, -0.8]} center style={{ pointerEvents: 'none' }} zIndexRange={[4, 0]}><div className="zzz"><span>z</span><span>z</span><span>Z</span></div></Html> : null;
 }
 

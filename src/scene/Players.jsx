@@ -10,6 +10,7 @@ import { getBackend } from '../services/backend';
 import { defaultAvatar, BOAT } from '../game/constants';
 import { serverNow } from '../game/time';
 import Avatar from './Avatar';
+import EmoteBubble from './EmoteBubble';
 import { BoatBody } from './Boat';
 import { Html } from '@react-three/drei';
 import { step, sfx } from '../game/audio';
@@ -120,6 +121,7 @@ function LocalPlayer() {
       <group ref={boatRef} visible={false}><BoatBody getRow={() => me.moving} /></group>
       <group ref={seat}><Avatar avatar={avatar} getAnim={currentAnim} name={user?.name} /></group>
       <ChatBubble uid={user.uid} />
+      <EmoteBubble getAnim={currentAnim} />
     </group>
   );
 }
@@ -145,6 +147,7 @@ function RemotePlayer({ uid }) {
       <group ref={boatRef} visible={false}><BoatBody getRow={() => others[uid]?.anim === 'row'} /></group>
       <group ref={seat}><Avatar avatar={avatar} getAnim={() => others[uid]?.anim || 'idle'} name={name} showName /></group>
       <ChatBubble uid={uid} y={2.4} />
+      <EmoteBubble getAnim={() => others[uid]?.anim} />
     </group>
   );
 }
