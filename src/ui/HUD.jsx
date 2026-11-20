@@ -29,6 +29,7 @@ import ChatFab from './ChatFab';
 import TouchControls, { isTouchDevice } from './TouchControls';
 import TodayPanel from './TodayPanel';
 import StoryPanel from './StoryPanel';
+import Emotes from './Emotes';
 import ProjectPanel from './ProjectPanel';
 import { jobList } from '../game/logic';
 import { respondDate, dateCondition } from '../game/actions';
@@ -385,6 +386,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       <NewsModal />
       {chatOpen && <ChatPanel />}
       <ChatFab />
+      <Emotes />
       <TouchControls />
       <button className="signout gear" onClick={open('help')} title={t("Ajustes y ayuda")}>⚙️</button>
       <ActionBar />
