@@ -3,7 +3,7 @@
 //   stat {metric,n} · deliver {item,n} · talk {npc} · friend {npc,level} · project {id} · letter {n}
 //   together {what:'plaza'|'bench'|'chat'|'clock'} · dusk · flag {id}
 // Recompensa: { coins, hearts, items:{item:n}, unlock:'cosmético o flag', piece:1 } + opcionales `flag` (desbloqueo extra) y `title` (título honorífico).
-// Ids de proyecto que se mencionan: fountain, bakery, store, schoolgarden, cafe, clocktower (los define el chat de Proyectos).
+// Ids de proyecto que se mencionan: fountain, bakery, store, school_garden, cafe, clock (los define el chat de Proyectos).
 import { t } from '../../i18n';
 
 export const CONDITION_TYPES = ['stat', 'deliver', 'talk', 'friend', 'project', 'letter', 'together', 'dusk', 'flag'];
@@ -41,7 +41,7 @@ export const CHAPTERS = [
     reward: { coins: 180, hearts: 15, items: { crystal: 1 }, unlock: 'shop:store', piece: 1 },
   },
   {
-    id: 'c4', title: t("Tres alumnos y un huerto"), from: 'celia', project: 'schoolgarden',
+    id: 'c4', title: t("Tres alumnos y un huerto"), from: 'celia', project: 'school_garden',
     letter: t("Queridos vecinos: soy Celia, maestra de la escuela más pequeña del valle. Tres alumnos, una pizarra y mucha ilusión. Lola, Biel y Nuri quieren un huerto de ‘cosas que crecen rápido’, porque tienen la paciencia de un gato en una ventana. ¿Podéis enseñarles cómo se cosecha de verdad y traerles lechugas y zanahorias para sembrar? Ellos prometen cuidarlo; yo prometo que no lo regarán todo con el bote de la cola."),
     steps: [
       { id: 'a', text: t("Cosechad 5 cultivos para enseñar a los niños cómo se hace."), cond: { type: 'stat', metric: 'harvest', n: 5 } },
@@ -61,7 +61,7 @@ export const CHAPTERS = [
     reward: { coins: 250, hearts: 20, items: { crystal: 2 }, unlock: 'cafe:art', piece: 1 },
   },
   {
-    id: 'c6', title: t("El corazón del reloj"), from: 'inigo', project: 'clocktower',
+    id: 'c6', title: t("El corazón del reloj"), from: 'inigo', project: 'clock',
     letter: t("Estimados vecinos: les escribo desde la torre, con las manos limpias de grasa por primera vez en años, porque no me atrevo a tocar nada. Yo rompí el reloj. O eso llevo creyendo desde aquel invierno: perdí el muelle, el corazón de la maquinaria, y ya no sé ni dónde. Las demás piezas las tengo gracias a ustedes. Para seguir necesito latón y aceite fino (los pedidos del Tablón traen de todo) y que averigüen qué fue de ese muelle: pregunten a quien tenga la costumbre de guardar cosas. Cuando aparezca, quiero que lo coloquemos los tres… quiero decir, los dos y yo, a la vez."),
     steps: [
       { id: 'a', text: t("Entregad 3 pedidos del Tablón: Íñigo necesita latón y aceite fino."), cond: { type: 'stat', metric: 'order', n: 3 } },
@@ -71,10 +71,10 @@ export const CHAPTERS = [
     reward: { coins: 300, hearts: 25, items: { crystal: 3 }, unlock: 'clock:spring', piece: 1 },
   },
   {
-    id: 'c7', title: t("La Hora de las Cartas"), from: 'remedios', project: 'clocktower',
+    id: 'c7', title: t("La Hora de las Cartas"), from: 'remedios', project: 'clock',
     letter: t("Queridos míos: esta tarde, cuando el cielo se ponga del color de la mermelada, vamos a encender los farolillos. Quiero que estéis los dos en la plaza a la vez, aunque cada uno la vea desde su pantalla y su ventana. Primero hay que terminar la torre con las cinco piezas; luego, preparar la fiesta con unos cuantos pedidos; y al atardecer, darle cuerda al reloj entre los dos. Os debo una confesión y una carta, y las dos se leerán en voz alta. Gracias por haber llegado hasta aquí."),
     steps: [
-      { id: 'a', text: t("Terminad la reparación de la torre del reloj con las cinco piezas."), cond: { type: 'project', id: 'clocktower' } },
+      { id: 'a', text: t("Terminad la reparación de la torre del reloj con las cinco piezas."), cond: { type: 'project', id: 'clock' } },
       { id: 'b', text: t("Entregad 3 pedidos del Tablón para preparar la fiesta."), cond: { type: 'stat', metric: 'order', n: 3 } },
       { id: 'c', text: t("Al atardecer, estad los dos en la plaza para dar cuerda al reloj."), cond: { type: 'dusk' } },
     ],

@@ -3,6 +3,7 @@ import { dailyQuests, weeklyGoals, weekKey, dailyOrders, eventsFor, dayUTC } fro
 import { dateKey } from '../game/time';
 import { questsStatus, currentGoal, ordersStatus, todayEvent, craftSuggestion, recipeName } from '../game/today';
 import { ITEMS } from '../game/constants';
+import { currentChapter, nextStep, chapterStatus, canClaim } from '../game/story/engine';
 import Modal from './Modal';
 import { t } from '../i18n';
 import './today.css';
@@ -35,6 +36,17 @@ export default function TodayPanel() {
 
   // 1) Misiones de pareja
   const q = questsStatus(dailyQuests(dateKey(now)), questLog, dateKey(now), uid, other);
+  // 0) Historia del Valle: capítulo actual y siguiente paso
+  const gs = useGame.getState();
+  const chapter = currentChapter(gs);
+  const nstep = chapter && nextStep(gs);
+  const storyCard = chapter && (
+    <Card icon="📖" title={t("Historia del Valle")} to="story" cls={canClaim(gs, chapter) ? 'hot' : ''}
+      label={canClaim(gs, chapter) ? t("Reclamar capítulo") : t("Abrir el diario")}
+      doText={canClaim(gs, chapter) ? t("¡Capítulo completado! Reclama tu recompensa.") : (nstep ? nstep.step.text : chapter.title)}
+      state={chapter.title} />
+  );
+
   const quests = (
     <Card icon="💌" title={t("Misiones de pareja")} to="quests"
       cls={q.done ? 'ok' : ''}
@@ -91,6 +103,7 @@ export default function TodayPanel() {
     <Modal title={t("☀️ Hoy")} wide>
       <div className="today">
         <p className="sub">{t("Lo que podéis hacer hoy, en un solo sitio.")}</p>
+        {storyCard}
         {quests}
         {goal}
         {orders}

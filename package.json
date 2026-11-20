@@ -11,7 +11,8 @@
     "lint": "eslint src",
     "smoke": "node tests/e2e/smoke.mjs",
     "bench": "node tests/e2e/bench.mjs",
-    "test:rules": "npx --yes firebase-tools@13 emulators:exec --only firestore --project demo-nuestra-casita \"node --test tests/rules/firestore.rules.test.mjs\""
+    "test:rules": "npx --yes firebase-tools@13 emulators:exec --only firestore --project demo-nuestra-casita \"node --test tests/rules/firestore.rules.test.mjs\"",
+    "story": "node tests/e2e/story.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

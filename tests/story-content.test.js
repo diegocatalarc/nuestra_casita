@@ -5,7 +5,8 @@ import { CAST } from '../src/game/story/characters';
 import { ITEMS, CROPS, STORIES } from '../src/game/constants';
 
 const NPCS = CAST.map((c) => c.id);
-const PROJECTS = ['fountain', 'bakery', 'store', 'schoolgarden', 'cafe', 'clocktower'];
+import { PROJECTS as PROJECT_DATA } from '../src/game/story/projects';
+const PROJECTS = Object.keys(PROJECT_DATA); // los ids reales (antes una lista a mano que se desincronizó)
 const LOOP = ['harvest', 'sell', 'order'];
 
 describe('chapters', () => {

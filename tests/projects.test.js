@@ -170,9 +170,9 @@ describe('contribute', () => {
     expect(writes.length).toBe(n);
   });
   it('el reloj no admite aportes sin 5 piezas', async () => {
-    reset({ ingot: 5, glass: 5, thread: 9, crystal: 5 }, { story: { pieces: 3 } });
-    expect(await contribute('clock', 'ingot', 1)).toBe(false);
+    reset({ stone: 9, wood: 9, cloth: 9, crystal: 5 }, { story: { pieces: 3 } });
+    expect(await contribute('clock', 'stone', 1)).toBe(false);
     db.couple.story.pieces = 5; useStore.setState({ couple: structuredClone(db.couple) });
-    expect(await contribute('clock', 'ingot', 1)).toBe(true);
+    expect(await contribute('clock', 'stone', 1)).toBe(true);
   });
 });

@@ -28,6 +28,8 @@ import MapPanel from './MapPanel';
 import ChatFab from './ChatFab';
 import TouchControls, { isTouchDevice } from './TouchControls';
 import TodayPanel from './TodayPanel';
+import StoryPanel from './StoryPanel';
+import ProjectPanel from './ProjectPanel';
 import { jobList } from '../game/logic';
 import { respondDate, dateCondition } from '../game/actions';
 import { warmth } from '../game/logic';
@@ -288,6 +290,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       ['mem', '🖼️', t("Recuerdos"), open('memories'), panel === 'memories', t("Vuestra sala de fotos y notas")],
     ] },
     { id: 'world', icon: '🌍', short: t("Mundo"), label: t("🌍 Mundo"), items: [
+      ['story', '📖', t("Diario del Valle"), open('story'), panel === 'story', t("La historia del pueblo y sus misiones")],
       ['explore', '🧭', t("Explorar"), () => G().set({ panel: panel === 'explore' ? null : 'explore', exploreTab: null, neighborFocus: null }), panel === 'explore' || panel === 'map', t("Mapa, excavar, mina, vecinos y mascotas")],
       ['fish', '🎣', t("Pescar"), open('fishing'), tool === 'fish' || panel === 'fishing', t("Caña, bote y diario de peces")],
       ['land', '📐', t("Terreno"), open('land'), panel === 'land', t("Ampliar la parcela y arar")],
@@ -376,6 +379,8 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       {panel === 'craft' && <CraftPanel />}
       {panel === 'map' && <MapPanel />}
       {panel === 'today' && <TodayPanel />}
+      {panel === 'story' && <StoryPanel />}
+      {panel === 'project' && <ProjectPanel />}
       <GiftFoundModal />
       <NewsModal />
       {chatOpen && <ChatPanel />}

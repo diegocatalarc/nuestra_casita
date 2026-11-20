@@ -5,7 +5,7 @@ import { t } from '../../i18n';
 
 /**
  * id · label · emoji · npc (vecino que lo pide) · site (id del edificio de TOWN_BUILDINGS/TOWN_LANDMARKS donde se ve)
- * cost: { item: n } con ítems que ya existen (recursos, cultivos, pescado, platos, materiales de crafteo)
+ * cost: { item: n } con ítems que ya existen: SOLO recursos crudos, cultivos, pescado y platos (nada de materiales intermedios del crafteo avanzado: la persona usuaria lo considera demasiado complejo)
  * unlocks: flags que se concederán en couple.story.flags
  * needs: requisitos para poder aportar { pieces: n } (piezas del reloj) · { project: id } (otro proyecto terminado)
  * blurb: texto corto del panel · gives: qué cambia al terminar
@@ -15,22 +15,22 @@ export const PROJECTS = {
     cost: { stone: 10, clay: 6, flower: 5 }, unlocks: ['town:fountain'],
     blurb: t("La fuente lleva años seca. Con piedra, arcilla y unas flores volverá a cantar."), gives: t("La fuente vuelve a manar agua en la plaza.") },
   bakery: { id: 'bakery', label: t("Panadería de Rosa"), emoji: '🥖', npc: 'rosa', site: 'bakery',
-    cost: { plank: 8, brick: 6, tomato: 6, egg: 6 }, unlocks: ['shop:bakery'],
+    cost: { wood: 12, stone: 8, tomato: 6, egg: 6 }, unlocks: ['shop:bakery'],
     blurb: t("El horno está frío y las persianas bajadas. Rosa solo necesita arreglarlo todo y huevos para empezar."), gives: t("La panadería abre: vende pan y da un extra de energía.") },
   store: { id: 'store', label: t("Tienda de Tomás"), emoji: '🏪', npc: 'tomas', site: 'store',
-    cost: { plank: 10, cloth: 6, lettuce: 8, thread: 4 }, unlocks: ['shop:store'],
+    cost: { wood: 14, cloth: 8, lettuce: 8 }, unlocks: ['shop:store'],
     blurb: t("Tomás siempre está «a punto de cerrar». Ayudadle a levantar la persiana de verdad."), gives: t("La tienda reabre con las semillas del día.") },
   school_garden: { id: 'school_garden', label: t("Huerto de la escuela"), emoji: '🍎', npc: 'celia', site: 'school',
-    cost: { wood: 8, rope: 3, strawberry: 6, sunflower: 3 }, unlocks: ['town:school_garden'],
+    cost: { wood: 8, cloth: 3, strawberry: 6, sunflower: 3 }, unlocks: ['town:school_garden'],
     blurb: t("A los tres alumnos de Celia les encantaría plantar cosas que crezcan rápido y tener unos columpios."), gives: t("El huerto de la escuela se llena de plantas y los columpios vuelven a funcionar.") },
   cafe: { id: 'cafe', label: t("Café del Puente"), emoji: '🍵', npc: 'luna', site: 'cafe',
-    cost: { plank: 8, paint: 3, milk: 4, trout: 3 }, unlocks: ['town:cafe'],
+    cost: { wood: 10, flower: 6, milk: 4, trout: 3 }, unlocks: ['town:cafe'],
     blurb: t("Luna sueña con un café con rincón de arte. Faltan mesas, pintura y algo rico que servir."), gives: t("El café abre con luz cálida, sombrillas y un rincón de arte.") },
   clock: { id: 'clock', label: t("Torre del reloj"), emoji: '🕰️', npc: 'inigo', site: 'clock',
-    cost: { ingot: 3, glass: 2, thread: 4, crystal: 2 }, unlocks: ['town:clock'], needs: { pieces: 5 },
+    cost: { stone: 6, wood: 6, cloth: 4, crystal: 4 }, unlocks: ['town:clock'], needs: { pieces: 5 },
     blurb: t("Con las cinco piezas del reloj reunidas, Íñigo puede volver a darle cuerda."), gives: t("El reloj vuelve a andar: las manecillas se mueven.") },
   festival: { id: 'festival', label: t("Festival de las Luces"), emoji: '🏮', npc: 'remedios', site: 'square',
-    cost: { fabric: 4, paint: 4, flower: 10, pie: 2, crystal: 3 }, unlocks: ['event:festival'], needs: { project: 'clock' },
+    cost: { cloth: 6, flower: 10, pie: 2, crystal: 3 }, unlocks: ['event:festival'], needs: { project: 'clock' },
     blurb: t("Farolillos, telas y tartas para la gran noche en que el reloj vuelva a marcar la Hora de las Cartas."), gives: t("La plaza se llena de farolillos para el festival.") },
 };
 export const PROJECT_IDS = Object.keys(PROJECTS);
