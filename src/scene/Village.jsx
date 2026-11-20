@@ -7,7 +7,7 @@ import { NEIGHBORS } from '../game/constants';
 import { L } from '../game/lighting';
 import { goAndDo } from '../game/actions';
 import { rbGeo } from './rb';
-import Avatar from './Avatar';
+import Npcs from './Npcs';
 import { t } from '../i18n';
 import ContactShadow from './shadow';
 import { propFree } from '../game/villageProps';
@@ -199,33 +199,6 @@ function House({ n, visit }) {
   );
 }
 
-// Dónde está cada vecino según la hora: trabajando, o charlando en la plaza al mediodía y a la tarde
-const WORK = {
-  marta: { x: 42.4, z: 12.1, rot: 0, anim: 'water', icon: '🌱' },
-  pablo: { x: 38.4, z: 17.5, rot: -Math.PI / 2, anim: 'fish', icon: '🎣' },
-  luna: { x: 45.5, z: 20.9, rot: -2.3, anim: 'build', icon: '🎨' },
-};
-const SOCIAL = {
-  marta: { x: PLAZA.x - 1.5, z: PLAZA.z + 0.3, rot: Math.PI / 2 },
-  pablo: { x: PLAZA.x + 1.5, z: PLAZA.z + 0.1, rot: -Math.PI / 2 },
-  luna: { x: PLAZA.x, z: PLAZA.z + 1.7, rot: Math.PI },
-};
-const social = (h) => (h >= 12 && h < 14) || (h >= 18 && h < 21);
-
-function Neighbor({ n }) {
-  const hour = useGame((s) => s.env.hour);
-  if (hour < n.hours[0] || hour >= n.hours[1]) return null;
-  const soc = social(hour), w = soc ? SOCIAL[n.id] : WORK[n.id];
-  const anim = soc ? 'idle' : w.anim;
-  const visit = (e) => { if (!can()) return; e.stopPropagation(); goAndDo(w.x, w.z, () => useGame.getState().set({ panel: 'explore', exploreTab: 'neighbors', neighborFocus: n.id }), 2.6); };
-  return (
-    <group position={[w.x, 0, w.z]} rotation={[0, w.rot, 0]} onClick={visit} onPointerOver={ptr(true)} onPointerOut={ptr(false)}>
-      <Avatar avatar={n.look} getAnim={() => anim} name={n.name} showName />
-      <Html position={[0, 2.05, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[3, 0]}><div className="fest-tag small">{soc ? '💬' : w.icon}</div></Html>
-    </group>
-  );
-}
-
 export default function Village() {
   const buildings = useGame((s) => s.buildings);
   const free = (id) => propFree(id, buildings);
@@ -245,7 +218,7 @@ export default function Village() {
       <Garden /><Laundry /><Pier /><PabloLine /><DryRack /><Easel /><Cat /><Arch />
       <Tree x={49.2} z={10.5} s={1.2} /><Tree x={39.8} z={10.2} s={1} c="#7ab865" /><Tree x={48.8} z={17.6} s={0.9} c="#f4a6c0" />
       {NEIGHBORS.map((n) => <House key={n.id} n={n} visit={visit(n)} />)}
-      {NEIGHBORS.map((n) => <Neighbor key={n.id} n={n} />)}
+      <Npcs />
     </group>
   );
 }

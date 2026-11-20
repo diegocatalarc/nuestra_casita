@@ -146,3 +146,9 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Decidido:** el muelle del reloj lo guardó **Tomás** en su cajón de cartas sin entregar (Íñigo, en shock, se lo dio sin recordarlo; Remedios lo intuía). El «alguien lejano» de Remedios es su hermana **Pilar**, y sus respuestas estaban en ese mismo cajón (se entregan en la última historia de amistad de Remedios).
 - Cap. 6 no usa `project`: el proyecto `clocktower` se completa en el cap. 7 (paso a), con las 5 piezas; el cap. 6 da la 5.ª pieza (el muelle) al colocarlo los dos juntos (`together clock`).
 - `deliver omelette` en el cap. 2 (no hay harina en ITEMS): «cocinar» se mide entregando un plato.
+## Vecinos vivos: agenda por hora en vez de simulación
+- **Problema:** «el pueblo se siente muerto»; los 3 vecinos estaban quietos y los paseantes eran solo decorado.
+- **Elegimos:** agenda declarativa (`SCHEDULES` en `game/story/routines.js`) → línea temporal de tramos «quieto/caminando» calculada con `findPath` una vez por mundo; posición = función pura de la hora. Así es idéntico para las dos personas sin guardar nada ni sincronizar, y barato (un `useFrame`, sin pathfinding por fotograma).
+- **Lluvia:** la agenda alternativa se genera igual (puesto → portal de casa, resto → dentro). Si el clima cambia, el vecino aparece/desaparece (salto >3 casillas) o corre hacia su sitio (≤3): no se intenta caminar «en directo» hacia el refugio.
+- **Descartamos:** guardar posiciones en Firestore (escrituras constantes, riesgo de desincronía); pathfinding por fotograma; vagabundeo aleatorio (rompe el determinismo entre jugadores).
+- **Detalle:** el embarcadero de Pablo está sobre casillas de agua (bloqueadas): ahora pesca en la orilla. Las horas de salida están calculadas con margen (la caminata más larga ≈ 12 s reales); `tests/routines.test.js` falla si una caminata no llega antes de la siguiente salida.
