@@ -41,6 +41,7 @@ Hecho: pedidos de temporada, pedido grande semanal cooperativo, bonus diario con
 - No hay otros secretos en `src/`.
 
 ## Próximos pasos (por prioridad)
+0b. **Reglas de Firestore endurecidas** (rama integrada, `docs/seguridad.md`): 38/38 pruebas con emulador. **Falta:** probar con Firebase real y desplegar con `firebase deploy --only firestore:rules` (decisión de la persona responsable).
 0. **Auditoría de sistemas** (`docs/auditoria-sistemas.md`): decidir la tabla de recortes. Hecho: controles táctiles (v10). Hecho también: panel «Hoy» (v12), tutorial ampliado (11 pasos), corazones con sumidero real (decoración del corazón, v11) y Mapa dentro de Explorar. En curso: pulido de modelos `feature/pulir-love-parts`.
 1. **Inicializar/recuperar el repo git** y dejar CI funcionando (rama `main` protegida, trabajo en `feature/*`).
 2. **Probar con Firebase real** (dos cuentas, dos dispositivos) y desplegar reglas; anotar fallos aquí.

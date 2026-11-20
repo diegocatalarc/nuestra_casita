@@ -1,6 +1,6 @@
 # Seguridad de Firestore (reglas)
 
-> ⚠️ **Estado: reglas escritas y tests escritos, pero NO ejecutados.** En la sesión que las preparó no se pudo instalar `@firebase/rules-unit-testing` ni `firebase-tools` (la instalación de devDependencies fue denegada por el entorno), así que el emulador nunca arrancó. **Antes de desplegar hay que ejecutar `npm run test:rules` y probar con Firebase real** (ver "Cómo desplegar").
+> ✅ **Estado (2026-11-20):** reglas escritas **y probadas contra el emulador de Firestore: 38/38 pruebas en verde** (`npm run test:rules`). Con las reglas anteriores fallan 13 pruebas de denegación, así que los tests detectan de verdad las trampas que ahora se bloquean. ⚠️ **Siguen SIN desplegarse y SIN probarse con Firebase real**: hay que hacerlo antes (ver §5).
 
 ## 1. Inventario de escrituras reales
 
