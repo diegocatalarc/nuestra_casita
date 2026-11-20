@@ -62,7 +62,7 @@ export default function StoryPanel() {
             <button className="btn primary big" onClick={startStory}>{t("Abrir el diario")}</button>
           </>
         )}
-        {started && <p className="sub">{t("Piezas del reloj")}: {'🕰️'.repeat(pieces) || '—'} ({pieces})</p>}
+        {started && <p className="sub">{t("Piezas del reloj")}: {pieces}/5 {'🕰️'.repeat(pieces)}</p>}
         {started && cur && (
           <div className="quest">
             <div className="q-head">

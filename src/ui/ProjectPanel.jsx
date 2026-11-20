@@ -44,7 +44,8 @@ export default function ProjectPanel() {
         })}
       </div>
       <div className="order" style={{ background: '#fff7e6' }}>
-        <b>{t("Al terminar")}</b>: {p.gives}
+        <b>{t("Al terminar")}</b>
+        <div>{p.gives}</div>
         {flags.length > 0 && pr.done && <div><small>{t("¡Ya desbloqueado!")}</small></div>}
       </div>
     </Modal>
