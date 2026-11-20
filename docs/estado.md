@@ -40,9 +40,9 @@ Hecho: pedidos de temporada, pedido grande semanal cooperativo, bonus diario con
 - Existe `.env.local` local con una **clave de API web de Firebase** (proyecto `bri-game`). No está versionada (no hay `.git`; no se pudo revisar historial). Las claves web de Firebase no son secretas por diseño (se incrustan en el bundle: aparecen en `dist/` y en el zip ya entregado), pero la protección real son las reglas de Firestore/RTDB y los dominios autorizados de Auth. **[POR CONFIRMAR: restringir la clave por dominio en Google Cloud y revisar dominios autorizados.]**
 - No hay otros secretos en `src/`.
 
-## Historia del Valle (integración en curso, 2026-11-20)
-Integrado y probado en `casita-sync`: motor de misiones, contenido (7 capítulos, diálogos, 5 historias nuevas), proyectos del pueblo (rotos/arreglados), Diario del Valle, tarjeta en Hoy, plaza viva y emotes. Pruebas: 152 unitarias + `npm run story` + `npm run emotes` (dos jugadores) + `npm run smoke`.
-**Falta:** «vecinos vivos» (rutinas y hablar con los vecinos; rama `feature/vecinos-vivos`, 2 commits locales en el chat auxiliar sin poder hacer push). **Sin esa pieza el paso 1 del capítulo 1 («Saludad a Doña Remedios») no se puede completar jugando**, así que la historia NO se publica hasta integrarla.
+## Historia del Valle (integrada, 2026-11-20)
+Integrado y probado en `casita-sync`: motor de misiones, contenido (7 capítulos, diálogos, 5 historias de amistad nuevas sin conectar), proyectos del pueblo (rotos/arreglados), Diario del Valle, tarjeta en Hoy, vecinos con rutinas y diálogo (el ❗ indica a quién hablar), plaza viva y emotes. Pruebas: 179 unitarias + e2e `smoke`, `story`, `emotes`.
+**Pendiente de la historia:** conectar la amistad/regalos de los 5 vecinos nuevos (hoy solo Marta, Pablo y Luna), probar el Festival (dos conectados al atardecer) con dos jugadores reales, «sentarse juntos» en un banco, balance de recompensas jugando. **No probado en iPad real ni con Firebase real.**
 
 ## Próximos pasos (por prioridad)
 0b. **Reglas de Firestore endurecidas** (rama integrada, `docs/seguridad.md`): 38/38 pruebas con emulador. **Falta:** probar con Firebase real y desplegar con `firebase deploy --only firestore:rules` (decisión de la persona responsable).

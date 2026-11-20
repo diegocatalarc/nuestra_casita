@@ -242,15 +242,6 @@ function CraftChip() {
   return <button className="chip-top" onClick={() => useGame.getState().set({ panel: 'craft', craftTab: 'bench' })}>🛠️ {ready ? t("{0} listo(s) para recoger", [ready]) : ''}{ready && asks ? ' · ' : ''}{asks ? t("🙏 {0} petición(es)", [asks]) : ''}</button>;
 }
 
-function GoalChip() {
-  const s = useGame();
-  const goals = weeklyGoals(s.now);
-  const claimed = s.couple?.goalsClaimed?.[weekKey(s.now)] || {};
-  const g = goals.find((x) => !claimed[x.id]) || goals[0];
-  const p = Math.min(goalProgress(s, g), g.target);
-  return <button className="chip-top goal-chip" onClick={() => s.set({ panel: 'quests' })}>🎯 {g.text} · <b>{p}/{g.target}</b></button>;
-}
-
 export default function HUD({ onSignOut, onSwitchHouse }) {
   const env = useGame((s) => s.env);
   const couple = useGame((s) => s.couple);

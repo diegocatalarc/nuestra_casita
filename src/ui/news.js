@@ -63,7 +63,7 @@ export const NEWS = [
   {
     v: 8, title: t("¡Un mundo por descubrir!"),
     items: [
-      { emoji: '☁️', text: t("El mapa está cubierto de niebla: se va despejando a medida que camináis, solos o juntos.") },
+      { emoji: '☁️', text: t("El valle esconde rincones secretos: ahora los encontraréis paseando juntos o por separado.") },
       { emoji: '🧭', text: t("Por el camino encontraréis 15 rincones secretos (círculo de piedras, faro, cabaña abandonada, cerezos en flor…) con premios, y un Mapa del mundo para seguir vuestro progreso.") },
       { emoji: '🏙️', text: t("¡Un pueblo mucho más grande al este! Plaza Mayor con fuente, ayuntamiento, torre del reloj, panadería, tienda, café, escuela, capilla, molino y vecinos paseando por la Calle Mayor.") },
     ],

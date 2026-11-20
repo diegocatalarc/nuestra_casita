@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, Fragment } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { useGame } from '../store/gameStore';
@@ -8,7 +8,6 @@ import { digSpots, dayUTC, chestReady } from '../game/logic';
 import { digAt, openChest, goAndDo, zoneOwned } from '../game/actions';
 import { rbGeo } from './rb';
 import Village from './Village';
-import { Reveal } from './Discover';
 
 const Bx = ({ p, s, c, r }) => <mesh position={p} rotation={r} geometry={rbGeo(s[0], s[1], s[2])} castShadow receiveShadow><meshStandardMaterial vertexColors color={c} roughness={0.9} /></mesh>;
 const can = () => useGame.getState().tool === 'interact';
@@ -24,7 +23,7 @@ function DigSpots() {
   const done = digs?.[day] || {};
   return (
     <group>
-      {digSpots(world, seed, day).filter((sp) => !done[sp.i]).map((sp) => <Reveal key={day + sp.i} pts={[[sp.x, sp.z]]}><Spot sp={sp} /></Reveal>)}
+      {digSpots(world, seed, day).filter((sp) => !done[sp.i]).map((sp) => <Fragment key={day + sp.i}><Spot sp={sp} /></Fragment>)}
     </group>
   );
 }
@@ -85,9 +84,9 @@ export default function Explore() {
   return (
     <group>
       <DigSpots />
-      <Reveal pts={[[40, 12], [44, 17], [47, 21]]}><Village /></Reveal>
-      {zoneOwned(couple, 'south') && <Reveal pts={[[35, 70]]}><Island /></Reveal>}
-      {zoneOwned(couple, 'southeast') && <Reveal pts={[[62, 62]]}><Cave /></Reveal>}
+      <><Village /></>
+      {zoneOwned(couple, 'south') && <><Island /></>}
+      {zoneOwned(couple, 'southeast') && <><Cave /></>}
     </group>
   );
 }

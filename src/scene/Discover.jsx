@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, Fragment } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { useGame } from '../store/gameStore';
@@ -12,11 +12,6 @@ import { rbGeo } from './rb';
 import ContactShadow from './shadow';
 import Avatar from './Avatar';
 
-/** Antes ocultaba lo no descubierto (niebla, retirada a petición de la persona usuaria). Ahora dibuja siempre; se conserva para no tocar a los llamadores. */
-export function Reveal({ children }) {
-  return children;
-}
-
 const hashRot = (x, z) => (((x * 12.9898 + z * 78.233) % 6.28) + 6.28) % 6.28;
 const Cob = ({ x, z, c }) => <mesh position={[x + 0.5, 0.03, z + 0.5]} geometry={rbGeo(0.96, 0.06, 0.96)} receiveShadow><meshStandardMaterial vertexColors color={c} roughness={1} /></mesh>;
 
@@ -29,13 +24,13 @@ function Pois() {
   return (
     <group>
       {pois.map((p) => (
-        <Reveal key={p.id} pts={[[p.x, p.z]]}>
+        <Fragment key={p.id}>
           <group position={[p.x, 0, p.z]} rotation={[0, hashRot(p.x, p.z), 0]}>
             <ContactShadow w={3.2} d={3.2} k={1.2} />
             <PartsList parts={POI_PARTS[p.kind] || []} />
             {!found[p.id] && <Html position={[0, 2.4, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[3, 0]}><div className="gift-tag">❔</div></Html>}
           </group>
-        </Reveal>
+        </Fragment>
       ))}
     </group>
   );
@@ -79,32 +74,32 @@ function Town() {
   const b = TOWN_BUILDINGS;
   return (
     <group>
-      <Reveal pts={[[53, 23], [58, 21], [66, 22], [75, 23]]}>
+      <>
         <TownCobbles />
         {TOWN_LIGHTS.map((q, i) => <group key={i} position={[q.x, 0, q.z]}><PartsList parts={LAMPPOST} /></group>)}
-        <Reveal pts={[[60, 19.5]]}><group position={[60, 0, 19.5]}><PlazaProject /></group></Reveal>
+        <><group position={[60, 0, 19.5]}><PlazaProject /></group></>
         {[[57.2, 18.2, 0], [62.8, 18.2, 0], [57.2, 21.4, PI], [62.8, 21.4, PI]].map(([x, z, r], i) => (
           <group key={i} position={[x, 0, z]} rotation={[0, r, 0]}><PartsList parts={[['b', [0, 0.45, 0], [1.2, 0.08, 0.4], '#b98254'], ['b', [0, 0.75, -0.18], [1.2, 0.35, 0.06], '#a8764c'], ['b', [-0.5, 0.2, 0], [0.08, 0.4, 0.36], '#6b4630'], ['b', [0.5, 0.2, 0], [0.08, 0.4, 0.36], '#6b4630']]} /></group>
         ))}
-      </Reveal>
+      </>
       {b.map((q) => (
-        <Reveal key={q.id} pts={[[q.x + q.w / 2, q.z + q.d / 2], [q.x + q.w / 2, q.z + q.d + 2]]}>
+        <Fragment key={q.id}>
           <group position={[q.x + q.w / 2, 0, q.z + q.d / 2]}>
             <ContactShadow w={q.w + 1} d={q.d + 1} k={1.15} />
             <SiteBuilding q={q} />
             {!q.plain && <Html position={[0, q.style === 'clock' ? 7.4 : q.style === 'windmill' ? 5.2 : 4.6, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[3, 0]}><div className="fest-tag small">{q.emoji}</div></Html>}
           </group>
-        </Reveal>
+        </Fragment>
       ))}
-      <Reveal pts={[[54, 10]]}><Orchard /></Reveal>
-      <Reveal pts={[[75, 20]]}><Playground /></Reveal>
+      <><Orchard /></>
+      <><Playground /></>
       <SchoolGarden />
-      <Reveal pts={[[51, 24]]}>
+      <>
         <group position={[51.5, 0, 24]}>
           <PartsList parts={[['b', [0, 1.4, -1.7], [0.22, 2.8, 0.22], '#8a5e3c'], ['b', [0, 1.4, 1.7], [0.22, 2.8, 0.22], '#8a5e3c'], ['b', [0, 2.85, 0], [0.3, 0.2, 4.0], '#a8764c'], ...[-1.2, -0.6, 0, 0.6, 1.2].map((z, i) => ['k', [0.05, 2.6, z], [0.14, 0.26], ['#f7a8c4', '#ffd98a', '#8fd0f0', '#b8e0a0', '#f7a8c4'][i], { r: [PI, 0, 0], seg: 3 }])]} />
           <Html position={[0, 3.4, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[2, 0]}><div className="zone-tag small" style={{ pointerEvents: 'none' }}>🏙️ Plaza Mayor</div></Html>
         </group>
-      </Reveal>
+      </>
     </group>
   );
 }
