@@ -67,6 +67,11 @@ Cada una: acotada, bajo riesgo, criterio de "listo" comprobable.
 ## No delegar (requiere criterio o permiso)
 Cambios en `worldGen.js`, reglas de Firebase, esquema de datos, balance de economía, claves de i18n existentes.
 
+## Historia del Valle: contenido del Libro I (rama feature/historia-contenido)
+- Hecho: `story/chapters.js` (7 capítulos × 3 pasos, recompensas, cartas), `story/dialogue.js` (≥14 líneas por vecino según hora/clima/estación/capítulo/amistad, `lineFor`, `GREETINGS`, `firstMeeting`, `STORIES_NEW` con 5 historias × 5 vecinos), `characters.js` enriquecido (bio, likesText, quirk, likes), `en-historia.js` completo, `tests/story-content.test.js`.
+- Para el motor/integración: fusionar `STORIES_NEW` con `STORIES`; ids de proyecto: fountain, bakery, store, schoolgarden, cafe, clocktower; flags de recompensa: village:lamps, shop:bakery, shop:store, school:swings, cafe:art, clock:spring, event:market.
+- Falta: validar con el motor real `together`/`dusk` y las recompensas extra (`flag`, `title`); revisar el tono en pantalla.
+
 ## Taller sencillo (rama feature/crafteo-simple)
 - Hecho: 10 recetas básicas por defecto, recogida automática, modo Avanzado plegado, Hoy y tutorial actualizados, tests/craft-simple.test.js, en-crafteo-simple.js. Probado en navegador (demo): taburete de principio a fin, trabajo antiguo (Tablón) con Recoger, interruptor avanzado.
 - Falta: aviso en Novedades (`news.js`, lo toca el chat principal); probar en iPad real; decidir balance de las prendas.

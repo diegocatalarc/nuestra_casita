@@ -141,3 +141,8 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Recogida:** `autoCollectCrafts` (tick de 1 s) solo recoge trabajos `simple` propios; un `Set` evita doble cobro durante la latencia (misma carrera que en «Cosechar muchas veces»).
 - **Descartamos:** mutar `RECIPES` (rompería el test de datos originales y la vista avanzada) y recetas con friend/lv (la progresión se saltaría).
 - **Balance [POR CONFIRMAR]:** orejas de gato/conejo y gafas de corazón también se compran con monedas (120-150 🪙); ahora hay vía alternativa barata en materiales.
+
+## Historia: giro del muelle y arco de Remedios
+- **Decidido:** el muelle del reloj lo guardó **Tomás** en su cajón de cartas sin entregar (Íñigo, en shock, se lo dio sin recordarlo; Remedios lo intuía). El «alguien lejano» de Remedios es su hermana **Pilar**, y sus respuestas estaban en ese mismo cajón (se entregan en la última historia de amistad de Remedios).
+- Cap. 6 no usa `project`: el proyecto `clocktower` se completa en el cap. 7 (paso a), con las 5 piezas; el cap. 6 da la 5.ª pieza (el muelle) al colocarlo los dos juntos (`together clock`).
+- `deliver omelette` en el cap. 2 (no hay harina en ITEMS): «cocinar» se mide entregando un plato.
