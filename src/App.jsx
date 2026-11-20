@@ -3,7 +3,6 @@ import { useGame, partnerUid } from './store/gameStore';
 import { loadBackend, getBackend, CLOUD_CONFIGURED } from './services/backend';
 import { generateWorld, zoneKey } from './game/worldGen';
 import { computeEnv, serverNow } from './game/time';
-import { resetFog } from './game/fog';
 import { exploreTick, autoCollectCrafts, recipeInfo, datesTick, checkGifts, ensureHouse, dailyLogin, rainWater, checkStars, checkBirth, autoFeedAnimals, checkSleepTogether, vitalsNotices } from './game/actions';
 import { me, others, doAnim } from './game/runtime';
 import { startAudio, updateAudio, toggleMute, isMuted, sfx } from './game/audio';
@@ -60,13 +59,11 @@ async function switchHouse(code) {
   const id = await be.couple.join(s.user, code);   // si falla, no se pierde nada
   if (id !== old) { try { await be.leaveHouse(s.user, old); } catch (e) { console.warn('No se pudo salir de la casita anterior', e); } }
   unsubWorld?.();
-  resetFog();
   useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, couple: null, world: null, panel: null, away: null, phase: 'loading', coupleId: id });
   enterGame(id);
 }
 
 async function signOut() {
-  resetFog();
   try { await getBackend().auth.signOut(); } catch { /* noop */ }
   localStorage.removeItem('nc_cloud');
   unsubWorld?.();

@@ -23,7 +23,6 @@ import Events from './Events';
 import Gifts from './Gifts';
 import Explore from './Explore';
 import Discover from './Discover';
-import Fog from './Fog';
 import { TilledSoil, LockedZones } from './Land';
 import { MooredBoat, FishingGear, BiteMark } from './Boat';
 import CameraRig from './CameraRig';
@@ -82,7 +81,6 @@ export default function GameCanvas() {
         <BiteMark />
         <Interaction />
         <FloatingFx />
-        {!location.search.includes('nofog') && <Fog />}
       </Suspense>
       <Weather />
       <Ambient />

@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { useGame } from '../store/gameStore';
 import { MAP, TILE, EXPLORE, ZONES } from '../game/constants';
 import { idx } from '../game/worldGen';
-import { fog, CH, cidx } from '../game/fog';
 import { me, others } from '../game/runtime';
 import { allDiscoveries, claimExplorer, EXPLORER_REWARDS } from '../game/actions';
 import Modal from './Modal';
@@ -17,7 +16,6 @@ export default function MapPanel() {
   const couple = useGame((s) => s.couple);
   const buildings = useGame((s) => s.buildings);
   const now = useGame((s) => s.now);
-  useGame((s) => s.fogVer);
   const cv = useRef();
   const found = couple.discovered || {};
   const list = allDiscoveries();
@@ -29,21 +27,18 @@ export default function MapPanel() {
     g.clearRect(0, 0, c.width, c.height);
     for (let z = 0; z < MAP; z++) for (let x = 0; x < MAP; x++) { g.fillStyle = COL[world.tiles[idx(x, z)]] || '#ccc'; g.fillRect(x * PX, z * PX, PX, PX); }
     for (const b of Object.values(buildings)) { g.fillStyle = '#c9643c'; g.fillRect(b.x * PX, b.z * PX, b.w * PX, b.d * PX); }
-    // niebla por celdas
-    const cs = EXPLORE.chunk * PX;
-    for (let cz = 0; cz < CH; cz++) for (let cx = 0; cx < CH; cx++) if (!fog.bits[cidx(cx, cz)]) { g.fillStyle = 'rgba(232,238,243,0.97)'; g.fillRect(cx * cs, cz * cs, cs, cs); g.fillStyle = 'rgba(190,202,216,0.35)'; g.fillRect(cx * cs + 3, cz * cs + 3, cs - 6, cs - 6); }
     // descubrimientos
     g.font = '15px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    for (const d of list) { const cxx = Math.floor(d.x / EXPLORE.chunk), czz = Math.floor(d.z / EXPLORE.chunk); if (!fog.bits[cidx(cxx, czz)]) continue; g.fillText(found[d.id] ? d.emoji : '❔', d.x * PX, d.z * PX); }
+    for (const d of list) { g.fillText(found[d.id] ? d.emoji : '❔', d.x * PX, d.z * PX); }
     // tú y tu pareja
     const dot = (x, z, col) => { g.beginPath(); g.arc(x * PX, z * PX, 5, 0, 7); g.fillStyle = '#fff'; g.fill(); g.beginPath(); g.arc(x * PX, z * PX, 3.4, 0, 7); g.fillStyle = col; g.fill(); };
     for (const o of Object.values(others)) if (o.online) dot(o.x, o.z, '#4a90e2');
     dot(me.x, me.z, '#e8527a');
-  }, [world, buildings, now, found, list.length, fog.ver]);
+  }, [world, buildings, now, found, list.length]);
 
   return (
     <Modal title={t("🗺️ Mapa del mundo")} wide>
-      <p className="sub">{t("Descubierto: {0} %. Andad por el camino para despejar la niebla y encontrar lugares. 🔴 tú · 🔵 tu pareja.", [Math.round((fog.bits.reduce((a, b) => a + b, 0) / fog.bits.length) * 100)])}</p>
+      <p className="sub">{t("Los ❔ son lugares por descubrir: acercaos para encontrarlos. 🔴 tú · 🔵 tu pareja.")}</p>
       <div className="mapwrap"><canvas ref={cv} width={MAP * PX} height={MAP * PX} /></div>
       <h3 className="fish-h">{t("🧭 Descubrimientos")} <small>{n}/{list.length}</small></h3>
       <div className="evcard">

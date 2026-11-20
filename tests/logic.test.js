@@ -3,7 +3,6 @@ import { mulberry32, hashStr } from '../src/game/rng';
 import { generateWorld, riverX, tileAt, idx } from '../src/game/worldGen';
 import { dailyOrders, eventsFor, visitorGift, digSpots, dailyQuests, canAfford, priceOf, weekIdx, weekKey, friendLevel, dayUTC } from '../src/game/logic';
 import { MAP, TILE, NEIGHBORS, POIS, EXPLORE, TOWN } from '../src/game/constants';
-import { fog, resetFog, markCircle, mergeStr, bitsToStr, isExplored, CH } from '../src/game/fog';
 
 describe('rng', () => {
   it('mulberry32 es determinista y está en [0,1)', () => {
@@ -63,26 +62,6 @@ describe('economía', () => {
   });
   it('los precios son números no negativos', () => { expect(priceOf('wood', 1, '2026-01-01')).toBeGreaterThanOrEqual(0); });
   it('niveles de amistad crecen con los puntos', () => { expect(friendLevel(0)).toBeLessThanOrEqual(friendLevel(10000)); });
-});
-
-describe('niebla', () => {
-  it('empieza vacía y se descubre al caminar', () => {
-    resetFog();
-    expect(isExplored(70, 20)).toBe(false);
-    expect(markCircle(70, 20, EXPLORE.radius)).toBe(true);
-    expect(isExplored(70, 20)).toBe(true);
-    expect(markCircle(70, 20, EXPLORE.radius)).toBe(false);
-  });
-  it('mezcla lo guardado en la nube sin perder lo local', () => {
-    resetFog(); markCircle(10, 10, 5);
-    const local = bitsToStr();
-    const other = '0'.repeat(CH * CH - 1) + '1';
-    expect(mergeStr(other)).toBe(true);
-    const merged = bitsToStr();
-    for (let i = 0; i < local.length; i++) if (local[i] === '1') expect(merged[i]).toBe('1');
-    expect(merged[merged.length - 1]).toBe('1');
-  });
-  it('mergeStr ignora entradas inválidas', () => { expect(mergeStr(undefined)).toBe(false); expect(mergeStr(5)).toBe(false); });
 });
 
 describe('contenido', () => {

@@ -7,7 +7,6 @@ import { ISLAND } from '../worldGen';
 import { me } from '../runtime';
 import { sfx } from '../audio';
 import { mulberry32, hashStr } from '../rng';
-import { fog, mergeStr, markCircle, bitsToStr, isExplored } from '../fog';
 import { t } from '../../i18n';
 import { goAndDo, wave } from './base';
 import { commit, doAnim, fx, gain, heartOps, logActivity, myVitals, st, toast, vitalsPatch, xpOp } from './core';
@@ -91,24 +90,10 @@ export function mineFinish(items, floor) {
 /** Todo lo descubrible del mundo actual (puntos de interés + pueblo) */
 export const allDiscoveries = () => [...(st().world?.pois || []), ...DISCOVERIES_FIXED];
 
-/** Cada segundo: descubre terreno alrededor de quien juega, sincroniza con la pareja y recoge descubrimientos. */
+/** Cada segundo: recoge los descubrimientos (rincones y edificios del pueblo) cuando alguien pasa cerca. */
 export function exploreTick() {
   const s = st();
   if (!s.couple || !s.world || !s.user) return;
-  mergeStr(s.couple.explored);
-  let ch = false;
-  ch = markCircle(me.x, me.z, me.boat ? EXPLORE.radius + 1 : EXPLORE.radius) || ch;
-  // lo ya construido o plantado cuenta como conocido
-  ch = markCircle(EXPLORE.base.x, EXPLORE.base.z, EXPLORE.base.r) || ch;
-  for (const o of [...Object.values(s.buildings), ...Object.values(s.decor), ...Object.values(s.crops)]) if (o.x != null && !isExplored(o.x, o.z)) ch = markCircle(o.x, o.z, 3) || ch;
-  for (const g of Object.values(s.gifts)) if (g.from === s.user.uid && !isExplored(g.x, g.z)) ch = markCircle(g.x, g.z, 3) || ch;
-  const now = performance.now();
-  if (fog.pending && now - fog.lastWrite > 3500) {
-    fog.pending = false; fog.lastWrite = now;
-    const str = bitsToStr(); fog.last = str;
-    commit([{ op: 'patch', data: { explored: str } }]);
-  }
-  if (ch) useGame.setState({ fogVer: fog.ver });
   // descubrimientos
   for (const d of allDiscoveries()) {
     if (s.couple.discovered?.[d.id] || discovering.has(d.id)) continue;

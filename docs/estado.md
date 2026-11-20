@@ -18,7 +18,7 @@ Hecho: pedidos de temporada, pedido grande semanal cooperativo, bonus diario con
 - **Firebase real nunca probado desde estas sesiones** (auth Google, reglas desplegadas, latencia, RTDB). Solo `localBackend`. **[POR CONFIRMAR si la persona usuaria lo probó por su cuenta con `bri-game`.]**
 - CI de GitHub (`.github/workflows/ci.yml`) escrito pero **no ejecutado**; además el directorio no es un repo git.
 - Revisión visual de los 15 POIs y del pueblo: se miraron 3-4 POIs y el pueblo; **[POR CONFIRMAR]** el resto (cabaña, faro, barco, gruta, etc.) y cómo se ven los marcadores Html (❔ de regalos, etiquetas de zona) bajo la niebla.
-- Niebla: reescrita como planos con shader (ver `docs/decisiones.md`); pendiente confirmar fluidez en el dispositivo real y posible hitch al montar lugares recién descubiertos.
+- Niebla: **retirada** (v16, petición de la persona usuaria).
 - `constants.js` sigue siendo un fichero grande (~600 líneas) con bloques interdependientes.
 - Rendimiento no medido en móviles reales (solo swiftshader).
 

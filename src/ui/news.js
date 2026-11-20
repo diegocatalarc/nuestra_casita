@@ -116,6 +116,12 @@ export const NEWS = [
       { emoji: '🛠️', text: t("El Taller ahora es mucho más fácil: pocas recetas con materiales básicos, sin estaciones ni niveles y con un solo botón. Lo fabricado llega solo a la mochila. Lo de antes sigue disponible en «recetas avanzadas».") },
     ],
   },
+  {
+    v: 16, title: t("Sin niebla"),
+    items: [
+      { emoji: '🗺️', text: t("Quitamos la niebla: ahora ves todo el mapa y el pueblo desde el principio. Los lugares secretos siguen ahí, marcados con ❔ en el mapa, esperando a que los descubráis.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

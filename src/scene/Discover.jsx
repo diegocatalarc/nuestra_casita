@@ -3,7 +3,6 @@ import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { useGame } from '../store/gameStore';
 import { TOWN_BUILDINGS, DECOR } from '../game/constants';
-import { isExplored } from '../game/fog';
 import { L } from '../game/lighting';
 import { POI_PARTS, TOWN_PARTS, PLAZA_PARTS, LAMPPOST, tree } from '../game/worldParts';
 import { PartsList } from './Decor';
@@ -12,11 +11,9 @@ import { rbGeo } from './rb';
 import ContactShadow from './shadow';
 import Avatar from './Avatar';
 
-/** Solo se dibuja si alguna de las celdas está descubierta (así lo que hay bajo la niebla es una sorpresa). */
-export function Reveal({ pts, children }) {
-  // solo se vuelve a dibujar cuando ESTE lugar pasa de oculto a descubierto (no con cada celda nueva del mapa)
-  const seen = useGame(() => pts.some(([x, z]) => isExplored(x, z)));
-  return seen ? children : null;
+/** Antes ocultaba lo no descubierto (niebla, retirada a petición de la persona usuaria). Ahora dibuja siempre; se conserva para no tocar a los llamadores. */
+export function Reveal({ children }) {
+  return children;
 }
 
 const hashRot = (x, z) => (((x * 12.9898 + z * 78.233) % 6.28) + 6.28) % 6.28;
@@ -131,7 +128,6 @@ function Walker({ i }) {
     const dir = Math.sign(b - a) * (fwd ? 1 : -1);
     g.current.position.set(a + Math.sign(b - a) * d, 0, z);
     g.current.rotation.y = dir > 0 ? Math.PI / 2 : -Math.PI / 2;
-    g.current.visible = isExplored(g.current.position.x, z);
   });
   if (hour < 7 || hour >= 22) return null;
   return <group ref={g}><Avatar avatar={LOOKS[i]} getAnim={() => 'walk'} /></group>;

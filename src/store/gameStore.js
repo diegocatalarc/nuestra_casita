@@ -34,7 +34,7 @@ export const useGame = create((set, get) => ({
   fx: [],
   sleeping: false,
   chatOpen: false,
-  fogVer: 0, discoverFx: null,
+  discoverFx: null,
   newsOpen: false, giftFound: null, exploreTab: null, neighborFocus: null, craftTab: 'bench',
   fishState: 'idle', // idle | wait | bite
   boating: 0, // 0 a pie · 1 remando · 2 pasajera/o

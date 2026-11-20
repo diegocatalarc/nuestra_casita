@@ -79,6 +79,11 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Mover la cámara por el mapa:** un dedo arrastrando (solo con Mano/Plantar/Pesca, no en Construir/Decorar) o dos dedos; la cámara vuelve sola al caminar y el botón 🎯 la recentra. Estado en `camTarget.px/pz`.
 - **Pruebas:** `tests/e2e/touch.mjs` ahora comprueba toque en el suelo, toque tras un gesto, arrastre y plantar. **[POR CONFIRMAR en iPad real]**.
 
+## Niebla retirada definitivamente (v16)
+- **Decisión de la persona usuaria:** «quitaría la niebla definitivamente». Se eliminaron `scene/Fog.jsx`, `game/fog.js`, la escritura de `couple.explored`, `fogVer` y los tests de niebla. El Mapa ya no se cubre; los lugares secretos se siguen descubriendo al acercarse (`discovered.*`). `Reveal` se conserva como envoltorio que siempre dibuja.
+- **Coste:** el pueblo y los rincones ahora siempre se montan (~+10 % de tiempo por fotograma en el banco de pruebas por software). Las secciones anteriores sobre la niebla quedan como historia: no repetir el intento.
+- **Datos antiguos:** el campo `explored` de partidas guardadas queda sin uso (inofensivo).
+
 ## Producto y diseño
 
 ## Cada función nueva lleva aviso en el juego

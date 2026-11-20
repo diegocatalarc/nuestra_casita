@@ -1,6 +1,6 @@
 // Medición orientativa de rendimiento: camina al jugador a velocidad constante
 // durante 9 s y mide el tiempo entre fotogramas (requestAnimationFrame).
-// Corre dos veces: normal y con &nofog (sin niebla de exploración).
+// Mide la media de ms por fotograma caminando 9 s.
 // Uso: npm run bench
 //
 // LIMITACIÓN: Chromium headless con render por software (swiftshader, sin GPU).
@@ -62,17 +62,7 @@ async function main() {
     await startGame(page, vite.url);
     const normal = await measure(page, 'normal');
 
-    // Recargar con &nofog: la sesión de la pestaña y la casita siguen en localStorage/sessionStorage.
-    await page.goto(`${vite.url}/?hour=12&weather=clear&debug=1&nofog`, { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.toolbar', { timeout: 120_000 }).catch(async () => {
-      // Si la recarga no retoma la partida, volver a entrar en demo.
-      await startGame(page, vite.url);
-    });
-    const nofog = await measure(page, 'nofog');
-
-    const pct = ((nofog.mean - normal.mean) / normal.mean) * 100;
-    console.log(`\nComparación (media): nofog ${nofog.mean.toFixed(1)} ms vs normal ${normal.mean.toFixed(1)} ms → ${pct >= 0 ? '+' : ''}${pct.toFixed(1)} % (${pct <= 0 ? 'nofog más rápido' : 'nofog más lento'}).`);
-    console.log('Ruido esperado ≈ ±5 % en esta máquina (ver docs/decisiones.md, sección de niebla).');
+    console.log(`\nMedia: ${normal.mean.toFixed(1)} ms por fotograma (render por software; solo orientativo).`);
     if (errors.length) console.log(`Aviso: ${errors.length} error(es) de consola durante el bench.`);
   } finally {
     await browser.close();
