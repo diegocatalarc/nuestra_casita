@@ -4,7 +4,8 @@ import { Html } from '@react-three/drei';
 import { useGame } from '../store/gameStore';
 import { TOWN_BUILDINGS, DECOR } from '../game/constants';
 import { L } from '../game/lighting';
-import { POI_PARTS, TOWN_PARTS, PLAZA_PARTS, LAMPPOST, tree } from '../game/worldParts';
+import { POI_PARTS, LAMPPOST, tree } from '../game/worldParts';
+import { SiteBuilding, PlazaProject, SchoolGarden } from './ProjectVisuals';
 import { PartsList } from './Decor';
 import { updateNightMats } from './nightmats';
 import { rbGeo } from './rb';
@@ -81,7 +82,7 @@ function Town() {
       <Reveal pts={[[53, 23], [58, 21], [66, 22], [75, 23]]}>
         <TownCobbles />
         {TOWN_LIGHTS.map((q, i) => <group key={i} position={[q.x, 0, q.z]}><PartsList parts={LAMPPOST} /></group>)}
-        <Reveal pts={[[60, 19.5]]}><group position={[60, 0, 19.5]}><ContactShadow w={3} d={3} /><PartsList parts={PLAZA_PARTS} /></group></Reveal>
+        <Reveal pts={[[60, 19.5]]}><group position={[60, 0, 19.5]}><PlazaProject /></group></Reveal>
         {[[57.2, 18.2, 0], [62.8, 18.2, 0], [57.2, 21.4, PI], [62.8, 21.4, PI]].map(([x, z, r], i) => (
           <group key={i} position={[x, 0, z]} rotation={[0, r, 0]}><PartsList parts={[['b', [0, 0.45, 0], [1.2, 0.08, 0.4], '#b98254'], ['b', [0, 0.75, -0.18], [1.2, 0.35, 0.06], '#a8764c'], ['b', [-0.5, 0.2, 0], [0.08, 0.4, 0.36], '#6b4630'], ['b', [0.5, 0.2, 0], [0.08, 0.4, 0.36], '#6b4630']]} /></group>
         ))}
@@ -90,13 +91,14 @@ function Town() {
         <Reveal key={q.id} pts={[[q.x + q.w / 2, q.z + q.d / 2], [q.x + q.w / 2, q.z + q.d + 2]]}>
           <group position={[q.x + q.w / 2, 0, q.z + q.d / 2]}>
             <ContactShadow w={q.w + 1} d={q.d + 1} k={1.15} />
-            <PartsList parts={TOWN_PARTS[q.style](q)} />
+            <SiteBuilding q={q} />
             {!q.plain && <Html position={[0, q.style === 'clock' ? 7.4 : q.style === 'windmill' ? 5.2 : 4.6, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[3, 0]}><div className="fest-tag small">{q.emoji}</div></Html>}
           </group>
         </Reveal>
       ))}
       <Reveal pts={[[54, 10]]}><Orchard /></Reveal>
       <Reveal pts={[[75, 20]]}><Playground /></Reveal>
+      <SchoolGarden />
       <Reveal pts={[[51, 24]]}>
         <group position={[51.5, 0, 24]}>
           <PartsList parts={[['b', [0, 1.4, -1.7], [0.22, 2.8, 0.22], '#8a5e3c'], ['b', [0, 1.4, 1.7], [0.22, 2.8, 0.22], '#8a5e3c'], ['b', [0, 2.85, 0], [0.3, 0.2, 4.0], '#a8764c'], ...[-1.2, -0.6, 0, 0.6, 1.2].map((z, i) => ['k', [0.05, 2.6, z], [0.14, 0.26], ['#f7a8c4', '#ffd98a', '#8fd0f0', '#b8e0a0', '#f7a8c4'][i], { r: [PI, 0, 0], seg: 3 }])]} />
