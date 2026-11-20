@@ -35,7 +35,7 @@ export const useGame = create((set, get) => ({
   sleeping: false,
   chatOpen: false,
   discoverFx: null,
-  newsOpen: false, giftFound: null, exploreTab: null, neighborFocus: null, craftTab: 'bench',
+  newsOpen: false, giftFound: null, exploreTab: null, neighborFocus: null, craftTab: 'bench', projectId: null,
   fishState: 'idle', // idle | wait | bite
   boating: 0, // 0 a pie · 1 remando · 2 pasajera/o
   away: null, // resumen "mientras no estabas"

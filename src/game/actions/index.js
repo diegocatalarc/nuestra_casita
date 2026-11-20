@@ -15,5 +15,6 @@ export * from './explore';
 export * from './neighbors';
 export * from './craft';
 export * from './story';
+export * from './projects';
 export { HOUSE } from '../constants';
 export { dailyQuests } from '../logic';
