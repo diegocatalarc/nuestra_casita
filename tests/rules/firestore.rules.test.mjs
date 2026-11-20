@@ -26,13 +26,14 @@ const baseCouple = (members = [A, B]) => ({
 beforeEach(async () => {
   await env.clearFirestore();
   await env.withSecurityRulesDisabled(async (ctx) => {
-    await setDoc(doc(ctx.firestore(), 'couples', CID), baseCouple());
-    await setDoc(doc(ctx.firestore(), 'invites', 'ABC234'), { coupleId: CID, owner: A });
-    await setDoc(doc(ctx.firestore(), 'couples', CID, 'gifts', 'g1'), { from: B, kind: 'coins', n: 50, foundBy: null, at: 1 });
-    await setDoc(doc(ctx.firestore(), 'couples', CID, 'gifts', 'g2'), { from: A, kind: 'coins', n: 50, foundBy: null, at: 1 });
-    await setDoc(doc(ctx.firestore(), 'couples', CID, 'mailbox', 'l1'), { from: B, to: A, text: 'hola', readAt: null, at: 1 });
-    await setDoc(doc(ctx.firestore(), 'couples', CID, 'chat', 'c1'), { from: B, text: 'hola', at: 1 });
-    await setDoc(doc(ctx.firestore(), 'couples', CID, 'crops', '3_4'), { type: 'tomato', x: 3, z: 4, by: B, harvested: false });
+    const db = ctx.firestore();
+    await setDoc(doc(db, 'couples', CID), baseCouple());
+    await setDoc(doc(db, 'invites', 'ABC234'), { coupleId: CID, owner: A });
+    await setDoc(doc(db, 'couples', CID, 'gifts', 'g1'), { from: B, kind: 'coins', n: 50, foundBy: null, at: 1 });
+    await setDoc(doc(db, 'couples', CID, 'gifts', 'g2'), { from: A, kind: 'coins', n: 50, foundBy: null, at: 1 });
+    await setDoc(doc(db, 'couples', CID, 'mailbox', 'l1'), { from: B, to: A, text: 'hola', readAt: null, at: 1 });
+    await setDoc(doc(db, 'couples', CID, 'chat', 'c1'), { from: B, text: 'hola', at: 1 });
+    await setDoc(doc(db, 'couples', CID, 'crops', '3_4'), { type: 'tomato', x: 3, z: 4, by: B, harvested: false });
   });
 });
 
