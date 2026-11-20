@@ -46,12 +46,17 @@ async function main() {
     check(await nc(() => !!window.__nc.useGame.getState().couple.story?.flags?.['town:fountain']), 'terminar la fuente concede su flag');
 
     // 5) Capítulo 1: hablar con Remedios + 3 cosechas + 1 pedido → reclamar
-    await nc(() => window.__nc.actions.storyTalk('remedios'));
+    // hablar con Doña Remedios como lo hace el juego: abrir su diálogo (marca el paso «talk»)
+    await nc(async () => { const m = await import('/src/ui/DialogueModal.jsx'); m.openDialogue('remedios'); });
+    await page.waitForTimeout(800);
+    check(await page.locator('[role="dialog"]').count() > 0, 'el diálogo con Doña Remedios se abre');
+    check(await nc(() => !!window.__nc.useGame.getState().couple.story.steps?.c1?.a?.done), 'hablar con Remedios completa el paso 1 del capítulo 1');
+    await nc(async () => { const m = await import('/src/ui/DialogueModal.jsx'); m.closeDialogue(); });
     await nc(async () => {
       const { useGame, backend, logic } = window.__nc; const s = useGame.getState(); const wk = logic.weekKey(Date.now());
       await backend.getBackend().write(s.coupleId, [{ op: 'inc', field: `stats.${wk}.harvest`, by: 3 }, { op: 'inc', field: `stats.${wk}.order`, by: 1 }]);
     });
-    await page.waitForFunction(() => { const s = window.__nc.useGame.getState(); const c = s.couple?.story?.steps || {}; return Object.keys(c).filter((k) => k.startsWith('c1.')).length >= 3; }, null, { timeout: 20_000 }).catch(() => {});
+    await page.waitForFunction(() => { const s = window.__nc.useGame.getState(); const c = s.couple?.story?.steps || {}; return Object.keys(c.c1 || {}).length >= 3; }, null, { timeout: 20_000 }).catch(() => {});
     const coins0 = await nc(() => window.__nc.useGame.getState().couple.coins || 0);
     await nc(() => window.__nc.actions.claimStoryChapter('c1'));
     await nc(() => window.__nc.actions.claimStoryChapter('c1')); // doble clic: no debe pagar dos veces

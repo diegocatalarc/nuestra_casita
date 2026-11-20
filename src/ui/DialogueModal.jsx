@@ -9,7 +9,7 @@ import { lineFor as stubLine } from '../game/story/dialogueStub'; // ← cambiar
 import { NEIGHBORS, FRIEND_LEVELS } from '../game/constants';
 import { friendLevel, friendPts, dayUTC } from '../game/logic';
 import { serverNow } from '../game/time';
-import { talkNeighbor, doAnim } from '../game/actions';
+import { talkNeighbor, doAnim, storyTalk } from '../game/actions';
 import { sfx } from '../game/audio';
 import { t } from '../i18n';
 
@@ -39,6 +39,7 @@ export default function DialogueModal() {
   // Charlar cuenta para la amistad una vez al día (misma lógica que el panel de vecinos, sin duplicarla)
   useEffect(() => {
     if (!npc) return;
+    storyTalk(npc); // si toca hablar con este vecino en la historia, marca el paso
     const day = dayUTC(serverNow());
     if (useGame.getState().couple?.friends?.[npc]?.talkDay !== day) talkNeighbor(npc);
     else { sfx('pop'); doAnim('wave', 900); }

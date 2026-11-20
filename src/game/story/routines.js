@@ -4,6 +4,7 @@
 // y después solo se interpola a lo largo de la polilínea: cero pathfinding por fotograma.
 import { CAST } from './characters';
 import { friendLevel, friendPts } from '../logic';
+import { currentChapter, nextStep, canClaim } from './engine';
 
 /** Velocidad de paseo: casillas por segundo real. 1 hora de juego = 60 s reales (game/time.js). */
 export const WALK_TILES_PER_SEC = 2.0;
@@ -199,6 +200,13 @@ export function hasNews(npcId, state) {
   if (!couple) return false;
   const p = couple.story?.pending;
   if (p && (Array.isArray(p) ? p.includes(npcId) : !!p[npcId])) return true;
+  // Historia: el vecino con el que toca hablar, o quien escribió la carta cuando el capítulo está listo para reclamar
+  const ch = currentChapter(state);
+  if (ch) {
+    const ns = nextStep(state);
+    if (ns?.step?.cond?.type === 'talk' && ns.step.cond.npc === npcId) return true;
+    if (ch.from === npcId && canClaim(state, ch)) return true;
+  }
   if (OLD[npcId]) return friendLevel(friendPts(couple, npcId)) - 1 > (couple.friends?.[npcId]?.ch || 0);
   return false;
 }

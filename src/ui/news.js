@@ -122,6 +122,14 @@ export const NEWS = [
       { emoji: '🗺️', text: t("Quitamos la niebla: ahora ves todo el mapa y el pueblo desde el principio. Los lugares secretos siguen ahí, marcados con ❔ en el mapa, esperando a que los descubráis.") },
     ],
   },
+  {
+    v: 17, title: t("La historia del Valle"),
+    items: [
+      { emoji: '📖', text: t("Un pueblo dormido y una alcaldesa que os esperaba: abre el Diario del Valle (menú Mundo) y sigue las Cartas con Doña Remedios y sus vecinos. Reparad entre los dos la fuente, la panadería, la tienda, la escuela, el café y el reloj.") },
+      { emoji: '🏘️', text: t("Los vecinos ahora viven su día: salen de casa, trabajan, pasean por la plaza y charlan. Tocadlos para hablar; el ❗ indica que tienen algo que contaros.") },
+      { emoji: '😊', text: t("Nuevos emotes para saludar, bailar o aplaudir juntos, y una plaza con pájaros y campana.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 
