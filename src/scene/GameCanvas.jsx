@@ -23,6 +23,7 @@ import Events from './Events';
 import Gifts from './Gifts';
 import Explore from './Explore';
 import Discover from './Discover';
+import Plaza from './Plaza';
 import { TilledSoil, LockedZones } from './Land';
 import { MooredBoat, FishingGear, BiteMark } from './Boat';
 import CameraRig from './CameraRig';
@@ -75,6 +76,7 @@ export default function GameCanvas() {
         <Gifts />
         <Explore />
         <Discover />
+        <Plaza />
         <MooredBoat />
         <Players />
         <FishingGear />
