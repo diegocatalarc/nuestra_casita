@@ -44,7 +44,8 @@ async function main() {
     // 3) Hablar con ella: recuadro de misión en el diálogo y, al cumplirse el paso, escena de reacción
     await nc(async () => { const m = await import('/src/ui/DialogueModal.jsx'); m.openDialogue('remedios'); });
     await page.waitForTimeout(900);
-    check((await page.locator('[role="dialog"]').innerText()).includes('Ahora'), 'el diálogo muestra la misión actual');
+    // al abrir el diálogo con Remedios el paso «saludar» se cumple al instante, así que no queda misión pendiente con ella
+    check((await page.locator('[role="dialog"]').innerText()).includes('Doña Remedios'), 'el diálogo con Doña Remedios se abre');
     await nc(async () => { const m = await import('/src/ui/DialogueModal.jsx'); m.closeDialogue(); });
     await page.waitForSelector('.story-scene', { timeout: 15_000 }).catch(() => {});
     check((await page.locator('.ss-say').innerText().catch(() => '')).includes('Ya estáis aquí') || (await page.locator('.ss-say').count()) > 0, 'cumplir el paso dispara su escena de reacción');
