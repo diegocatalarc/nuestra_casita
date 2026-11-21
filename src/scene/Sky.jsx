@@ -1,8 +1,99 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { L, isWet } from '../game/lighting';
 import { clamp } from '../game/rng';
+
+// ---- Cielo: degradado por hora + nubes lejanas pintadas ------------------------------------------------------------
+// UN cuadro a pantalla completa dibujado al FINAL de los opacos con prueba de profundidad en el plano lejano (z = w):
+// la GPU descarta de antemano los píxeles tapados por el terreno, así solo se sombrea el cielo visible. Los colores
+// (cenit, horizonte, nubes) son uniformes que se copian de `L` cada fotograma (unos pocos números); las nubes salen de una
+// textura de ruido de 128² horneada UNA vez. Sin render targets, sin transparencias, sin coste por píxel fuera del cielo.
+const SKY_VS = `varying vec2 vUv;
+void main() { vUv = position.xy * 0.5 + 0.5; gl_Position = vec4(position.xy, 1.0, 1.0); }`;
+const SKY_FS = `uniform vec3 uZen, uHor, uCloud, uGlowCol;
+uniform float uCover, uTime, uNight, uAspect, uGlow, uZoom;
+uniform vec2 uSun;
+uniform sampler2D uNoise;
+varying vec2 vUv;
+void main() {
+  float v = vUv.y;
+  // degradado: horizonte claro abajo, cenit arriba (curva suave para que el cielo no sea una rampa lineal)
+  float k = smoothstep(0.02, 0.98, v);
+  vec3 col = mix(uHor, uZen, pow(k, 0.85));
+  // resplandor cálido alrededor del sol (amanecer/atardecer)
+  vec2 d = (vUv - uSun) * vec2(uAspect, 1.0);
+  float g = exp(-dot(d, d) * 5.0) * uGlow;
+  col += uGlowCol * g;
+  // nubes: dos capas de ruido (lejana y fina) con borde duro-suave «pintado» y luz por arriba
+  vec2 p = vec2(vUv.x * uAspect, vUv.y) * (0.9 / max(0.55, uZoom / 46.0)) + vec2(uTime * 0.006, 0.0);
+  float n = texture2D(uNoise, p * 0.7).r * 0.65 + texture2D(uNoise, p * 1.9 + 0.37).r * 0.35;
+  float lit = texture2D(uNoise, p * 0.7 + vec2(0.0, 0.012)).r * 0.65 + texture2D(uNoise, p * 1.9 + vec2(0.37, 0.025)).r * 0.35;
+  float th = 1.0 - uCover;
+  float a = smoothstep(th, th + 0.07, n) * smoothstep(0.0, 0.3, 1.0 - abs(v - 0.42) * 1.3);
+  float shade = clamp((n - lit) * 9.0 + 0.5, 0.0, 1.0);
+  vec3 cc = mix(uCloud * 0.8, uCloud * 1.08, shade);
+  col = mix(col, cc, a * (0.88 - 0.25 * uNight));
+  gl_FragColor = vec4(col, 1.0);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+}`;
+
+function makeNoise(S = 128) {
+  // ruido de valor periódico (se repite sin costuras) en 4 octavas
+  const data = new Uint8Array(S * S);
+  let a = 7;
+  const rnd = () => { a = (a * 1664525 + 1013904223) >>> 0; return a / 4294967296; };
+  const oct = [8, 16, 32, 64].map((f) => { const g = new Float32Array(f * f); for (let i = 0; i < g.length; i++) g[i] = rnd(); return [f, g]; });
+  const sm = (t) => t * t * (3 - 2 * t);
+  for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+    let v = 0, amp = 0.5, tot = 0;
+    for (const [f, g] of oct) {
+      const u = (x / S) * f, w = (y / S) * f, ix = Math.floor(u), iy = Math.floor(w), fx = sm(u - ix), fy = sm(w - iy);
+      const i0 = ix % f, i1 = (ix + 1) % f, j0 = iy % f, j1 = (iy + 1) % f;
+      const top = g[j0 * f + i0] * (1 - fx) + g[j0 * f + i1] * fx, bot = g[j1 * f + i0] * (1 - fx) + g[j1 * f + i1] * fx;
+      v += (top * (1 - fy) + bot * fy) * amp; tot += amp; amp *= 0.5;
+    }
+    data[y * S + x] = Math.round((v / tot) * 255);
+  }
+  const t = new THREE.DataTexture(data, S, S, THREE.RedFormat);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = t.minFilter = THREE.LinearFilter; t.needsUpdate = true;
+  return t;
+}
+
+function SkyDome() {
+  const m = useRef();
+  const noise = useMemo(() => makeNoise(), []);
+  const uni = useMemo(() => ({
+    uZen: { value: new THREE.Color() }, uHor: { value: new THREE.Color() }, uCloud: { value: new THREE.Color() }, uGlowCol: { value: new THREE.Color() },
+    uCover: { value: 0.4 }, uTime: { value: 0 }, uNight: { value: 0 }, uAspect: { value: 1.6 }, uGlow: { value: 0 }, uZoom: { value: 46 },
+    uSun: { value: new THREE.Vector2(0.3, 0.6) }, uNoise: { value: noise },
+  }), [noise]);
+  useEffect(() => () => noise.dispose(), [noise]);
+  useFrame((s) => {
+    const u = uni;
+    u.uZen.value.copy(L.zenith); u.uHor.value.copy(L.horizon); u.uCloud.value.copy(L.cloudCol);
+    u.uTime.value = s.clock.elapsedTime; u.uNight.value = L.night;
+    u.uAspect.value = s.size.width / s.size.height; u.uZoom.value = s.camera.zoom;
+    // cobertura de nubes: despejado = nubes sueltas; lluvia/tormenta = cielo cubierto
+    const wet = isWet(L.weather);
+    const cover = wet ? 0.92 : L.weather === 'snow' ? 0.8 : 0.42;
+    u.uCover.value += (cover - u.uCover.value) * 0.05;
+    // el sol (mismo punto que el disco de Backdrop) y su resplandor: fuerte a primera y última hora
+    const f = clamp((L.hour - 6) / 12, 0, 1);
+    const sx = -14 + f * 28, sy = 1.5 + Math.sin(f * Math.PI) * 5.5;
+    u.uSun.value.set(0.5 + (sx * s.camera.zoom) / s.size.width, 0.5 + (sy * s.camera.zoom) / s.size.height);
+    const low = 1 - Math.sin(f * Math.PI); // 1 con el sol bajo
+    u.uGlow.value = (wet ? 0.05 : 0.18 + low * 0.5) * clamp(1 - L.night * 1.5, 0, 1);
+    u.uGlowCol.value.copy(L.sun).multiplyScalar(0.55);
+  });
+  return (
+    <mesh frustumCulled={false} renderOrder={1000}>
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial ref={m} vertexShader={SKY_VS} fragmentShader={SKY_FS} uniforms={uni} depthWrite={false} depthTest toneMapped={false} />
+    </mesh>
+  );
+}
 
 /** Estrellas, sol y luna pegados a la cámara: se ven en el vacío que rodea el diorama. */
 export function Backdrop() {
@@ -29,6 +120,8 @@ export function Backdrop() {
     moon.current.visible = L.night > 0.3 && !isWet(L.weather);
   });
   return (
+    <>
+    <SkyDome />
     <group ref={g}>
       <points ref={stars} geometry={geo} frustumCulled={false}>
         <pointsMaterial color="#ffffff" size={2.2} sizeAttenuation={false} transparent depthWrite={false} fog={false} toneMapped={false} />
@@ -36,6 +129,7 @@ export function Backdrop() {
       <mesh ref={sun} frustumCulled={false}><circleGeometry args={[3.2, 24]} /><meshBasicMaterial color="#fff0c0" fog={false} toneMapped={false} /></mesh>
       <mesh ref={moon} position={[11, 8, -400]} frustumCulled={false}><circleGeometry args={[4, 24]} /><meshBasicMaterial color="#f4f1ff" fog={false} toneMapped={false} /></mesh>
     </group>
+    </>
   );
 }
 
