@@ -16,3 +16,4 @@ dist
 .vscode/
 vite.config.js.timestamp-*.mjs
 perf-results
+shots/
