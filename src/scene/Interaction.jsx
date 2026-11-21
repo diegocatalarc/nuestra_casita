@@ -1,6 +1,7 @@
 import { gestureActive } from '../game/cameraControl';
 import { useEffect } from 'react';
 import { Html } from '@react-three/drei';
+import { shallow } from 'zustand/shallow';
 import { useGame } from '../store/gameStore';
 import { BUILDINGS, DECOR, MAP, TILE } from '../game/constants';
 import { tileAt } from '../game/worldGen';
@@ -21,8 +22,14 @@ const Tile = ({ x, z, c, o = 0.4 }) => (
 let lastDrop = 0;
 
 export default function Interaction() {
-  const s = useGame();
-  const { tool, buildSel, decorSel, dragId, hover, decorRot, decorVariant, seedSel, world } = s;
+  // Selector fino: antes `useGame()` suscribía a TODO el estado (reloj, chat, jugadores…) y re-renderizaba cada segundo.
+  const { tool, buildSel, decorSel, dragId, hover, decorRot, decorVariant, seedSel, world } = useGame((st) => ({
+    tool: st.tool, buildSel: st.buildSel, decorSel: st.decorSel, dragId: st.dragId, hover: st.hover, decorRot: st.decorRot,
+    decorVariant: st.decorVariant, seedSel: st.seedSel, world: st.world,
+    // solo para volver a validar el fantasma cuando cambian estos datos
+    soil: st.soil, crops: st.crops, buildings: st.buildings, decor: st.decor, nodes: st.nodes,
+  }), shallow);
+  const s = useGame.getState();
 
   // Teclado de edición
   useEffect(() => {

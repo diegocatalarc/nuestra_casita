@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef } from 'react';
+import { lazy, memo, Suspense, useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGame } from '../store/gameStore';
@@ -62,7 +62,8 @@ function Prewarm() {
   return null;
 }
 
-export default function GameCanvas() {
+// memo: App se vuelve a renderizar cada segundo (reloj); sin memo se reconciliaba toda la escena 3D cada vez.
+export default memo(function GameCanvas() {
   const fx = useGame((s) => s.quality);
   return (
     <Canvas
@@ -112,4 +113,4 @@ export default function GameCanvas() {
       {fx && <Suspense fallback={null}><Effects /></Suspense>}
     </Canvas>
   );
-}
+});

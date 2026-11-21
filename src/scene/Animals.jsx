@@ -138,7 +138,7 @@ function Model({ type, t }) {
 
 function Animal({ a }) {
   const g = useRef(), body = useRef();
-  const now = useGame((s) => s.now);
+  const now = useGame((s) => Math.floor(s.now / 3000) * 3000);
   const stats = animalStats(a, now);
   useFrame((s) => {
     const t = serverNow();

@@ -17,7 +17,7 @@ const ptr = (on) => () => { if (can()) document.body.style.cursor = on ? 'pointe
 function DigSpots() {
   const world = useGame((s) => s.world);
   const seed = useGame((s) => s.couple?.seed);
-  const now = useGame((s) => s.now);
+  const now = useGame((s) => Math.floor(s.now / 60000) * 60000);
   const digs = useGame((s) => s.couple?.digs);
   const day = dayUTC(now);
   const done = digs?.[day] || {};

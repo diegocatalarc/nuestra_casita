@@ -136,6 +136,7 @@ const Crop = memo(function Crop({ crop, now }) {
 
 export default function Crops() {
   const crops = useGame((s) => s.crops);
-  const now = useGame((s) => s.now);
+// Reloj grueso: el aspecto solo cambia cada varios segundos; con `s.now` se re-renderizaba todo cada segundo.
+  const now = useGame((s) => Math.floor(s.now / 3000) * 3000);
   return <group>{Object.values(crops).map((c) => <Crop key={c.id} crop={c} now={now} />)}</group>;
 }
