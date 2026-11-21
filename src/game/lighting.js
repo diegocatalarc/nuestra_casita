@@ -26,7 +26,7 @@ const SNOWC = new THREE.Color('#d9e0e6');
 const WHITE = new THREE.Color('#ffffff');
 const CLOUDDARK = new THREE.Color('#9aa3b4');
 // Tinte del sol por estación (se multiplica): primavera fresca, verano dorado, otoño ámbar, invierno claro y algo frío
-const SEASON_SUN = [new THREE.Color('#fffaf2'), new THREE.Color('#fff2d8'), new THREE.Color('#ffe2bc'), new THREE.Color('#f3f6fc')];
+const SEASON_SUN = [new THREE.Color('#fffaf2'), new THREE.Color('#fff2d8'), new THREE.Color('#ffefd8'), new THREE.Color('#f3f6fc')];
 
 // Objeto compartido y reutilizado (sin asignaciones por frame)
 export const L = {
@@ -84,7 +84,7 @@ export function updateLighting(env) {
 
 // Colores por estación
 export const SEASON_COLORS = {
-  grass: ['#98cf72', '#86c35a', '#c0a944', '#f1f6f8'],
+  grass: ['#98cf72', '#86c35a', '#b4aa48', '#f1f6f8'],
   leaves: [['#f4b0c6', '#8ad46a', '#f9c4d4'], ['#5cb04e', '#4fa447', '#72be55'], ['#e5832f', '#cc4d32', '#eeaa38'], ['#eaf2f5', '#d6e4eb', '#f6fafb']],
   pine: ['#4f9a68', '#3f8a5c', '#d7e6e0', '#dbe8ee'],
 };
