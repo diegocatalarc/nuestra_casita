@@ -35,10 +35,14 @@ function outlineMat(out, radial) {
   gl_Position.xy += od * uThick * ${mul.toFixed(2)} * gl_Position.w;`);
     };
     m.customProgramCacheKey = () => 'outline' + k;
+    m.visible = HULL_ON;
     OUTLINES.set(k, m);
   }
   return OUTLINES.get(k);
 }
+/** Enciende/apaga los cascos invertidos (se apagan cuando el contorno global de postproceso ya dibuja las siluetas). */
+export function setHullOutlines(on) { HULL_ON = on; for (const m of OUTLINES.values()) m.visible = on; }
+let HULL_ON = true;
 /** Mantiene el grosor del contorno en píxeles reales (cambia con el tamaño del lienzo y algo con el zoom). Montar una vez dentro del Canvas. */
 export function OutlineSync() {
   useFrame((s) => {
