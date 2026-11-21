@@ -20,6 +20,7 @@ npm run smoke                    # e2e: arranque, todos los paneles, chat, táct
 npm run story                    # e2e: historia (arranque, aportes a proyectos, reclamar capítulo)
 npm run emotes                   # e2e con dos jugadores: presencia, emotes, chat
 npm run bench                    # medición orientativa de ms por fotograma
+npm run perf -- --label x        # arnés de rendimiento (draw calls, JS por fotograma, carga, paneles); ver docs/rendimiento.md
 npm run test:rules               # reglas de Firestore contra el emulador (requiere Java)
 node tools/i18n-missing.cjs      # lista textos t("…") sin traducción al inglés (vacío = OK)
 ```

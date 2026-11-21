@@ -160,3 +160,9 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 ## Pantalla de carga (v19)
 - `ui/LoadingScreen.jsx` cubre el juego hasta que: (1) `useProgress` de drei termina (modelos/texturas), (2) `ctx.ready` (mundo y colisiones) y (3) hay 30 fotogramas seguidos < 45 ms (`scene/BootProbe.jsx` → `game/boot.js`). Entonces pide pulsar «Entrar al valle» (también arranca el audio, que el navegador bloquea sin gesto). Tope de 15 s: entra igualmente con aviso de que puede ir lento. Las escenas de la historia esperan a que se pulse.
 - Pruebas automáticas: `localStorage.nc_noboot='1'` la salta (el harness lo hace; `npm run scenes` la activa con `boot: true`). Es [POR CONFIRMAR] que el umbral de 45 ms sea adecuado en iPad real.
+
+## Rendimiento: bloques, sombras ajustadas y carga diferida (rama feature/rendimiento)
+- Medido con `npm run perf` (ver `docs/rendimiento.md`): el 55-65 % del trabajo de dibujo era la pasada de sombras y las capas instanciadas/terreno se dibujaban enteras. **Elegimos:** terreno y vegetación en bloques espaciales con descarte, volumen de sombras centrado en la vista y ajustado al zoom (12-26 u), precalentamiento de geometrías/shaders tras la carga, piezas por datos fusionadas, diccionario inglés y paneles diferidos.
+- **Descartado:** horneado genérico de mallas estáticas en `Buildings`/`Props` (rompe raycasting de grupos con `onClick` y animaciones por `ref`); el recorte de draw calls queda en −12 %/−21 %, no −30 %.
+- **Cuidado:** `main.jsx` espera `loadDictionary()` antes de importar `App` (los módulos llaman a `t()` al evaluarse); los tests que comprueban inglés deben llamarlo. `GameCanvas` está memoizado: no pasarle props que cambien cada segundo.
+- Cajas redondeadas con 2 segmentos (`scene/rb.js`) y mapa de sombras 1536² (1024² táctil): no volver a subirlos sin medir con `npm run perf`.
