@@ -21,16 +21,14 @@ async function main() {
     check(/Mano/.test(t0) && /Plantar/.test(t0), 'al empezar están Mano y Plantar');
     check(!/Construir/.test(t0) && !/Decorar/.test(t0) && !/Hoy/.test(t0), 'al empezar no están Construir, Decorar ni Hoy');
     check((await page.locator('.toolbar .tb.group').count()) <= 2, 'al empezar hay como mucho 2 menús (Mundo y Comercio)');
-    check(await page.locator('.top-right .res span').count() === 0 || true, 'recursos en cero ocultos (no falla)');
-    // los recursos con cantidad cero no se muestran: la mochila inicial tiene algo, el resto no
-    const res0 = await page.locator('.top-right .res span').count();
-    check(res0 < 6, `se muestran pocos recursos al empezar (${res0})`);
+    check(await page.locator('.top-right .res span').count() === 0, 'al empezar no se muestran recursos (aún no se construye)');
     // capítulo 2: aparecen Construir y Hoy, con aviso
     await nc(async () => { const { useGame, backend } = window.__nc; const s = useGame.getState(); await backend.getBackend().write(s.coupleId, [{ op: 'patch', data: { 'story.chapter': 2 } }]); });
     await page.waitForTimeout(2500);
     const t2 = (await tools()).join(' | ');
     check(/Construir/.test(t2) && /Hoy/.test(t2), 'en el capítulo 2 aparecen Construir y Hoy');
     check(!/Decorar/.test(t2), 'Decorar sigue oculto hasta el capítulo 3');
+    check(await page.locator('.top-right .res span').count() > 0, 'en el capítulo 2 aparecen los recursos de construcción');
     // capítulo 3 y el aviso «Desbloqueado»
     await nc(async () => { const { useGame, backend } = window.__nc; const s = useGame.getState(); await backend.getBackend().write(s.coupleId, [{ op: 'patch', data: { 'story.chapter': 3 } }]); });
     await page.waitForTimeout(2500);

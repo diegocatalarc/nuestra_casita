@@ -11,9 +11,9 @@ export const LEGACY_BEFORE = Date.UTC(2026, 10, 22);
 /** Capítulo (1-based) a partir del cual está disponible cada función. */
 export const FEATURE_CHAPTER = {
   // Capítulo 1 — «La primavera que no llegó»: sembrar, cosechar y entregar un pedido
-  hand: 1, plant: 1, orders: 1, story: 1, inv: 1, help: 1, chat: 1,
+  hand: 1, plant: 1, orders: 1, story: 1, help: 1, chat: 1,
   // Capítulo 2 — «Expediente de verano»: cocinar exige construir la cocina; aparecen hambre y energía
-  today: 2, food: 2, sleep: 2, build: 2, avatar: 2, vitals: 2,
+  today: 2, food: 2, sleep: 2, build: 2, avatar: 2, vitals: 2, inv: 2,
   // Capítulo 3 — «Otoño, pendiente de firma»: vender, cartas y pareja
   market: 3, mail: 3, quests: 3, hug: 3, wave: 3, decor: 3, emotes: 3,
   // Capítulo 4 — «El invierno inquilino»
