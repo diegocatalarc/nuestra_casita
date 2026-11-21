@@ -20,12 +20,16 @@ const ONLY = opt('only', '') ? opt('only', '').split(',') : null;
 const OUT = path.join(ROOT, 'shots', LABEL);
 fs.mkdirSync(OUT, { recursive: true });
 
-// [nombre, hora, estación, clima]
+const EDGE = { px: -22, pz: -22, zoom: 30 };
+// [nombre, hora, estación, clima, cámara?]
 const DESKTOP = [
   ['h06-primavera', 6, 0, 'clear'], ['h12-primavera', 12, 0, 'clear'], ['h18-primavera', 18, 0, 'clear'], ['h22-primavera', 22, 0, 'clear'],
   ['h06-verano', 6, 1, 'clear'], ['h12-verano', 12, 1, 'clear'], ['h18-verano', 18, 1, 'clear'], ['h22-verano', 22, 1, 'clear'],
   ['h12-otono', 12, 2, 'clear'], ['h18-otono', 18, 2, 'clear'], ['h12-invierno', 12, 3, 'clear'],
   ['h12-lluvia', 12, 0, 'rain'], ['h12-nieve', 12, 3, 'snow'], ['h18-tormenta', 18, 1, 'storm'],
+  // cámara arrastrada hasta el borde del mapa y alejada: se ve el cielo/horizonte que rodea el diorama (y el agua)
+  ['borde-h06', 6, 0, 'clear', EDGE], ['borde-h12', 12, 1, 'clear', EDGE], ['borde-h18', 18, 2, 'clear', EDGE], ['borde-h22', 22, 0, 'clear', EDGE], ['borde-lluvia', 12, 0, 'rain', EDGE],
+  ['agua-h12', 12, 1, 'clear', { px: 8, pz: 16, zoom: 62 }], ['agua-h18', 18, 1, 'clear', { px: 8, pz: 16, zoom: 62 }],
 ];
 const QUICK = [['h12-primavera', 12, 0, 'clear'], ['h18-verano', 18, 1, 'clear'], ['h22-primavera', 22, 0, 'clear'], ['h12-otono', 12, 2, 'clear']];
 const IPAD = [['ipad-h12-primavera', 12, 0, 'clear'], ['ipad-h18-otono', 18, 2, 'clear'], ['ipad-h22-verano', 22, 1, 'clear']];
@@ -70,11 +74,12 @@ async function run(browser, url, key) {
   await page.waitForFunction(() => window.__nc.useGame.getState().world?.seed === 4242, null, { timeout: 180000 });
   // sin interfaz encima: se ve la escena sola
   await page.addStyleTag({ content: '.toolbar, .hud, .hud *, .topbar, .bottombar, .joystick { visibility: hidden !important; }' });
-  for (const [name, hour, season, weather] of list) {
+  for (const [name, hour, season, weather, cam] of list) {
     await page.evaluate(async ([h, s, w]) => {
       const m = await import('/src/game/time.js');
       m.DEBUG.hour = h; m.DEBUG.season = s; m.DEBUG.weather = w;
     }, [hour, season, weather]);
+    await page.evaluate((c) => { const t = window.__camTarget; t.px = c?.px ?? 0; t.pz = c?.pz ?? 0; t.zoom = c?.zoom ?? 46; t.off = 0; }, cam);
     await page.waitForFunction((s) => window.__nc.useGame.getState().env?.season === s, season, { timeout: 30000 }).catch(() => {});
     await page.waitForTimeout(key === 'ipad' ? 9000 : 7000); // transiciones de luz, terreno nuevo, precalentamiento, lluvia/nieve
     const file = path.join(OUT, `${name}.png`);

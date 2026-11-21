@@ -126,7 +126,7 @@ export function Backdrop() {
       <points ref={stars} geometry={geo} frustumCulled={false}>
         <pointsMaterial color="#ffffff" size={2.2} sizeAttenuation={false} transparent depthWrite={false} fog={false} toneMapped={false} />
       </points>
-      <mesh ref={sun} frustumCulled={false}><circleGeometry args={[3.2, 24]} /><meshBasicMaterial color="#fff0c0" fog={false} toneMapped={false} /></mesh>
+      <mesh ref={sun} frustumCulled={false}><circleGeometry args={[2.5, 28]} /><meshBasicMaterial color={[2.3, 1.25, 0.45]} fog={false} toneMapped={false} /></mesh>
       <mesh ref={moon} position={[11, 8, -400]} frustumCulled={false}><circleGeometry args={[4, 24]} /><meshBasicMaterial color="#f4f1ff" fog={false} toneMapped={false} /></mesh>
     </group>
     </>

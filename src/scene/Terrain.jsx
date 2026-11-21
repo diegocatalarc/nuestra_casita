@@ -172,7 +172,7 @@ export default function Terrain() {
   const waterM = useMemo(() => makeWaterMaterial(COARSE), []);
   waterMat.current = waterM;
   useEffect(() => () => waterM.dispose(), [waterM]);
-  WATER_U.uShore.value = shore;
+  WATER_U.uShore.value = shore; WATER_U.uMap.value = MAP; WATER_U.uN.value = N;
   const grain = useMemo(detailTexture, []);
   const landM = useMemo(() => new THREE.MeshStandardMaterial({ vertexColors: true, map: grain, roughness: 1 }), [grain]);
   landMat.current = landM; // material compartido por todos los bloques; useFrame lo ajusta con la lluvia

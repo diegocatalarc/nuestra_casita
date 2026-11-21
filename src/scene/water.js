@@ -20,7 +20,8 @@ export function shoreTexture(geo, N) {
   const pos = geo.attributes.position, S = N + 1, data = new Uint8Array(S * S);
   for (let k = 0; k < S * S; k++) data[k] = Math.round(Math.min(1, Math.max(0, (pos.getY(k) + 0.5) / 0.7)) * 255);
   const t = new THREE.DataTexture(data, S, S, THREE.RedFormat);
-  t.magFilter = t.minFilter = THREE.LinearFilter; t.needsUpdate = true;
+  t.magFilter = t.minFilter = THREE.LinearFilter; t.unpackAlignment = 1; // 201 px de ancho: sin esto las filas se desalinean
+  t.needsUpdate = true;
   return t;
 }
 
@@ -38,10 +39,10 @@ ${sh.fragmentShader
   vec2 suv = (vWp.xz / uMap * uN + 0.5) / (uN + 1.0);
   float bed = texture2D(uShore, suv).r * 0.7 - 0.5;
   float dep = max(0.0, ${WATER_Y.toFixed(2)} - bed);               // profundidad sobre el lecho
-  vec3 shallow = diffuseColor.rgb * vec3(1.18, 1.14, 1.0) + vec3(0.03, 0.05, 0.0);
-  vec3 deep = diffuseColor.rgb * vec3(0.7, 0.82, 1.0);
+  vec3 shallow = diffuseColor.rgb * vec3(0.92, 1.12, 1.06) + vec3(0.0, 0.03, 0.02);
+  vec3 deep = diffuseColor.rgb * vec3(0.5, 0.72, 1.0);
   vec3 wcol = mix(shallow, deep, smoothstep(0.0, 0.22, dep));
-  wcol = mix(wcol, uSky * 0.95, 0.3);                               // REFLECT: reflejo falso del cielo
+  wcol = mix(wcol, uSky * 0.9, 0.14);                               // REFLECT: reflejo falso del cielo
   float wave = 0.5 + 0.5 * sin(uTime * 1.3 + (vWp.x + vWp.z) * 2.5 + sin(vWp.x * 3.1) * 1.5);
   float brk = smoothstep(-0.6, 0.25, sin(vWp.x * 13.0 + uTime * 0.6) * sin(vWp.z * 11.0 - uTime * 0.5)); // espuma rota
   float edge = 0.035 + 0.035 * wave;                                // FOAM: ancho de la franja que va y viene
@@ -59,7 +60,7 @@ ${sh.fragmentShader
   #endif`)
     .replace('#include <opaque_fragment>', `  float s1 = sin(vWp.x * 6.0 + uTime * 1.7 + sin(vWp.z * 3.0 + uTime * 0.7) * 1.5);
   float s2 = sin(vWp.z * 7.0 - uTime * 1.3 + sin(vWp.x * 4.0 - uTime * 0.9) * 1.3);
-  float glint = pow(clamp(s1 * s2, 0.0, 1.0), 10.0);               // GLINT: destellos del sol/luna
+  float glint = pow(clamp(s1 * s2, 0.0, 1.0), 16.0) * 0.8;               // GLINT: destellos del sol/luna
   #ifndef WATER_SIMPLE
   glint += pow(clamp(sin(vWp.x * 11.0 - uTime * 2.1) * sin(vWp.z * 9.0 + uTime * 1.6), 0.0, 1.0), 14.0) * 0.6;
   #endif
