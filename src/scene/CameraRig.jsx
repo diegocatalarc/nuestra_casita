@@ -11,6 +11,8 @@ const BASE_YAW = Math.PI / 4;
 const PITCH = 0.66;
 const DIST = 70;
 const focus = new THREE.Vector3(me.x, 0, me.z);
+/** Punto del suelo al que mira la cámara (lo usa la luz para centrar el mapa de sombras en lo que se ve). */
+export const camFocus = focus;
 
 export default function CameraRig() {
   const { gl } = useThree();
