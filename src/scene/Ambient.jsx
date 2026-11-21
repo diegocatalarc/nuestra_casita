@@ -5,6 +5,16 @@ import { L, isWet } from '../game/lighting';
 import { me } from '../game/runtime';
 
 const FF = 40, PET = 150, DUST = 20, SPL = 70;
+/** Punto de luz redondo y suave (textura de 32² pintada una vez) para las luciérnagas. */
+const glowTex = (() => {
+  try {
+    const c = document.createElement('canvas'); c.width = c.height = 32;
+    const g = c.getContext('2d'), gr = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,0.7)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 32, 32);
+    return new THREE.CanvasTexture(c);
+  } catch { return null; }
+})();
 const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v3 = new THREE.Vector3(), s3 = new THREE.Vector3();
 
 /** Luciérnagas (noche), pétalos/hojas (primavera/otoño) y polvo al caminar. */
@@ -85,7 +95,7 @@ export default function Ambient() {
   return (
     <>
       <points ref={ff} geometry={ffGeo} frustumCulled={false}>
-        <pointsMaterial color="#eaff7a" size={7} sizeAttenuation={false} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+        <pointsMaterial color="#eaff7a" map={glowTex} size={16} sizeAttenuation={false} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </points>
       <points ref={pet} geometry={petGeo} frustumCulled={false}>
         <pointsMaterial color="#ffc2d4" size={5} sizeAttenuation={false} transparent opacity={0} depthWrite={false} />

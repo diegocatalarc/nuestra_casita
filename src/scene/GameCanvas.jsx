@@ -10,6 +10,8 @@ import { Backdrop, CloudShadows } from './Sky';
 import BootProbe from './BootProbe';
 import Weather from './Weather';
 import LightPool from './LightPool';
+import Halos from './Halos';
+import { OutlineSync } from './toon';
 import Terrain from './Terrain';
 import Nature from './Nature';
 import Details from './Details';
@@ -108,6 +110,8 @@ export default memo(function GameCanvas() {
         <Interaction />
         <FloatingFx />
       </Suspense>
+      <Halos />
+      <OutlineSync />
       <Weather />
       <Ambient />
       <CameraRig />

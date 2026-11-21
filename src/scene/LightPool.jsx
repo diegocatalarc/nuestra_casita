@@ -11,13 +11,11 @@ import { TOWN_LIGHTS } from './Discover';
 
 const POOL = 6; // número FIJO de luces: cambiarlo en caliente recompilaría los shaders
 
-/** Asigna las 6 PointLights a las fuentes más cercanas (lámparas, chimeneas, edificios). */
-export default function LightPool() {
+/** Fuentes de luz del mundo (lámparas, hogueras, edificios, farolas del pueblo). La usan LightPool y Halos. */
+export function useLightSources() {
   const decor = useGame((s) => s.decor);
   const buildings = useGame((s) => s.buildings);
-  const refs = useRef([]);
-
-  const sources = useMemo(() => {
+  return useMemo(() => {
     const out = [];
     for (const o of Object.values(decor)) {
       const def = DECOR[o.type];
@@ -27,12 +25,18 @@ export default function LightPool() {
     }
     for (const b of Object.values(buildings)) {
       const cx = b.x + b.w / 2, cz = b.z + b.d / 2;
-      if (b.type === 'observatory') out.push({ x: cx, y: 1.4, z: cz, c: '#9fb4ff', base: 0.9, dayMul: 0 });
-      else if (b.type === 'terrace' || b.type === 'garden') out.push({ x: cx, y: 1.2, z: cz, c: '#ffd98a', base: 0.8, dayMul: 0 });
-      else if (b.type !== 'greenhouse') out.push({ x: cx, y: 1.7, z: cz, c: '#ffcf8a', base: 1.1, dayMul: 0 });
+      if (b.type === 'observatory') out.push({ x: cx, y: 1.4, z: cz, c: '#9fb4ff', base: 0.9, dayMul: 0, noHalo: true });
+      else if (b.type === 'terrace' || b.type === 'garden') out.push({ x: cx, y: 1.2, z: cz, c: '#ffd98a', base: 0.8, dayMul: 0, noHalo: true });
+      else if (b.type !== 'greenhouse') out.push({ x: cx, y: 1.7, z: cz, c: '#ffcf8a', base: 1.1, dayMul: 0, noHalo: true });
     }
     return [...out, ...PROP_LIGHTS, ...VILLAGE_LIGHTS, ...TOWN_LIGHTS];
   }, [decor, buildings]);
+}
+
+/** Asigna las 6 PointLights a las fuentes más cercanas (lámparas, chimeneas, edificios). */
+export default function LightPool() {
+  const sources = useLightSources();
+  const refs = useRef([]);
 
   useFrame((s) => {
     const t = s.clock.elapsedTime;

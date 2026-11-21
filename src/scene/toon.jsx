@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
 
 // Sombreado "dibujo animado": 3 tonos de luz + contorno oscuro suave (casco invertido).
 const grad = (() => {
@@ -13,7 +14,39 @@ export const toonMat = (c) => {
   if (!mats.has(c)) mats.set(c, new THREE.MeshToonMaterial({ color: c, gradientMap: grad }));
   return mats.get(c);
 };
-const OUTLINE = new THREE.MeshBasicMaterial({ color: '#4a3036', side: THREE.BackSide });
+// Contorno de «casco invertido» con GROSOR CONSTANTE EN PANTALLA: el casco (cara trasera) se empuja a lo largo de la normal
+// en el espacio de recorte, así el trazo mide siempre ~1,6 px (ajustado al zoom) en vez de crecer con el tamaño de la pieza.
+// Color marrón cálido oscuro (no negro). Un material compartido por (grosor, cajas) y UN uniforme de píxeles: sin coste por pieza.
+// Ajuste: OUTLINE_PX (grosor base), OUTLINE_COLOR; `out` de cada <P> escala el grosor (0 = sin contorno).
+export const OUTLINE_PX = 1.6;
+export const OUTLINE_COLOR = '#4a2f26';
+const OUT_U = { uThick: { value: new THREE.Vector2(0.002, 0.003) } };
+const OUTLINES = new Map();
+function outlineMat(out, radial) {
+  const k = Math.round(Math.min(1.6, Math.max(0.5, out / 0.07)) * 4) / 4 + (radial ? 'r' : '');
+  if (!OUTLINES.has(k)) {
+    const mul = parseFloat(k);
+    const m = new THREE.MeshBasicMaterial({ color: OUTLINE_COLOR, side: THREE.BackSide, toneMapped: false });
+    m.onBeforeCompile = (sh) => {
+      sh.uniforms.uThick = OUT_U.uThick;
+      sh.vertexShader = 'uniform vec2 uThick;\n' + sh.vertexShader.replace('#include <project_vertex>', `#include <project_vertex>
+  vec3 on = ${radial ? 'normalize(position + 1e-5)' : 'normal'};
+  vec2 od = normalize((normalMatrix * on).xy + 1e-5);
+  gl_Position.xy += od * uThick * ${mul.toFixed(2)} * gl_Position.w;`);
+    };
+    m.customProgramCacheKey = () => 'outline' + k;
+    OUTLINES.set(k, m);
+  }
+  return OUTLINES.get(k);
+}
+/** Mantiene el grosor del contorno en píxeles reales (cambia con el tamaño del lienzo y algo con el zoom). Montar una vez dentro del Canvas. */
+export function OutlineSync() {
+  useFrame((s) => {
+    const px = OUTLINE_PX * Math.min(1.5, Math.max(0.7, s.camera.zoom / 46));
+    OUT_U.uThick.value.set((2 * px) / s.size.width, (2 * px) / s.size.height);
+  });
+  return null;
+}
 const BASIC = new Map();
 export const basicMat = (c, extra = {}) => {
   const k = c + JSON.stringify(extra);
@@ -34,7 +67,7 @@ export function P({ g, color, p = [0, 0, 0], s = [1, 1, 1], r = [0, 0, 0], out =
   return (
     <group position={p} rotation={r}>
       <mesh geometry={g} material={material || toonMat(color)} scale={s} castShadow={cast} />
-      {out > 0 && <mesh geometry={g} material={OUTLINE} scale={[s[0] * (1 + out), s[1] * (1 + out), s[2] * (1 + out)]} />}
+      {out > 0 && <mesh geometry={g} material={outlineMat(out, g.type === 'BoxGeometry')} scale={s} />}
       {children}
     </group>
   );

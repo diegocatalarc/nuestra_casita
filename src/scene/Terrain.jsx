@@ -7,11 +7,13 @@ import { idx } from '../game/worldGen';
 import { SEASON_COLORS, L, isWet } from '../game/lighting';
 import { hashStr } from '../game/rng';
 import { rbGeo } from './rb';
+import { WATER_U, WATER_Y, shoreTexture, makeWaterMaterial } from './water';
+
+const COARSE = typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
 
 const RES = 4; // vértices por tile
 const N = MAP * RES;
 const TOP = { [TILE.GRASS]: 0, [TILE.MEADOW]: 0, [TILE.FOREST]: 0, [TILE.SAND]: -0.07, [TILE.SOIL]: 0.02, [TILE.PATH]: -0.015, [TILE.WATER]: -0.46, [TILE.BRIDGE]: -0.46, [TILE.VOID]: 0 };
-const WATER_Y = -0.26;
 const sm = (a, b, v) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
 const hash2 = (x, z) => ((hashStr(`${x},${z}`) % 10000) / 10000);
 // ruido de valor suave (para bordes orgánicos y variación de color)
@@ -159,12 +161,18 @@ function buildSkirt(terrain) {
 export default function Terrain() {
   const world = useGame((s) => s.world);
   const season = useGame((s) => s.env.season);
-  const landMat = useRef(), waterMat = useRef(), plankRef = useRef(), railRef = useRef(), sparkRef = useRef();
+  const landMat = useRef(), waterMat = useRef(), plankRef = useRef(), railRef = useRef();
 
   const terrain = useMemo(() => buildTerrain(world, season), [world, season]);
   const skirt = useMemo(() => buildSkirt(terrain), [terrain]);
   const chunks = useMemo(() => chunkTerrain(terrain), [terrain]);
   useEffect(() => () => { chunks.forEach((g) => g.dispose()); terrain.dispose(); skirt.dispose(); }, [chunks, terrain, skirt]);
+  const shore = useMemo(() => shoreTexture(terrain, N), [terrain]);
+  useEffect(() => () => shore.dispose(), [shore]);
+  const waterM = useMemo(() => makeWaterMaterial(COARSE), []);
+  waterMat.current = waterM;
+  useEffect(() => () => waterM.dispose(), [waterM]);
+  WATER_U.uShore.value = shore;
   const grain = useMemo(detailTexture, []);
   const landM = useMemo(() => new THREE.MeshStandardMaterial({ vertexColors: true, map: grain, roughness: 1 }), [grain]);
   landMat.current = landM; // material compartido por todos los bloques; useFrame lo ajusta con la lluvia
@@ -190,7 +198,6 @@ export default function Terrain() {
     return o;
   }, [rails]);
   const postRef = useRef(), beamRef = useRef(), capRef = useRef(), knobRef = useRef();
-  const sparks = useMemo(() => Array.from({ length: 120 }, (_, i) => { const w = water[(i * 7919) % water.length] || [0, 0]; return { x: w[0] + 0.15 + ((i * 37) % 70) / 100, z: w[1] + 0.15 + ((i * 53) % 70) / 100, ph: i * 1.7 }; }), [water]);
 
   useLayoutEffect(() => {
     const m = new THREE.Matrix4();
@@ -226,18 +233,12 @@ export default function Terrain() {
     posts.forEach(([x, z], i) => { m.compose(new THREE.Vector3(x, 0.32, z), new THREE.Quaternion(), new THREE.Vector3(1, 1, 1)); postRef.current.setMatrixAt(i, m); m.compose(new THREE.Vector3(x, 0.68, z), new THREE.Quaternion(), new THREE.Vector3(1, 1, 1)); knobRef.current.setMatrixAt(i, m); });
     postRef.current.instanceMatrix.needsUpdate = true; knobRef.current.instanceMatrix.needsUpdate = true;
   }, [posts]);
-  const m4 = useMemo(() => new THREE.Matrix4(), []);
-  const q = useMemo(() => new THREE.Quaternion(), []);
-  const e = useMemo(() => new THREE.Euler(), []);
   useFrame((s, dt) => {
     const t = s.clock.elapsedTime;
-    sparks.forEach((k, i) => {
-      const a = Math.max(0, Math.sin(t * 1.8 + k.ph)); const sc = a * a * a * 0.2;
-      e.set(-Math.PI / 2, 0, k.ph); q.setFromEuler(e);
-      m4.compose(new THREE.Vector3(k.x, WATER_Y + 0.01, k.z), q, new THREE.Vector3(sc * 1.8, sc * 0.5, 1));
-      sparkRef.current.setMatrixAt(i, m4);
-    });
-    sparkRef.current.instanceMatrix.needsUpdate = true;
+    WATER_U.uTime.value = t;
+    WATER_U.uSky.value.copy(L.horizon);
+    WATER_U.uSunCol.value.copy(L.sun);
+    WATER_U.uGlint.value = (isWet(L.weather) ? 0.12 : 0.5) * (1 - L.night) * Math.min(1, L.sunI / 1.4) + L.night * 0.16;
     if (waterMat.current) waterMat.current.color.setHSL(0.52, 0.55, 0.52 + Math.sin(t * 1.2) * 0.03);
     if (landMat.current) {
       const wet = isWet(L.weather), k = Math.min(1, dt * 1.2);
@@ -257,11 +258,8 @@ export default function Terrain() {
       {/* agua */}
       <mesh position={[MAP / 2, WATER_Y, MAP / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[MAP, MAP]} />
-        <meshStandardMaterial ref={waterMat} color="#6cc3d8" roughness={0.22} metalness={0.1} transparent opacity={0.78} />
+        <primitive object={waterM} attach="material" />
       </mesh>
-      <instancedMesh ref={sparkRef} args={[null, null, 120]} frustumCulled={false}>
-        <planeGeometry args={[1, 1]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.8} depthWrite={false} toneMapped={false} />
-      </instancedMesh>
       {/* puente */}
       <instancedMesh ref={plankRef} args={[null, null, Math.max(1, planks.length * 4)]} castShadow receiveShadow>
         <primitive object={rbGeo(0.23, 0.1, 0.98)} attach="geometry" /><meshStandardMaterial vertexColors roughness={0.95} />
