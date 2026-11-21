@@ -46,7 +46,7 @@ Objetivo: acercar el aspecto a la calidez de Stardew Valley (colores cálidos, l
 
 ## Contorno global (`scene/OutlineEffect.js`, `scene/Effects.jsx`)
 - Efecto propio de `postprocessing` que usa SOLO la profundidad de la escena (sin `NormalPass`, sin segundo render). Un píxel es borde si, en 4 ejes y 2 radios (≈2 px de búfer), el par simétrico cumple `2d - d(+r) - d(-r) > uSil`: un plano inclinado (tejado, ladera) se cancela y un escalón de profundidad (silueta) no. El trazo sale por fuera del objeto, también contra el cielo y entre árboles. La fracción de muestras que acierta da antialiasing al trazo.
-- No hay línea en el cielo (no escribe profundidad; las nubes son color) ni en el agua (transparente, sin profundidad), ni en lluvia, nieve, halos o partículas (sin escritura de profundidad). Funciona con chunks e instancias porque lee el z-buffer.
+- No hay línea en el cielo (no escribe profundidad; las nubes son color) ni en el agua salvo, quizá, una línea en el borde del plano de agua contra el cielo al arrastrar la cámara al límite del mapa (el agua es transparente pero escribe profundidad: pendiente de valorar `depthWrite:false`), ni en lluvia, nieve, halos o partículas (sin escritura de profundidad). Funciona con chunks e instancias porque lee el z-buffer.
 - Color `#33201a` antes de la etapa de color (sale ≈ `#4a2f26` tras ACES y brillo). Grosor constante en píxeles de pantalla (`1.7 × dpr`, ≈1,5-2 px), independiente del zoom.
 - **Importante**: el efecto va el PRIMERO de la cadena: solo el primer `EffectPass` ve la profundidad de la escena (después los búferes se intercambian y el depth sale vacío).
 - Se probó un segundo canal de «pliegues internos» (segunda diferencia de profundidad) y se descartó: dibuja bandas de cuantización sobre los tejados. Los bordes internos (tejado/pared) no tienen contorno; sí lo tienen las siluetas de todo.
@@ -89,3 +89,7 @@ Objetivo: acercar el aspecto a la calidez de Stardew Valley (colores cálidos, l
 | Fugas | 0 | 0 | 0 |
 
 Escritorio queda por debajo del original (se quitó el TiltShift y el contorno entra en un pase existente). iPad Normal: +1,9 % quieta / +1,7 % moviéndose frente al original (límite +3 %): hierba, flores, insectos y pájaros suman ~20 llamadas. Con iPad «Alta» se añade un `EffectPass` y la pasada de composición: no medible aquí.
+
+## Retoques tras la revisión independiente
+- Chispas, mariposas y libélulas no escriben profundidad (el contorno global no las rodea). El «pop» inicial de un cultivo solo ocurre si se plantó hace < 8 s. Si falla la compilación de un shader, `quality` pasa a Normal automáticamente (`gl.debug.onShaderError`).
+- Pendiente de GPU real: contorno con MSAA×4 y dpr 2; coste del pase de contorno en iPad «Alta» (21 lecturas/píxel; si pesa, bajar muestras en táctil); cielo algo distinto entre Normal y Alta (`toneMapped:false` en el domo); materiales de Life/Details/Halos sin `dispose` al cambiar de casita (sin urgencia).

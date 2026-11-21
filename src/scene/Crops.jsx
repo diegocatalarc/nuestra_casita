@@ -105,12 +105,11 @@ function Plant({ type, stage, p }) {
   );
 }
 
-const T0 = typeof performance !== 'undefined' ? performance.now() : 0;
 const Crop = memo(function Crop({ crop, now }) {
   const info = cropInfo(crop, now);
   const spark = useRef(), sway = useRef();
   // «pop» de escala al nacer (plantado tras la carga inicial) y al pasar a la siguiente fase de crecimiento
-  const pop = useRef(typeof performance !== 'undefined' && performance.now() - T0 > 6000 ? 1 : 0), prevStage = useRef(info.stage);
+  const pop = useRef(crop.plantedAt && now - crop.plantedAt < 8000 ? 1 : 0), prevStage = useRef(info.stage);
   if (info.stage > prevStage.current) pop.current = 1;
   prevStage.current = info.stage;
   useFrame((s, dt) => {

@@ -76,7 +76,7 @@ export default memo(function GameCanvas() {
       dpr={typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches ? [1, 1.5] : [1, 2]}
       camera={{ zoom: 46, position: [40, 40, 40], near: 0.1, far: 1000 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
-      onCreated={(state) => { if (location.search.includes('debug')) { window.__cam = state.camera; window.__gl = state.gl; window.__r3f = state; } }}
+      onCreated={(state) => { try { state.gl.debug.onShaderError = () => { useGame.setState({ quality: false }); }; } catch { /* sin depuración de shaders */ } if (location.search.includes('debug')) { window.__cam = state.camera; window.__gl = state.gl; window.__r3f = state; } }}
     >
       <color attach="background" args={['#bfe3f2']} />
       <CollisionSync />

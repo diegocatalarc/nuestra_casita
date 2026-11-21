@@ -5,7 +5,7 @@ import { Uniform, Color, Vector2 } from 'three';
  * Contorno global (postproceso) con SOLO la profundidad: sin NormalPass, sin segundo render de la escena.
  *  · Silueta: un píxel es borde si algún vecino a `uThick` píxeles está MÁS CERCA que él por encima de `uSil` unidades de mundo
  *    (se dibuja por fuera del objeto, también contra el cielo, que no escribe profundidad). Las pendientes suaves (orillas,
- *    colinas) y el agua (no escribe profundidad) no cuentan: solo saltos reales de profundidad.
+ *    colinas) y el agua (casi plana) no cuentan: solo saltos reales de profundidad.
  *    La prueba usa pares simétricos (2d - d(+r) - d(-r)): un plano inclinado (tejado, ladera) se cancela y no da falsas líneas.
  *    Las sombras NO dan líneas (no están en la profundidad). (Se probó también un contorno de pliegues internos por segunda
  *    diferencia: ensuciaba los tejados con bandas de cuantización de la profundidad, se descartó.)

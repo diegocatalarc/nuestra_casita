@@ -101,7 +101,7 @@ function Insects() {
   });
   return (
     <instancedMesh ref={ref} args={[geo, null, BUT_MAX]} frustumCulled={false}>
-      <shaderMaterial vertexShader={WING_VS} fragmentShader={WING_FS} uniforms={uni} side={THREE.DoubleSide} />
+      <shaderMaterial vertexShader={WING_VS} fragmentShader={WING_FS} uniforms={uni} side={THREE.DoubleSide} depthWrite={false} />
     </instancedMesh>
   );
 }
@@ -252,7 +252,7 @@ function Sparks() {
   });
   return (
     <instancedMesh ref={ref} args={[null, null, SPARK_N]} frustumCulled={false}>
-      <icosahedronGeometry args={[1, 0]} /><meshBasicMaterial toneMapped={false} />
+      <icosahedronGeometry args={[1, 0]} /><meshBasicMaterial toneMapped={false} depthWrite={false} />
     </instancedMesh>
   );
 }
