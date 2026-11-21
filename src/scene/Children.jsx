@@ -10,7 +10,7 @@ import Avatar from './Avatar';
 function Child({ c }) {
   const g = useRef();
   const anim = useRef('idle');
-  const now = useGame((s) => s.now);
+  const now = useGame((s) => Math.floor(s.now / 3000) * 3000);
   const decor = useGame((s) => s.decor);
   const info = childInfo(c, now);
   const crib = info.stage.id === 'baby' ? Object.values(decor).find((d) => d.type === 'crib') : null;

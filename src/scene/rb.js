@@ -18,6 +18,6 @@ function bakeAO(geo, h) {
 /** Caja con bordes suavizados (compartida por tamaño), con degradado de luz horneado. */
 export function rbGeo(w, h, d) {
   const k = `${w.toFixed(3)}|${h.toFixed(3)}|${d.toFixed(3)}`;
-  if (!cache.has(k)) cache.set(k, bakeAO(new RoundedBoxGeometry(w, h, d, 3, Math.max(0.006, Math.min(0.06, Math.min(w, h, d) / 3))), h));
+  if (!cache.has(k)) cache.set(k, bakeAO(new RoundedBoxGeometry(w, h, d, 2, Math.max(0.006, Math.min(0.06, Math.min(w, h, d) / 3))), h));
   return cache.get(k);
 }

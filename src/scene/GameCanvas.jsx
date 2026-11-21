@@ -1,5 +1,5 @@
-import { Suspense, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { lazy, memo, Suspense, useEffect, useRef } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGame } from '../store/gameStore';
 import { rebuildCollision } from '../game/movement';
@@ -31,7 +31,8 @@ import CameraRig from './CameraRig';
 import Interaction from './Interaction';
 import FloatingFx from './FloatingFx';
 import Ambient from './Ambient';
-import Effects from './Effects';
+// El postproceso (bloom, tilt-shift…) es una librería grande: solo se descarga si los efectos están activos.
+const Effects = lazy(() => import('./Effects'));
 
 /** Mantiene la rejilla de colisión sincronizada con nodos agotados y edificios. */
 function CollisionSync() {
@@ -43,7 +44,27 @@ function CollisionSync() {
   return null;
 }
 
-export default function GameCanvas() {
+/**
+ * Precalentamiento: sube a la GPU todas las geometrías y compila los shaders UNA vez (un dibujado sin descarte por
+ * visibilidad) mientras la pantalla de carga sigue encima. Si no, cada objeto nuevo que entra en cámara al caminar
+ * o hacer zoom provoca su subida y compilación en pleno juego: tirones.
+ */
+function Prewarm() {
+  const { gl, scene, camera } = useThree();
+  const n = useRef(0);
+  useFrame(() => {
+    n.current++;
+    if (n.current !== 30 && n.current !== 150) return;
+    const off = [];
+    scene.traverse((o) => { if (o.frustumCulled && (o.isMesh || o.isPoints || o.isLine)) { o.frustumCulled = false; off.push(o); } });
+    try { gl.compile(scene, camera); gl.render(scene, camera); } catch { /* sin precalentar: no pasa nada */ } finally { off.forEach((o) => { o.frustumCulled = true; }); }
+  });
+  return null;
+}
+
+// memo: App se vuelve a renderizar cada segundo (reloj); sin memo se reconciliaba toda la escena 3D cada vez.
+export default memo(function GameCanvas() {
+  const fx = useGame((s) => s.quality);
   return (
     <Canvas
       shadows={{ type: THREE.PCFSoftShadowMap }}
@@ -51,11 +72,12 @@ export default function GameCanvas() {
       dpr={typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches ? [1, 1.5] : [1, 2]}
       camera={{ zoom: 46, position: [40, 40, 40], near: 0.1, far: 1000 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
-      onCreated={({ camera }) => { if (location.search.includes('debug')) window.__cam = camera; }}
+      onCreated={(state) => { if (location.search.includes('debug')) { window.__cam = state.camera; window.__gl = state.gl; window.__r3f = state; } }}
     >
       <color attach="background" args={['#bfe3f2']} />
       <CollisionSync />
       <BootProbe />
+      <Prewarm />
       <Lighting />
       <LightPool />
       <Backdrop />
@@ -88,7 +110,7 @@ export default function GameCanvas() {
       <Weather />
       <Ambient />
       <CameraRig />
-      <Effects />
+      {fx && <Suspense fallback={null}><Effects /></Suspense>}
     </Canvas>
   );
-}
+});

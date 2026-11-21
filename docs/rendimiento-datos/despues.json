@@ -1,0 +1,1130 @@
+{
+  "label": "despues",
+  "date": "2026-11-21T18:36:44.660Z",
+  "mode": "build",
+  "phaseSeconds": 20,
+  "note": "Render por software (swiftshader): solo valen las comparaciones en la misma máquina y las métricas independientes de GPU.",
+  "bundle": {
+    "entryChunks": [
+      "assets/index-LWuG8Tp2.js 2897",
+      "assets/r3f-B7nEvgy-.js 93554",
+      "assets/three-DQl2fZcS.js 175805"
+    ],
+    "entryJsGzip": 272256,
+    "entryJsRaw": 979442,
+    "totalJsGzip": 779974,
+    "totalJsRaw": 2631298,
+    "lazyJsGzip": 507718,
+    "cssGzip": 8544,
+    "chunks": [
+      "assets/three-DQl2fZcS.js raw=683945 gzip=175805 [entrada]",
+      "assets/firebaseBackend-3rZDtm6z.js raw=726406 gzip=169888",
+      "assets/App-08xtb8rQ.js raw=313348 gzip=102937",
+      "assets/r3f-B7nEvgy-.js raw=288711 gzip=93554 [entrada]",
+      "assets/constants-DeNBbv4g.js raw=68761 gzip=23577",
+      "assets/en-extra-CHFFG4nW.js raw=55866 gzip=23057",
+      "assets/en-historia-CrM2bgve.js raw=56786 gzip=22231",
+      "assets/Decor-CKWjxQqX.js raw=71430 gzip=21510",
+      "assets/Effects-ChI5cRAR.js raw=77705 gzip=19191",
+      "assets/projects-CC-MvLBW.js raw=35832 gzip=14632",
+      "assets/en-CT2OytcX.js raw=27564 gzip=11929",
+      "assets/story-Rnp7j1gN.js raw=27523 gzip=10829",
+      "assets/logic-sjlb-ENT.js raw=17646 gzip=7852",
+      "assets/en-escenas-DnPOoFOr.js raw=17814 gzip=7835",
+      "assets/ExplorePanel-BBMbmnW0.js raw=7801 gzip=3095",
+      "assets/TodayPanel-DR81eeA_.js raw=6832 gzip=3087",
+      "assets/EventsPanel-CaaOP4jM.js raw=7364 gzip=2989",
+      "assets/index-LWuG8Tp2.js raw=6786 gzip=2897 [entrada]",
+      "assets/HelpPanel-CkuyxBg3.js raw=6309 gzip=2791",
+      "assets/worldGen-QJBI1Qg2.js raw=6350 gzip=2715",
+      "assets/runtime-hVMC1wih.js raw=6070 gzip=2552",
+      "assets/CraftPanel-Binp7XNj.js raw=6467 gzip=2535",
+      "assets/DatesPanel-XapZ8OLL.js raw=6083 gzip=2486",
+      "assets/QuestsPanel-DOQB17vn.js raw=5527 gzip=2244",
+      "assets/AvatarPanel-B6uSPR_k.js raw=5691 gzip=2122",
+      "assets/OrdersPanel-BrNvAdtU.js raw=4805 gzip=2114",
+      "assets/MarketPanel-MbpiCJLJ.js raw=4926 gzip=1967",
+      "assets/actions-DPYeDujl.js raw=3988 gzip=1882",
+      "assets/localBackend-YwCB7wiJ.js raw=4014 gzip=1842",
+      "assets/FamilyPanel-ezW6S4uG.js raw=4010 gzip=1817",
+      "assets/AnimalsPanel-5gMSa4Li.js raw=4147 gzip=1816",
+      "assets/en-proyectos-aByIjIm7.js raw=3133 gzip=1562",
+      "assets/MinePanel-S__ErqjU.js raw=3073 gzip=1542",
+      "assets/economy-ljIEC93P.js raw=3287 gzip=1541",
+      "assets/events-DyrPQcMf.js raw=3191 gzip=1519",
+      "assets/MapPanel-qCQaFqx2.js raw=2868 gzip=1512",
+      "assets/MailboxPanel-k6z3W1A3.js raw=3159 gzip=1482",
+      "assets/en-vecinos-KtbRrg8d.js raw=2642 gzip=1445",
+      "assets/ProjectPanel-CUferzh8.js raw=2772 gzip=1426",
+      "assets/FishingPanel-u9htK38g.js raw=3026 gzip=1380",
+      "assets/FoodPanel-CywZIOrP.js raw=3047 gzip=1356",
+      "assets/DecorPanel-CbtFYRza.js raw=2379 gzip=1145",
+      "assets/LandPanel-Ct8dnWyu.js raw=2142 gzip=1135",
+      "assets/gameStore-CnChfIUY.js raw=2385 gzip=1130",
+      "assets/projects-l6wZVQg5.js raw=1900 gzip=1061",
+      "assets/en-novedades13-DMFoZVzR.js raw=1868 gzip=1024",
+      "assets/en-hoy-Bg3FxHzX.js raw=1823 gzip=963",
+      "assets/Showroom-Ca0LH5a-.js raw=1695 gzip=952",
+      "assets/en-escenas-ui-BtHgF1vI.js raw=1727 gzip=929",
+      "assets/en-corazones-BAzjdYZC.js raw=1726 gzip=877",
+      "assets/BuildPanel-BI-miWKu.js raw=1485 gzip=847",
+      "assets/en-motor-historia-CHG1lZDS.js raw=1370 gzip=833",
+      "assets/en-tutorial-8ODyzTkd.js raw=1385 gzip=819",
+      "assets/time-Bw7jJgcb.js raw=1210 gzip=724",
+      "assets/en-novedades17-B3SF3chI.js raw=1224 gzip=706",
+      "assets/en-pedidos-C_A9pM7U.js raw=1241 gzip=653",
+      "assets/en-crafteo-pfG-34X1.js raw=1180 gzip=638",
+      "assets/InventoryPanel-SJbO60JC.js raw=1117 gzip=636",
+      "assets/en-tactil-BfB_U0cl.js raw=1096 gzip=616",
+      "assets/en-crafteo-simple-BgWux59d.js raw=1026 gzip=610",
+      "assets/en-carga-Cel6R6m4.js raw=825 gzip=525",
+      "assets/initialState-5DMp7L-2.js raw=713 gzip=503",
+      "assets/backend-qGAZhhqw.js raw=927 gzip=485",
+      "assets/en-sinniebla-DyPbQI_F.js raw=583 gzip=384",
+      "assets/en-sinniebla2-CnB7SWl1.js raw=402 gzip=289",
+      "assets/rng-ByERsPTs.js raw=403 gzip=282",
+      "assets/en-historia-hud-BnKn6Der.js raw=346 gzip=245",
+      "assets/en-plaza-CGD-SzrN.js raw=179 gzip=173",
+      "assets/en-diagnostico-CsoKEku1.js raw=164 gzip=158",
+      "assets/en-prueba-DiUgMBSn.js raw=72 gzip=89"
+    ]
+  },
+  "load": {
+    "runs": 3,
+    "cpuThrottle": 2,
+    "tLoginMs": 866,
+    "tLoadingScreenMs": 169,
+    "tEnterMs": 18534,
+    "fcpMs": 836,
+    "jsRequests": 20,
+    "jsGzipAtLogin": 467987,
+    "jsGzipAtEnter": 511353,
+    "jsBytesEncoded": 469744,
+    "raw": [
+      {
+        "gzLogin": 467987,
+        "gzEnter": 511353,
+        "tLoginMs": 579,
+        "tLoadingScreenMs": 170,
+        "tEnterMs": 18534,
+        "dcl": 420.09999999962747,
+        "load": 421.29999999981374,
+        "fcp": 560,
+        "jsReq": 20,
+        "jsBytes": 469744,
+        "jsAtAvatar": 22,
+        "jsAtEnter": 22
+      },
+      {
+        "gzLogin": 467987,
+        "gzEnter": 511353,
+        "tLoginMs": 866,
+        "tLoadingScreenMs": 157,
+        "tEnterMs": 18234,
+        "dcl": 367.70000000018626,
+        "load": 371.30000000074506,
+        "fcp": 836,
+        "jsReq": 20,
+        "jsBytes": 469744,
+        "jsAtAvatar": 22,
+        "jsAtEnter": 22
+      },
+      {
+        "gzLogin": 467987,
+        "gzEnter": 511353,
+        "tLoginMs": 947,
+        "tLoadingScreenMs": 169,
+        "tEnterMs": 20854,
+        "dcl": 378.40000000037253,
+        "load": 382.1000000005588,
+        "fcp": 936,
+        "jsReq": 20,
+        "jsBytes": 469744,
+        "jsAtAvatar": 22,
+        "jsAtEnter": 22
+      }
+    ]
+  },
+  "desktop": {
+    "profile": "Escritorio 1024×640",
+    "seed": 4242,
+    "info": {
+      "dpr": 1,
+      "coarse": false,
+      "fx": true,
+      "canvas": [
+        1024,
+        640
+      ]
+    },
+    "useFrameSubscribers": 173,
+    "idle": {
+      "name": "quieta",
+      "seconds": 21.01,
+      "frames": 25,
+      "fps": 1.19,
+      "movedUnits": 0,
+      "drawCalls": {
+        "mean": 974.44,
+        "p50": 975,
+        "p95": 976,
+        "max": 977
+      },
+      "triangles": {
+        "mean": 602567.2,
+        "p50": 602612,
+        "p95": 602692,
+        "max": 602772
+      },
+      "renderPasses": 21,
+      "useFrameMs": {
+        "mean": 8.91,
+        "p50": 8.5,
+        "p95": 10.7,
+        "max": 11.5
+      },
+      "glRenderJsMs": {
+        "mean": 8.11,
+        "p50": 7.7,
+        "p95": 10,
+        "max": 10.5
+      },
+      "jsPerFrameMs": {
+        "mean": 17.02,
+        "p50": 16.2,
+        "p95": 20.7,
+        "max": 22
+      },
+      "frameIntervalMs": {
+        "mean": 836.63,
+        "p50": 833.3,
+        "p95": 883.4,
+        "max": 900
+      },
+      "memory": {
+        "geometries": [
+          750,
+          750
+        ],
+        "textures": [
+          23,
+          23
+        ],
+        "programs": [
+          103,
+          103
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 0.57,
+      "r3fCommitsPerSec": 0.48,
+      "longTasks": 25,
+      "longTasksMs": 20955,
+      "cdpPerFrame": {
+        "scriptMs": 10.23,
+        "layoutMs": 0.15,
+        "recalcStyleMs": 0.5,
+        "taskMs": 805.15,
+        "layoutCount": 0.81,
+        "recalcStyleCount": 1.95,
+        "mainThreadBusyPct": 95.81
+      },
+      "heapMB": [
+        57.44,
+        47.16
+      ]
+    },
+    "move": {
+      "name": "movimiento",
+      "seconds": 22.98,
+      "frames": 25,
+      "fps": 1.09,
+      "movedUnits": -1.33,
+      "drawCalls": {
+        "mean": 1016.2,
+        "p50": 982,
+        "p95": 1244,
+        "max": 1249
+      },
+      "triangles": {
+        "mean": 602139.36,
+        "p50": 602372,
+        "p95": 674534,
+        "max": 691874
+      },
+      "renderPasses": 21,
+      "useFrameMs": {
+        "mean": 11.1,
+        "p50": 11.4,
+        "p95": 12.9,
+        "max": 16.7
+      },
+      "glRenderJsMs": {
+        "mean": 9.96,
+        "p50": 10.1,
+        "p95": 11.6,
+        "max": 15.1
+      },
+      "jsPerFrameMs": {
+        "mean": 21.06,
+        "p50": 21.5,
+        "p95": 24.5,
+        "max": 31.8
+      },
+      "frameIntervalMs": {
+        "mean": 915.3,
+        "p50": 899.9,
+        "p95": 1000.1,
+        "max": 1400
+      },
+      "memory": {
+        "geometries": [
+          750,
+          750
+        ],
+        "textures": [
+          23,
+          23
+        ],
+        "programs": [
+          103,
+          104
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 1
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 2.39,
+      "r3fCommitsPerSec": 0.39,
+      "longTasks": 24,
+      "longTasksMs": 22005,
+      "cdpPerFrame": {
+        "scriptMs": 12.5,
+        "layoutMs": 0.29,
+        "recalcStyleMs": 0.7,
+        "taskMs": 882.53,
+        "layoutCount": 0.83,
+        "recalcStyleCount": 1.87,
+        "mainThreadBusyPct": 96.02
+      },
+      "heapMB": [
+        50.47,
+        68.44
+      ]
+    },
+    "jsIdle": {
+      "name": "quieta (solo JS)",
+      "seconds": 20,
+      "frames": 1199,
+      "fps": 59.94,
+      "movedUnits": 0,
+      "drawCalls": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "triangles": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "renderPasses": 21,
+      "useFrameMs": {
+        "mean": 0.44,
+        "p50": 0.4,
+        "p95": 0.7,
+        "max": 10.8
+      },
+      "glRenderJsMs": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "jsPerFrameMs": {
+        "mean": 0.44,
+        "p50": 0.4,
+        "p95": 0.7,
+        "max": 10.8
+      },
+      "frameIntervalMs": {
+        "mean": 16.67,
+        "p50": 16.7,
+        "p95": 16.7,
+        "max": 16.8
+      },
+      "memory": {
+        "geometries": [
+          750,
+          750
+        ],
+        "textures": [
+          23,
+          23
+        ],
+        "programs": [
+          104,
+          104
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 1,
+      "r3fCommitsPerSec": 0.6,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "cdpPerFrame": {
+        "scriptMs": 0.6,
+        "layoutMs": 0.02,
+        "recalcStyleMs": 0.31,
+        "taskMs": 2.01,
+        "layoutCount": 7.3,
+        "recalcStyleCount": 67.29,
+        "mainThreadBusyPct": 12.03
+      },
+      "heapMB": [
+        38.87,
+        38.89
+      ]
+    },
+    "jsMove": {
+      "name": "movimiento (solo JS)",
+      "seconds": 20.02,
+      "frames": 1201,
+      "fps": 59.99,
+      "movedUnits": -6.13,
+      "drawCalls": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "triangles": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "renderPasses": 21,
+      "useFrameMs": {
+        "mean": 0.5,
+        "p50": 0.5,
+        "p95": 0.7,
+        "max": 2.9
+      },
+      "glRenderJsMs": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "jsPerFrameMs": {
+        "mean": 0.5,
+        "p50": 0.5,
+        "p95": 0.7,
+        "max": 2.9
+      },
+      "frameIntervalMs": {
+        "mean": 16.67,
+        "p50": 16.7,
+        "p95": 16.7,
+        "max": 16.8
+      },
+      "memory": {
+        "geometries": [
+          750,
+          750
+        ],
+        "textures": [
+          23,
+          23
+        ],
+        "programs": [
+          104,
+          104
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 2.1,
+      "r3fCommitsPerSec": 0.65,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "cdpPerFrame": {
+        "scriptMs": 0.64,
+        "layoutMs": 0.02,
+        "recalcStyleMs": 0.36,
+        "taskMs": 2.08,
+        "layoutCount": 7.34,
+        "recalcStyleCount": 67.34,
+        "mainThreadBusyPct": 12.48
+      },
+      "heapMB": [
+        47.27,
+        47.2
+      ]
+    },
+    "camera": {
+      "name": "zoom+giro (solo JS)",
+      "seconds": 20.02,
+      "frames": 1201,
+      "fps": 59.99,
+      "movedUnits": 0,
+      "drawCalls": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "triangles": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "renderPasses": 21,
+      "useFrameMs": {
+        "mean": 0.44,
+        "p50": 0.4,
+        "p95": 0.7,
+        "max": 2.2
+      },
+      "glRenderJsMs": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "jsPerFrameMs": {
+        "mean": 0.44,
+        "p50": 0.4,
+        "p95": 0.7,
+        "max": 2.2
+      },
+      "frameIntervalMs": {
+        "mean": 16.67,
+        "p50": 16.7,
+        "p95": 16.7,
+        "max": 16.8
+      },
+      "memory": {
+        "geometries": [
+          750,
+          750
+        ],
+        "textures": [
+          23,
+          23
+        ],
+        "programs": [
+          104,
+          104
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 2,
+      "r3fCommitsPerSec": 0.6,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "cdpPerFrame": {
+        "scriptMs": 0.57,
+        "layoutMs": 0.02,
+        "recalcStyleMs": 0.32,
+        "taskMs": 1.91,
+        "layoutCount": 7.39,
+        "recalcStyleCount": 67.43,
+        "mainThreadBusyPct": 11.44
+      },
+      "heapMB": [
+        55.18,
+        43.07
+      ]
+    },
+    "panels": [
+      {
+        "id": "today",
+        "firstMs": 6,
+        "repeatMs": 1
+      },
+      {
+        "id": "inventory",
+        "firstMs": 3,
+        "repeatMs": 2
+      },
+      {
+        "id": "market",
+        "firstMs": 2,
+        "repeatMs": 1
+      },
+      {
+        "id": "quests",
+        "firstMs": 2,
+        "repeatMs": 2
+      },
+      {
+        "id": "orders",
+        "firstMs": 3,
+        "repeatMs": 2
+      },
+      {
+        "id": "mailbox",
+        "firstMs": 2,
+        "repeatMs": 1
+      },
+      {
+        "id": "help",
+        "firstMs": 5,
+        "repeatMs": 1
+      }
+    ],
+    "topUseFrameTotalMs": [
+      [
+        "(z,R)=>{if(n){const y=v.autoClear;v.autoClear=a,c&&!a&&v.clearStencil(),m.render(R),v.auto #p1",
+        746
+      ],
+      [
+        "Ge=>{if(he.current){X.updateMatrixWorld(),he.current.updateWorldMatrix(!0,!1);const ue=v?F #p0",
+        677
+      ],
+      [
+        "P=>{const B=P.clock.elapsedTime,V=s?s():\"idle\",X=hc(V,B),Ke=c.current;if(Ke&&(Ke.rotation. #p0",
+        176
+      ],
+      [
+        "(R,q)=>{const _=R.clock.elapsedTime;if(S.forEach((T,D)=>{const C=Math.max(0,Math.sin(_*1.8 #p0",
+        139
+      ],
+      [
+        "(c,l)=>{const d=Math.min(l,.05),u=c.clock.elapsedTime,m=g.getState().env||{},h=i.dm;if(a.c #p0",
+        109
+      ],
+      [
+        "(l,d)=>{d=Math.min(d,.05);const u=l.clock.elapsedTime,m=a.current.material,h=I.night>.35&& #p0",
+        106
+      ],
+      [
+        "o=>{var i,a,l,u;const s=c.current;if(!s)return;const n=o.clock.elapsedTime,r=t[0]*3.1+t[2] #p0",
+        79
+      ],
+      [
+        "(i,c)=>{if(!Za.ready)return;s.current.tiles!==Za.tiles&&(s.current={tiles:Za.tiles,data:Ni #p0",
+        63
+      ]
+    ],
+    "errors": []
+  },
+  "ipad": {
+    "profile": "iPad táctil 1024×768 @1x (el dpr real se limita a 1,5)",
+    "seed": 4242,
+    "info": {
+      "dpr": 1,
+      "coarse": true,
+      "fx": false,
+      "canvas": [
+        1024,
+        768
+      ]
+    },
+    "useFrameSubscribers": 171,
+    "idle": {
+      "name": "quieta",
+      "seconds": 20.87,
+      "frames": 36,
+      "fps": 1.72,
+      "movedUnits": 0,
+      "drawCalls": {
+        "mean": 984.31,
+        "p50": 984,
+        "p95": 985,
+        "max": 985
+      },
+      "triangles": {
+        "mean": 636548.44,
+        "p50": 636524,
+        "p95": 636604,
+        "max": 636604
+      },
+      "renderPasses": 1,
+      "useFrameMs": {
+        "mean": 1.23,
+        "p50": 0.9,
+        "p95": 2.2,
+        "max": 11.4
+      },
+      "glRenderJsMs": {
+        "mean": 10.19,
+        "p50": 9.7,
+        "p95": 14.4,
+        "max": 15
+      },
+      "jsPerFrameMs": {
+        "mean": 11.42,
+        "p50": 10.9,
+        "p95": 15.9,
+        "max": 20.1
+      },
+      "frameIntervalMs": {
+        "mean": 577.29,
+        "p50": 583.3,
+        "p95": 616.6,
+        "max": 616.7
+      },
+      "memory": {
+        "geometries": [
+          746,
+          746
+        ],
+        "textures": [
+          5,
+          5
+        ],
+        "programs": [
+          44,
+          44
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 0.77,
+      "r3fCommitsPerSec": 0.57,
+      "longTasks": 36,
+      "longTasksMs": 20783,
+      "cdpPerFrame": {
+        "scriptMs": 13.43,
+        "layoutMs": 0.18,
+        "recalcStyleMs": 0.7,
+        "taskMs": 561.94,
+        "layoutCount": 1.1,
+        "recalcStyleCount": 2.78,
+        "mainThreadBusyPct": 96.92
+      },
+      "heapMB": [
+        52.98,
+        35.32
+      ]
+    },
+    "move": {
+      "name": "movimiento",
+      "seconds": 22.07,
+      "frames": 38,
+      "fps": 1.72,
+      "movedUnits": -5.18,
+      "drawCalls": {
+        "mean": 1041.26,
+        "p50": 989,
+        "p95": 1273,
+        "max": 1278
+      },
+      "triangles": {
+        "mean": 644017,
+        "p50": 646196,
+        "p95": 717930,
+        "max": 718674
+      },
+      "renderPasses": 1,
+      "useFrameMs": {
+        "mean": 1.02,
+        "p50": 0.9,
+        "p95": 1.8,
+        "max": 2.2
+      },
+      "glRenderJsMs": {
+        "mean": 10.2,
+        "p50": 10.1,
+        "p95": 14.1,
+        "max": 15.6
+      },
+      "jsPerFrameMs": {
+        "mean": 11.22,
+        "p50": 11.1,
+        "p95": 15.4,
+        "max": 16.7
+      },
+      "frameIntervalMs": {
+        "mean": 582,
+        "p50": 583.2,
+        "p95": 650,
+        "max": 983.3
+      },
+      "memory": {
+        "geometries": [
+          746,
+          746
+        ],
+        "textures": [
+          5,
+          5
+        ],
+        "programs": [
+          44,
+          44
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 2.76,
+      "r3fCommitsPerSec": 0.5,
+      "longTasks": 37,
+      "longTasksMs": 21463,
+      "cdpPerFrame": {
+        "scriptMs": 12.82,
+        "layoutMs": 0.24,
+        "recalcStyleMs": 0.85,
+        "taskMs": 567.16,
+        "layoutCount": 1.18,
+        "recalcStyleCount": 2.85,
+        "mainThreadBusyPct": 97.66
+      },
+      "heapMB": [
+        34.9,
+        38.49
+      ]
+    },
+    "jsIdle": {
+      "name": "quieta (solo JS)",
+      "seconds": 20,
+      "frames": 1199,
+      "fps": 59.94,
+      "movedUnits": 0,
+      "drawCalls": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "triangles": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "renderPasses": 1,
+      "useFrameMs": {
+        "mean": 0.41,
+        "p50": 0.4,
+        "p95": 0.7,
+        "max": 9.2
+      },
+      "glRenderJsMs": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "jsPerFrameMs": {
+        "mean": 0.41,
+        "p50": 0.4,
+        "p95": 0.7,
+        "max": 9.2
+      },
+      "frameIntervalMs": {
+        "mean": 16.67,
+        "p50": 16.7,
+        "p95": 16.7,
+        "max": 16.8
+      },
+      "memory": {
+        "geometries": [
+          746,
+          746
+        ],
+        "textures": [
+          5,
+          5
+        ],
+        "programs": [
+          44,
+          44
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 2.4,
+      "r3fCommitsPerSec": 0.65,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "cdpPerFrame": {
+        "scriptMs": 0.57,
+        "layoutMs": 0.02,
+        "recalcStyleMs": 0.34,
+        "taskMs": 2.13,
+        "layoutCount": 7.35,
+        "recalcStyleCount": 67.34,
+        "mainThreadBusyPct": 12.78
+      },
+      "heapMB": [
+        34.57,
+        35.48
+      ]
+    },
+    "jsMove": {
+      "name": "movimiento (solo JS)",
+      "seconds": 20.02,
+      "frames": 1200,
+      "fps": 59.95,
+      "movedUnits": -6.14,
+      "drawCalls": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "triangles": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "renderPasses": 1,
+      "useFrameMs": {
+        "mean": 0.54,
+        "p50": 0.5,
+        "p95": 0.8,
+        "max": 1.4
+      },
+      "glRenderJsMs": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "jsPerFrameMs": {
+        "mean": 0.54,
+        "p50": 0.5,
+        "p95": 0.8,
+        "max": 1.4
+      },
+      "frameIntervalMs": {
+        "mean": 16.67,
+        "p50": 16.7,
+        "p95": 16.8,
+        "max": 16.8
+      },
+      "memory": {
+        "geometries": [
+          746,
+          746
+        ],
+        "textures": [
+          5,
+          5
+        ],
+        "programs": [
+          44,
+          44
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 1.7,
+      "r3fCommitsPerSec": 0.6,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "cdpPerFrame": {
+        "scriptMs": 0.71,
+        "layoutMs": 0.02,
+        "recalcStyleMs": 0.43,
+        "taskMs": 2.43,
+        "layoutCount": 7.29,
+        "recalcStyleCount": 67.29,
+        "mainThreadBusyPct": 14.59
+      },
+      "heapMB": [
+        36.71,
+        36
+      ]
+    },
+    "camera": {
+      "name": "zoom+giro (solo JS)",
+      "seconds": 20.02,
+      "frames": 1201,
+      "fps": 59.98,
+      "movedUnits": 0,
+      "drawCalls": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "triangles": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "renderPasses": 1,
+      "useFrameMs": {
+        "mean": 0.5,
+        "p50": 0.5,
+        "p95": 0.8,
+        "max": 1.5
+      },
+      "glRenderJsMs": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "jsPerFrameMs": {
+        "mean": 0.5,
+        "p50": 0.5,
+        "p95": 0.8,
+        "max": 1.5
+      },
+      "frameIntervalMs": {
+        "mean": 16.67,
+        "p50": 16.7,
+        "p95": 16.8,
+        "max": 16.8
+      },
+      "memory": {
+        "geometries": [
+          746,
+          746
+        ],
+        "textures": [
+          5,
+          5
+        ],
+        "programs": [
+          44,
+          44
+        ],
+        "growth": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        },
+        "leak": false
+      },
+      "reactCommitsPerSec": 2,
+      "r3fCommitsPerSec": 0.6,
+      "longTasks": 0,
+      "longTasksMs": 0,
+      "cdpPerFrame": {
+        "scriptMs": 0.66,
+        "layoutMs": 0.02,
+        "recalcStyleMs": 0.4,
+        "taskMs": 2.31,
+        "layoutCount": 7.39,
+        "recalcStyleCount": 67.43,
+        "mainThreadBusyPct": 13.83
+      },
+      "heapMB": [
+        36.3,
+        41.4
+      ]
+    },
+    "panels": [
+      {
+        "id": "today",
+        "firstMs": 5,
+        "repeatMs": 1
+      },
+      {
+        "id": "inventory",
+        "firstMs": 4,
+        "repeatMs": 2
+      },
+      {
+        "id": "market",
+        "firstMs": 3,
+        "repeatMs": 1
+      },
+      {
+        "id": "quests",
+        "firstMs": 3,
+        "repeatMs": 2
+      },
+      {
+        "id": "orders",
+        "firstMs": 5,
+        "repeatMs": 2
+      },
+      {
+        "id": "mailbox",
+        "firstMs": 3,
+        "repeatMs": 2
+      },
+      {
+        "id": "help",
+        "firstMs": 3,
+        "repeatMs": 2
+      }
+    ],
+    "topUseFrameTotalMs": [
+      [
+        "Ge=>{if(he.current){X.updateMatrixWorld(),he.current.updateWorldMatrix(!0,!1);const ue=v?F #p0",
+        881
+      ],
+      [
+        "P=>{const B=P.clock.elapsedTime,V=s?s():\"idle\",X=hc(V,B),Ke=c.current;if(Ke&&(Ke.rotation. #p0",
+        235
+      ],
+      [
+        "(R,q)=>{const _=R.clock.elapsedTime;if(S.forEach((T,D)=>{const C=Math.max(0,Math.sin(_*1.8 #p0",
+        197
+      ],
+      [
+        "(l,d)=>{d=Math.min(d,.05);const u=l.clock.elapsedTime,m=a.current.material,h=I.night>.35&& #p0",
+        125
+      ],
+      [
+        "o=>{var i,a,l,u;const s=c.current;if(!s)return;const n=o.clock.elapsedTime,r=t[0]*3.1+t[2] #p0",
+        97
+      ],
+      [
+        "(i,c)=>{if(!Za.ready)return;s.current.tiles!==Za.tiles&&(s.current={tiles:Za.tiles,data:Ni #p0",
+        85
+      ],
+      [
+        "(o,r)=>{var y,v;const i=g.getState(),c=Ro(ne(),(y=i.couple)==null?void 0:y.startedAt,(v=i. #p0",
+        70
+      ],
+      [
+        "r=>{const i=r.clock.elapsedTime,c=ze(I.night*1.3+(I.weather===\"rain\"||I.weather===\"storm\"? #p0",
+        67
+      ]
+    ],
+    "errors": []
+  }
+}

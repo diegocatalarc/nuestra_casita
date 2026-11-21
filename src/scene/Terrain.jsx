@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGame } from '../store/gameStore';
@@ -101,6 +101,30 @@ function buildTerrain(world, season) {
   return geo;
 }
 
+/**
+ * Trocea el terreno en bloques (comparten los mismos atributos y solo cambian el índice) para que el descarte por
+ * visibilidad funcione: antes era una sola malla de 205 000 triángulos que se dibujaba entera dos veces (imagen y sombras).
+ */
+function chunkTerrain(geo, K = 64) {
+  const ind = geo.index.array, pos = geo.attributes.position;
+  const per = Math.ceil(N / K), bins = Array.from({ length: per * per }, () => []);
+  for (let iy = 0; iy < N; iy++) for (let ix = 0; ix < N; ix++) {
+    const o = (iy * N + ix) * 6, b = bins[Math.floor(iy / K) * per + Math.floor(ix / K)];
+    for (let t = 0; t < 6; t++) b.push(ind[o + t]);
+  }
+  return bins.filter((b) => b.length).map((b) => {
+    const g = new THREE.BufferGeometry();
+    for (const k of Object.keys(geo.attributes)) g.setAttribute(k, geo.attributes[k]);
+    g.setIndex(b);
+    const box = new THREE.Box3();
+    for (let i = 0; i < b.length; i++) box.expandByPoint(tmpV.set(pos.getX(b[i]), pos.getY(b[i]), pos.getZ(b[i])));
+    g.boundingBox = box;
+    g.boundingSphere = box.getBoundingSphere(new THREE.Sphere());
+    return g;
+  });
+}
+const tmpV = new THREE.Vector3();
+
 /** Falda del diorama: pared de tierra alrededor del terreno. */
 function buildSkirt(terrain) {
   const pos = terrain.attributes.position, col = terrain.attributes.color;
@@ -139,7 +163,11 @@ export default function Terrain() {
 
   const terrain = useMemo(() => buildTerrain(world, season), [world, season]);
   const skirt = useMemo(() => buildSkirt(terrain), [terrain]);
+  const chunks = useMemo(() => chunkTerrain(terrain), [terrain]);
+  useEffect(() => () => { chunks.forEach((g) => g.dispose()); terrain.dispose(); skirt.dispose(); }, [chunks, terrain, skirt]);
   const grain = useMemo(detailTexture, []);
+  const landM = useMemo(() => new THREE.MeshStandardMaterial({ vertexColors: true, map: grain, roughness: 1 }), [grain]);
+  landMat.current = landM; // material compartido por todos los bloques; useFrame lo ajusta con la lluvia
 
   const { planks, rails, water } = useMemo(() => {
     const planks = [], rails = [], water = [];
@@ -220,9 +248,9 @@ export default function Terrain() {
 
   return (
     <group>
-      <mesh geometry={terrain} receiveShadow castShadow>
-        <meshStandardMaterial ref={landMat} vertexColors map={grain} roughness={1} />
-      </mesh>
+      {chunks.map((g, i) => (
+        <mesh key={i} geometry={g} receiveShadow castShadow><primitive object={landM} attach="material" /></mesh>
+      ))}
       <mesh geometry={skirt}>
         <meshStandardMaterial vertexColors roughness={1} side={THREE.DoubleSide} />
       </mesh>

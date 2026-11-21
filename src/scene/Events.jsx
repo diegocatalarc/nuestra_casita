@@ -30,7 +30,7 @@ function FestivalStand({ fest }) {
 
 /** Visitante sorpresa en la plaza (de día). */
 function Visitor({ v }) {
-  const hour = useGame((s) => s.env.hour);
+  const hour = useGame((s) => Math.floor(s.env.hour * 20) / 20); // el valor exacto cambia cada segundo
   const taken = useGame((s) => !!s.couple?.events?.[eventsFor(s.couple.seed, s.now, s.env.season).day]?.gift);
   if (hour < VISITOR_HOURS[0] || hour >= VISITOR_HOURS[1]) return null;
   return (
@@ -66,14 +66,15 @@ function Meteors() {
 
 export default function Events() {
   const seed = useGame((s) => s.couple?.seed);
-  const now = useGame((s) => s.now);
-  const env = useGame((s) => s.env);
-  const ev = eventsFor(seed, now, env.season);
+  const now = useGame((s) => Math.floor(s.now / 60000) * 60000);
+  const season = useGame((s) => s.env.season);
+  const hour = useGame((s) => Math.round(s.env.hour * 20) / 20); // el reloj entero de `env` cambia cada segundo
+  const ev = eventsFor(seed, now, season);
   return (
     <group>
       {ev.festival && <FestivalStand fest={ev.festival} />}
       {ev.visitor && <Visitor v={ev.visitor} />}
-      {meteorActive(ev, env.hour) && <Meteors />}
+      {meteorActive(ev, hour) && <Meteors />}
     </group>
   );
 }

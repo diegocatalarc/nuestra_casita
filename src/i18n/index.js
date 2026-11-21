@@ -1,10 +1,11 @@
 // Idiomas: español (base, las claves del código) e inglés. Se detecta el idioma del dispositivo.
 // Cambiar de idioma recarga la página (así todo el contenido se evalúa en el idioma elegido).
-import enBase from './en.js';
 // Todos los ficheros src/i18n/en-*.js se fusionan solos: cada tema puede traer su propio diccionario sin tocar los demás.
-const extras = import.meta.glob('./en-*.js', { eager: true });
-
-const en = Object.assign({}, enBase, ...Object.values(extras).map((m) => m.default));
+// El diccionario inglés (~190 KB) se carga bajo demanda: solo se descarga si el idioma activo es inglés.
+// Hay que esperar a `loadDictionary()` ANTES de importar módulos que llamen a t() al evaluarse (ver main.jsx).
+const loaders = import.meta.glob(['./en.js', './en-*.js']);
+const en = {};
+let loaded = false;
 
 const STORAGE = 'nc_lang';
 export const LANGS = [{ id: 'es', label: 'Español' }, { id: 'en', label: 'English' }];
@@ -21,6 +22,14 @@ function detect() {
 }
 
 export const lang = detect();
+
+/** Carga el diccionario inglés (no hace nada en español). Idempotente. Con `force` carga también en español (pruebas). */
+export async function loadDictionary(force = false) {
+  if ((lang !== 'en' && !force) || loaded) return;
+  loaded = true;
+  const mods = await Promise.all(Object.entries(loaders).sort(([a], [b]) => (a === './en.js' ? -1 : b === './en.js' ? 1 : 0)).map(([, f]) => f()));
+  for (const m of mods) Object.assign(en, m.default);
+}
 if (typeof document !== 'undefined') document.documentElement.lang = lang;
 
 const missing = (typeof window !== 'undefined' && (window.__i18nMissing = window.__i18nMissing || new Set())) || new Set();

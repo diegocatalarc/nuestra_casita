@@ -31,7 +31,7 @@ function tryMove(nx, nz) {
 /** Globo de texto sobre la cabeza durante unos segundos tras escribir en el chat. */
 function ChatBubble({ uid, y = 2.1 }) {
   const msg = useGame((s) => { let b = null; for (const m of Object.values(s.chat)) if (m.from === uid && (!b || m.at > b.at)) b = m; return b; });
-  const now = useGame((s) => s.now);
+  const now = useGame((s) => (msg ? s.now : 0)); // el reloj solo importa mientras hay un mensaje visible
   if (!msg || now - msg.at > 7000 || now - msg.at < -4000) return null;
   const txt = msg.text.length > 70 ? msg.text.slice(0, 68) + '…' : msg.text;
   const big = /^\p{Extended_Pictographic}{1,3}$/u.test(msg.text.replace(/\uFE0F/g, ''));

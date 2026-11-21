@@ -9,6 +9,7 @@ import { gatherNode } from '../game/actions';
 import { idx } from '../game/worldGen';
 import { hashStr } from '../game/rng';
 import { useKGeo } from '../game/models';
+import { makeChunks, useChunkSet, ChunkLayer } from './chunks';
 
 const U = { uTime: { value: 0 } };
 /** Material con balanceo de viento en el vertex shader (por instancia). */
@@ -41,22 +42,6 @@ function put(mesh, i, x, y, z, sx, sy, sz, ry = 0) {
   mesh.setMatrixAt(i, m4);
 }
 
-/** Un InstancedMesh por pieza; clic por instanceId → recolectar. */
-function Layer({ list, geo, mat, refCb, onPick }) {
-  const hover = (e) => { e.stopPropagation(); document.body.style.cursor = 'pointer'; };
-  return (
-    <instancedMesh
-      ref={refCb} args={[null, null, Math.max(1, list.length)]} castShadow receiveShadow
-      onClick={(e) => { if (useGame.getState().tool !== 'interact') return; e.stopPropagation(); const n = list[e.instanceId]; if (n) onPick(n); }}
-      onPointerOver={(e) => { if (useGame.getState().tool === 'interact') hover(e); }}
-      onPointerOut={() => { document.body.style.cursor = ''; }}
-    >
-      {geo}
-      {mat}
-    </instancedMesh>
-  );
-}
-
 export default function Nature() {
   const world = useGame((s) => s.world);
   const nodesState = useGame((s) => s.nodes);
@@ -73,48 +58,78 @@ export default function Nature() {
   }), []);
   const kMat = useMemo(() => swayMaterial(0.08, true, { map: treeMaps[1] }), [treeMaps]);
   useLayoutEffect(() => { kMat.map = treeMaps[season]; kMat.needsUpdate = true; }, [season, kMat, treeMaps]);
-  const r = { trunk: useRef(), kpine: useRef(), round: useRef(), rock: useRef(), crystal: useRef(), clay: useRef(), flower: useRef(), stem: useRef(), cotton: useRef(), tuft: useRef(), round2: useRef(), wild: useRef(), wildStem: useRef() };
+
+  // Geometrías y materiales compartidos por todos los bloques
+  const G = useMemo(() => ({
+    trunk: new THREE.CylinderGeometry(0.1, 0.15, 0.9, 6), round: new THREE.IcosahedronGeometry(0.55, 1),
+    rock: new THREE.DodecahedronGeometry(0.6, 0), crystal: new THREE.OctahedronGeometry(0.7, 0), clay: new THREE.CylinderGeometry(0.6, 0.9, 1, 8),
+    cotton: new THREE.IcosahedronGeometry(0.7, 0), ico1: new THREE.IcosahedronGeometry(1, 0), stem: new THREE.CylinderGeometry(1, 1, 1, 4), tuft: new THREE.ConeGeometry(1, 1.4, 4),
+  }), []);
+  const M = useMemo(() => ({
+    vc: new THREE.MeshStandardMaterial({ roughness: 1, flatShading: true }),
+    crystal: new THREE.MeshStandardMaterial({ roughness: 0.2, metalness: 0.2, emissive: '#6a8cff', emissiveIntensity: 0.55, flatShading: true }),
+  }), []);
 
   const groups = useMemo(() => {
     const g = { tree: [], rock: [], crystal: [], clay: [], flower: [], cotton: [] };
     for (const n of world.nodes) g[n.type].push(n);
+    // Los pinos (tile de bosque) y los árboles de copa no comparten capas: así no se dibujan instancias ocultas.
+    g.pine = []; g.broad = []; g.treeRef = g.tree.map((n) => (world.tiles[idx(n.x, n.z)] === TILE.FOREST ? { pine: true, k: g.pine.push(n) - 1 } : { pine: false, k: g.broad.push(n) - 1 }));
+    g.flower3 = g.flower.flatMap((n) => [n, n, n]);
+    g.wild = world.tufts.filter((_, i) => i % 7 === 0);
     return g;
   }, [world]);
+  const P = useMemo(() => {
+    const pt = (n) => [n.x + 0.5, n.z + 0.5];
+    return {
+      trunk: makeChunks(groups.tree.map(pt)), pine: makeChunks(groups.pine.map(pt)), broad: makeChunks(groups.broad.map(pt)),
+      rock: makeChunks(groups.rock.map(pt)), crystal: makeChunks(groups.crystal.map(pt)), clay: makeChunks(groups.clay.map(pt)), cotton: makeChunks(groups.cotton.map(pt)),
+      flower: makeChunks(groups.flower3.map(pt)), tuft: makeChunks(world.tufts.map((t) => [t.x, t.z])), wild: makeChunks(groups.wild.map((t) => [t.x, t.z])),
+    };
+  }, [groups, world]);
+  const r = {
+    trunk: useChunkSet(P.trunk), kpine: useChunkSet(P.pine), round: useChunkSet(P.broad), round2: useChunkSet(P.broad),
+    rock: useChunkSet(P.rock), crystal: useChunkSet(P.crystal), clay: useChunkSet(P.clay), cotton: useChunkSet(P.cotton),
+    flower: useChunkSet(P.flower), stem: useChunkSet(P.flower), tuft: useChunkSet(P.tuft), wild: useChunkSet(P.wild), wildStem: useChunkSet(P.wild),
+  };
 
   // Árboles y piezas (se recalculan al cambiar estado de nodos / estación)
   useLayoutEffect(() => {
     const now = useGame.getState().now;
-    const upd = (m) => { m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; };
+    const upd = (m) => { m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true; m.refresh(); };
+    const HIDE = (set, i, x, z) => put(set, i, x, -5, z, 0.001, 0.001, 0.001);
 
     groups.tree.forEach((n, i) => {
       const alive = nodeAlive(n, nodesState, now);
-      const pine = world.tiles[idx(n.x, n.z)] === TILE.FOREST;
+      const { pine, k } = groups.treeRef[i];
       const sc = 0.85 + n.v * 0.5, ry = n.v * 6.28;
       const x = n.x + 0.5, z = n.z + 0.5;
-      const leaf = SEASON_COLORS.leaves[season][Math.floor(n.v * 3) % 3];
-      if (alive && pine) {
-        // pino de Kenney (incluye tronco)
-        put(r.kpine.current, i, x, 0, z, 1.15 * sc, 1.15 * sc, 1.15 * sc, ry);
-        put(r.trunk.current, i, x, -5, z, 0.001, 0.001, 0.001);
-        put(r.round.current, i, x, -5, z, 0.001, 0.001, 0.001); put(r.round2.current, i, x, -5, z, 0.001, 0.001, 0.001);
-        r.kpine.current.setColorAt(i, col.setRGB(1, 1, 1).multiplyScalar(0.9 + n.v * 0.2));
-      } else if (alive) {
-        put(r.kpine.current, i, x, -5, z, 0.001, 0.001, 0.001);
-        put(r.trunk.current, i, x, 0.45 * sc, z, sc, sc, sc, ry);
-        put(r.round.current, i, x, 1.35 * sc, z, sc, sc, sc, ry);
-        r.round.current.setColorAt(i, col.set(leaf));
-        put(r.round2.current, i, x + Math.cos(ry) * 0.3 * sc, 1.72 * sc, z + Math.sin(ry) * 0.3 * sc, 0.72 * sc, 0.72 * sc, 0.72 * sc, ry); // segunda copa más clara: copa menos esférica
-        r.round2.current.setColorAt(i, col.set(leaf).offsetHSL(0.01, 0.02, 0.06));
+      if (pine) {
+        if (alive) {
+          // pino de Kenney (incluye tronco)
+          put(r.kpine.current, k, x, 0, z, 1.15 * sc, 1.15 * sc, 1.15 * sc, ry);
+          r.kpine.current.setColorAt(k, col.setRGB(1, 1, 1).multiplyScalar(0.9 + n.v * 0.2));
+          HIDE(r.trunk.current, i, x, z);
+        } else {
+          // talado: solo queda el tocón
+          HIDE(r.kpine.current, k, x, z);
+          put(r.trunk.current, i, x, 0.15, z, sc, 0.3, sc, ry);
+        }
       } else {
-        // talado: solo queda el tocón
-        put(r.kpine.current, i, x, -5, z, 0.001, 0.001, 0.001);
-        put(r.round.current, i, x, -5, z, 0.001, 0.001, 0.001); put(r.round2.current, i, x, -5, z, 0.001, 0.001, 0.001);
-        put(r.trunk.current, i, x, 0.15, z, sc, 0.3, sc, ry);
+        const leaf = SEASON_COLORS.leaves[season][Math.floor(n.v * 3) % 3];
+        if (alive) {
+          put(r.trunk.current, i, x, 0.45 * sc, z, sc, sc, sc, ry);
+          put(r.round.current, k, x, 1.35 * sc, z, sc, sc, sc, ry);
+          r.round.current.setColorAt(k, col.set(leaf));
+          put(r.round2.current, k, x + Math.cos(ry) * 0.3 * sc, 1.72 * sc, z + Math.sin(ry) * 0.3 * sc, 0.72 * sc, 0.72 * sc, 0.72 * sc, ry); // segunda copa más clara: copa menos esférica
+          r.round2.current.setColorAt(k, col.set(leaf).offsetHSL(0.01, 0.02, 0.06));
+        } else {
+          HIDE(r.round.current, k, x, z); HIDE(r.round2.current, k, x, z);
+          r.round.current.setColorAt(k, col.set(leaf)); r.round2.current.setColorAt(k, col.set(leaf));
+          put(r.trunk.current, i, x, 0.15, z, sc, 0.3, sc, ry);
+        }
       }
       r.trunk.current.setColorAt(i, col.set('#8a5e3c'));
-      if (!r.kpine.current.instanceColor) r.kpine.current.setColorAt(i, col.setRGB(1, 1, 1));
-      if (!r.round.current.instanceColor) r.round.current.setColorAt(i, col.set(leaf));
-      if (!r.round2.current.instanceColor) r.round2.current.setColorAt(i, col.set(leaf));
     });
     ['trunk', 'kpine', 'round', 'round2'].forEach((k) => upd(r[k].current));
 
@@ -156,42 +171,37 @@ export default function Nature() {
       put(m, i, t.x, 0.1 * t.s, t.z, 0.18 * t.s, 0.22 * t.s, 0.18 * t.s, t.r);
       m.setColorAt(i, col.set(SEASON_COLORS.grass[season]).offsetHSL(0, 0, -0.07 + (i % 5) * 0.01));
     });
-    m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true;
+    m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true; m.refresh();
     // florecillas silvestres: una de cada 7 matas lleva una flor
     const WILD = ['#f7a8c4', '#fff6c4', '#ffffff', '#cbb2f2', '#ffb48a'];
-    let n = 0;
     world.tufts.forEach((t, i) => {
-      if (i % 7 || n >= wildMax) return;
+      if (i % 7) return;
+      const n = i / 7;
       const sc = 0.9 + (i % 3) * 0.15;
       put(r.wildStem.current, n, t.x + 0.07, 0.11 * sc, t.z, 0.02, 0.22 * sc, 0.02);
       put(r.wild.current, n, t.x + 0.07, 0.25 * sc, t.z, 0.06 * sc, 0.06 * sc, 0.06 * sc);
-      r.wild.current.setColorAt(n, col.set(WILD[i % 5])); r.wildStem.current.setColorAt(n, col.set('#6aa552')); n++;
+      r.wild.current.setColorAt(n, col.set(WILD[i % 5])); r.wildStem.current.setColorAt(n, col.set('#6aa552'));
     });
-    r.wild.current.count = n; r.wildStem.current.count = n;
-    for (const k of ['wild', 'wildStem']) { r[k].current.instanceMatrix.needsUpdate = true; if (r[k].current.instanceColor) r[k].current.instanceColor.needsUpdate = true; }
+    for (const k of ['wild', 'wildStem']) { r[k].current.instanceMatrix.needsUpdate = true; r[k].current.instanceColor.needsUpdate = true; r[k].current.refresh(); }
   }, [world, season]);
 
-  const wildMax = Math.ceil(world.tufts.length / 7);
-  const flat = (c) => <meshStandardMaterial color={c} roughness={1} flatShading />;
-  const vc = <meshStandardMaterial roughness={1} flatShading />;
-  const trees = groups.tree;
+  const L = (set, list, geo, mat, extra) => <ChunkLayer set={set} list={list} geo={geo} mat={mat} {...extra} />;
+  const pick = { castShadow: true, receiveShadow: true, onPick: gatherNode };
   return (
     <group>
-      <Layer list={trees} refCb={r.trunk} onPick={gatherNode} geo={<cylinderGeometry args={[0.1, 0.15, 0.9, 6]} />} mat={vc} />
-      <Layer list={trees} refCb={r.kpine} onPick={gatherNode} geo={<primitive object={treeGeo} attach="geometry" />} mat={<primitive object={kMat} attach="material" />} />
-      <Layer list={trees} refCb={r.round} onPick={gatherNode} geo={<icosahedronGeometry args={[0.55, 1]} />} mat={<primitive object={swayTree} attach="material" />} />
-      <instancedMesh ref={r.round2} args={[null, null, Math.max(1, trees.length)]} castShadow><icosahedronGeometry args={[0.55, 1]} /><primitive object={swayTree} attach="material" /></instancedMesh>
-      <Layer list={groups.rock} refCb={r.rock} onPick={gatherNode} geo={<dodecahedronGeometry args={[0.6, 0]} />} mat={vc} />
-      <Layer list={groups.crystal} refCb={r.crystal} onPick={gatherNode} geo={<octahedronGeometry args={[0.7, 0]} />} mat={<meshStandardMaterial roughness={0.2} metalness={0.2} emissive="#6a8cff" emissiveIntensity={0.55} flatShading vertexColors={false} />} />
-      <Layer list={groups.clay} refCb={r.clay} onPick={gatherNode} geo={<cylinderGeometry args={[0.6, 0.9, 1, 8]} />} mat={vc} />
-      <Layer list={groups.cotton} refCb={r.cotton} onPick={gatherNode} geo={<icosahedronGeometry args={[0.7, 0]} />} mat={vc} />
-      <Layer list={groups.flower.flatMap((n) => [n, n, n])} refCb={r.flower} onPick={gatherNode} geo={<icosahedronGeometry args={[1, 0]} />} mat={vc} />
-      <instancedMesh ref={r.stem} args={[null, null, Math.max(1, groups.flower.length * 3)]}><cylinderGeometry args={[1, 1, 1, 4]} /><primitive object={swayGrass} attach="material" /></instancedMesh>
-      <instancedMesh ref={r.tuft} args={[null, null, world.tufts.length]} receiveShadow>
-        <coneGeometry args={[1, 1.4, 4]} /><primitive object={swayGrass} attach="material" />
-      </instancedMesh>
-      <instancedMesh ref={r.wildStem} args={[null, null, Math.max(1, wildMax)]}><cylinderGeometry args={[1, 1, 1, 4]} /><primitive object={swayGrass} attach="material" /></instancedMesh>
-      <instancedMesh ref={r.wild} args={[null, null, Math.max(1, wildMax)]}><icosahedronGeometry args={[1, 0]} /><primitive object={swayGrass} attach="material" /></instancedMesh>
+      {L(r.trunk, groups.tree, G.trunk, M.vc, pick)}
+      {L(r.kpine, groups.pine, treeGeo, kMat, pick)}
+      {L(r.round, groups.broad, G.round, swayTree, pick)}
+      {L(r.round2, groups.broad, G.round, swayTree, { castShadow: true })}
+      {L(r.rock, groups.rock, G.rock, M.vc, pick)}
+      {L(r.crystal, groups.crystal, G.crystal, M.crystal, pick)}
+      {L(r.clay, groups.clay, G.clay, M.vc, pick)}
+      {L(r.cotton, groups.cotton, G.cotton, M.vc, pick)}
+      {L(r.flower, groups.flower3, G.ico1, M.vc, pick)}
+      {L(r.stem, groups.flower3, G.stem, swayGrass)}
+      {L(r.tuft, null, G.tuft, swayGrass, { receiveShadow: true })}
+      {L(r.wildStem, null, G.stem, swayGrass)}
+      {L(r.wild, null, G.ico1, swayGrass)}
       <Fence />
     </group>
   );

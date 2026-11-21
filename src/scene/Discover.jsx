@@ -117,7 +117,7 @@ const LOOKS = [
 const ROUTES = [[52, 76, 22.5, 0.7], [76, 52, 25.5, 0.55], [56, 70, 22.6, 0.45], [74, 55, 25.4, 0.65], [60, 66, 22.5, 0.4], [70, 58, 25.6, 0.5]];
 function Walker({ i }) {
   const g = useRef();
-  const hour = useGame((s) => s.env.hour);
+  const hour = useGame((s) => Math.floor(s.env.hour * 20) / 20); // el valor exacto cambia cada segundo
   useFrame((s) => {
     if (!g.current) return;
     const [a, b, z, sp] = ROUTES[i], len = Math.abs(b - a), t = (s.clock.elapsedTime * sp + i * 3.7) % (2 * len);

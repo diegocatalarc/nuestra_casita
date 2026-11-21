@@ -1,39 +1,17 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { rareCrop } from '../game/logic';
 import { CROPS, RESOURCES, SEASONS, WEATHER_EMOJI, WEATHER_LABEL, DECOR, BUILDINGS } from '../game/constants';
 import { fmtHour, fmtDuration } from '../game/time';
-import BuildPanel from './BuildPanel';
-import DecorPanel from './DecorPanel';
-import AnimalsPanel from './AnimalsPanel';
-import QuestsPanel from './QuestsPanel';
 import MemoriesPanel, { MemoryViewer } from './MemoriesPanel';
-import AvatarPanel from './AvatarPanel';
-import InventoryPanel from './InventoryPanel';
-import FoodPanel from './FoodPanel';
-import FamilyPanel from './FamilyPanel';
-import MailboxPanel from './MailboxPanel';
-import HelpPanel from './HelpPanel';
 import ChatPanel from './ChatPanel';
-import FishingPanel from './FishingPanel';
-import OrdersPanel from './OrdersPanel';
-import MarketPanel from './MarketPanel';
-import EventsPanel from './EventsPanel';
-import LandPanel from './LandPanel';
-import DatesPanel from './DatesPanel';
-import ExplorePanel from './ExplorePanel';
-import MinePanel from './MinePanel';
-import CraftPanel from './CraftPanel';
-import MapPanel from './MapPanel';
 import ChatFab from './ChatFab';
 import TouchControls, { isTouchDevice } from './TouchControls';
-import TodayPanel from './TodayPanel';
 import StoryPanel from './StoryPanel';
 import StoryScene from './StoryScene';
 import Objective from './Objective';
 import Emotes from './Emotes';
 import DialogueModal from './DialogueModal';
-import ProjectPanel from './ProjectPanel';
 import { jobList } from '../game/logic';
 import { respondDate, dateCondition } from '../game/actions';
 import { warmth } from '../game/logic';
@@ -50,6 +28,40 @@ import { goalProgress } from '../game/actions';
 import { hug, wave, goSleep, wake, reelIn, cancelFish, leaveBoat, rotateDecor, recolorDecor, startMoveDecor, deleteSelectedDecor } from '../game/actions';
 import { vitals } from '../game/logic';
 import { t } from '../i18n';
+
+// Paneles bajo demanda (salen del chunk de entrada); se precargan en reposo para que abrirlos sea inmediato.
+const panelLoaders = {
+  BuildPanel: () => import('./BuildPanel'),
+  DecorPanel: () => import('./DecorPanel'),
+  AnimalsPanel: () => import('./AnimalsPanel'),
+  QuestsPanel: () => import('./QuestsPanel'),
+  InventoryPanel: () => import('./InventoryPanel'),
+  FoodPanel: () => import('./FoodPanel'),
+  FamilyPanel: () => import('./FamilyPanel'),
+  MailboxPanel: () => import('./MailboxPanel'),
+  HelpPanel: () => import('./HelpPanel'),
+  FishingPanel: () => import('./FishingPanel'),
+  OrdersPanel: () => import('./OrdersPanel'),
+  MarketPanel: () => import('./MarketPanel'),
+  EventsPanel: () => import('./EventsPanel'),
+  LandPanel: () => import('./LandPanel'),
+  DatesPanel: () => import('./DatesPanel'),
+  ExplorePanel: () => import('./ExplorePanel'),
+  MinePanel: () => import('./MinePanel'),
+  CraftPanel: () => import('./CraftPanel'),
+  MapPanel: () => import('./MapPanel'),
+  TodayPanel: () => import('./TodayPanel'),
+  ProjectPanel: () => import('./ProjectPanel'),
+  AvatarPanel: () => import('./AvatarPanel'),
+};
+const L = Object.fromEntries(Object.entries(panelLoaders).map(([k, f]) => [k, lazy(f)]));
+const { BuildPanel, DecorPanel, AnimalsPanel, QuestsPanel, InventoryPanel, FoodPanel, FamilyPanel, MailboxPanel, HelpPanel, FishingPanel, OrdersPanel, MarketPanel, EventsPanel, LandPanel, DatesPanel, ExplorePanel, MinePanel, CraftPanel, MapPanel, TodayPanel, ProjectPanel, AvatarPanel } = L;
+let prefetched = false;
+function prefetchPanels() {
+  if (prefetched) return; prefetched = true;
+  const run = () => Object.values(panelLoaders).forEach((f, i) => setTimeout(() => f().catch(() => { prefetched = false; }), i * 120));
+  if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(run, { timeout: 8000 }); else setTimeout(run, 3000);
+}
 
 function Toast() {
   const t = useGame((s) => s.toastMsg);
@@ -245,6 +257,7 @@ function CraftChip() {
 }
 
 export default function HUD({ onSignOut, onSwitchHouse }) {
+  useEffect(() => { prefetchPanels(); }, []);
   const env = useGame((s) => s.env);
   const couple = useGame((s) => s.couple);
   const tool = useGame((s) => s.tool);
@@ -355,6 +368,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
         })}
       </div>
 
+      <Suspense fallback={null}>
       {panel === 'build' && <BuildPanel />}
       {panel === 'decor' && <DecorPanel />}
       {panel === 'animals' && <AnimalsPanel />}
@@ -376,6 +390,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       {panel === 'today' && <TodayPanel />}
       {panel === 'story' && <StoryPanel />}
       {panel === 'project' && <ProjectPanel />}
+      </Suspense>
       <GiftFoundModal />
       <NewsModal />
       {chatOpen && <ChatPanel />}
@@ -386,12 +401,16 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       <TouchControls />
       <button className="signout gear" onClick={open('help')} title={t("Ajustes y ayuda")}>⚙️</button>
       <ActionBar />
+      <Suspense fallback={null}>
       {panel === 'help' && <HelpPanel onSignOut={onSignOut} onSwitchHouse={onSwitchHouse} />}
+      </Suspense>
       <Tutorial />
       <AwayModal />
-      {panel === 'family' && <FamilyPanel />}
+      <Suspense fallback={null}>{panel === 'family' && <FamilyPanel />}</Suspense>
       <SleepOverlay />
+      <Suspense fallback={null}>
       {(panel === 'avatar' || first) && <AvatarPanel first={first} />}
+      </Suspense>
       <MemoryViewer />
       <StoryScene />
     </div>
