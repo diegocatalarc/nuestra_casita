@@ -8,7 +8,8 @@ export default defineConfig({
   define: { __BUILD__: JSON.stringify(build) },
   plugins: [react()],
   build: {
-    assetsInlineLimit: 1000000,
+    // Los modelos .glb no se incrustan en el JS (base64 dentro del chunk de entrada): se piden por separado.
+    assetsInlineLimit: (file, content) => (file.endsWith('.glb') ? false : content.length < 1000000),
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {

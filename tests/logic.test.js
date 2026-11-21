@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { mulberry32, hashStr } from '../src/game/rng';
 import { generateWorld, riverX, tileAt, idx } from '../src/game/worldGen';
 import { dailyOrders, eventsFor, visitorGift, digSpots, dailyQuests, canAfford, priceOf, weekIdx, weekKey, friendLevel, dayUTC } from '../src/game/logic';
@@ -80,8 +80,9 @@ describe('props del pueblo viejo', () => {
   });
 });
 
-import { t } from '../src/i18n';
+import { t, loadDictionary } from '../src/i18n';
 describe('i18n', () => {
+  beforeAll(() => loadDictionary()); // el diccionario inglés se carga bajo demanda
   it('fusiona los diccionarios en-*.js (en inglés el idioma por defecto del test)', () => {
     // en el entorno de test no hay navegador: idioma 'en'
     expect(t('Texto de prueba i18n')).toBe('i18n test text');
