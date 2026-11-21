@@ -87,3 +87,10 @@ Tareas largas con render real: no son interpretables aquí (swiftshader bloquea 
 - Tiempo real hasta «Entrar» (la regla de 30 fotogramas < 45 ms) y si el precalentamiento alarga la carga en un iPad lento.
 - Que 1024² táctil de sombras se vea bien en pantalla Retina; si no, subir `SHADOW_PX` en `Lighting.jsx` (1536).
 - Los ≈ 1 000 draw calls restantes: si en iPad real siguen siendo el cuello, el siguiente paso es instanciar/fusionar `Buildings` y `Props` a mano (por tipo de objeto) con pruebas visuales por objeto (`?showroom`).
+
+
+## Retoques tras la revisión independiente (integración)
+- Sombras: `SHADOW_PX` vuelve a **2048 en escritorio** (1536 en iPad en vez de 1024) y el semilado `R` se cuantiza a saltos de 3 u (sin reescalar el mapa en cada pellizco). Es el único cambio visual que se había introducido; ahora el aspecto en escritorio vuelve al original.
+- Fallos de carga de chunks: `ui/lazyRetry.js` reintenta una vez y recarga una sola vez (`sessionStorage`); `main.jsx` muestra un botón de recarga si no se puede descargar el juego; `loadDictionary()` se puede reintentar tras un fallo.
+- `Prewarm` solo corre mientras la pantalla de carga sigue encima (fotogramas 60 y 150) y reinicia la cuenta de fotogramas fluidos tras su dibujado.
+- Pendiente: medir con GPU real (iPad Safari y Edge/macOS) con «Medir fluidez» antes/después.
