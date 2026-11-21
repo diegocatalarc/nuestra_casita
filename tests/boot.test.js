@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { bootStatus, MAX_WAIT_MS } from '../src/game/boot';
+import { bootStatus, MAX_WAIT_MS, HARD_WAIT_MS } from '../src/game/boot';
 
 describe('pantalla de carga', () => {
   it('no deja entrar hasta que todo está listo', () => {
@@ -14,5 +14,8 @@ describe('pantalla de carga', () => {
     const s = bootStatus({ assetsDone: true, worldReady: true, smooth: false, elapsed: MAX_WAIT_MS });
     expect(s.ready).toBe(true); expect(s.slow).toBe(true);
     expect(bootStatus({ assetsDone: false, worldReady: false, smooth: false, elapsed: MAX_WAIT_MS }).ready).toBe(false);
+  });
+  it('nunca bloquea al jugador: tras el tope duro deja entrar aunque nada esté listo', () => {
+    expect(bootStatus({ assetsDone: false, worldReady: false, smooth: false, elapsed: HARD_WAIT_MS }).ready).toBe(true);
   });
 });

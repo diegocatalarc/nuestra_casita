@@ -31,7 +31,7 @@ export default function LoadingScreen() {
         </>
       ) : (
         <>
-          <p>{st.slow ? t("Listo. Si notas tirones, prueba a cerrar otras pestañas o a bajar la calidad en ⚙️.") : t("¡Todo listo!")}</p>
+          <p>{st.slow ? t("Listo. Si notas tirones, prueba a cerrar otras pestañas del navegador.") : t("¡Todo listo!")}</p>
           <button className="btn primary big" onClick={go}>{t("▶ Entrar al valle")}</button>
         </>
       )}

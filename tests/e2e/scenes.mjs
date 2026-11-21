@@ -58,7 +58,8 @@ async function main() {
     check((await page.locator('[role="dialog"]').innerText()).includes('Doña Remedios'), 'el diálogo con Doña Remedios se abre');
     await nc(async () => { const m = await import('/src/ui/DialogueModal.jsx'); m.closeDialogue(); });
     await page.waitForSelector('.story-scene', { timeout: 15_000 }).catch(() => {});
-    check((await page.locator('.ss-say').innerText().catch(() => '')).includes('Ya estáis aquí') || (await page.locator('.ss-say').count()) > 0, 'cumplir el paso dispara su escena de reacción');
+    await page.waitForTimeout(2500); // el texto se escribe solo
+    check((await page.locator('.ss-say').innerText().catch(() => '')).includes('Ya estáis aquí'), 'cumplir el paso dispara su escena de reacción');
     await nc(() => window.__nc.useGame.getState().set({}));
     for (let i = 0; i < 6 && await page.locator('.story-scene').count(); i++) { await tap(); }
 

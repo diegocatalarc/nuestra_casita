@@ -24,7 +24,7 @@ npm run test:rules               # reglas de Firestore contra el emulador (requi
 node tools/i18n-missing.cjs      # lista textos t("…") sin traducción al inglés (vacío = OK)
 ```
 Probar sin Firebase: abrir **dos pestañas** en `npm run dev` → demo → Crear / Unirme con el código (localStorage + BroadcastChannel).
-Parámetros URL: `?fast=60` (acelera crecimiento) · `?hour=12` · `?weather=clear|rain|snow|fog` · `?season=0..3` · `?debug` expone `window.__nc` (`useGame`, `actions`, `runtime`, `logic`, `backend`) y `window.__camTarget` · `?showroom` sala de pruebas visual de objetos (`__show(tipo, variante, giro)`).
+Parámetros URL: `?fast=60` (acelera crecimiento) · `?hour=12` · `?weather=clear|rain|snow` · `?season=0..3` · `?debug` expone `window.__nc` (`useGame`, `actions`, `runtime`, `logic`, `backend`) y `window.__camTarget` · `?showroom` sala de pruebas visual de objetos (`__show(tipo, variante, giro)`).
 Claves localStorage útiles: `nc_fx` (`'0'` desactiva efectos, útil en tests headless), `nc_news` (versión de novedades vista; `99` las oculta), `nc_evday`, `nc_lang`, `nc_muted`, `nc_cloud`.
 Firebase real: `cp .env.example .env.local` y rellenar `VITE_FIREBASE_*`; desplegar `firestore.rules` y `database.rules.json` (ver `docs/02-ARQUITECTURA.md` §11).
 

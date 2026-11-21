@@ -6,7 +6,7 @@ export default {
   "Cargando modelos y texturas": "Loading models and textures",
   "Preparando el mundo": "Preparing the world",
   "Afinando la fluidez": "Smoothing things out",
-  "Listo. Si notas tirones, prueba a cerrar otras pestañas o a bajar la calidad en ⚙️.": "Ready. If you notice stutter, try closing other tabs or lowering the quality in ⚙️.",
+  "Listo. Si notas tirones, prueba a cerrar otras pestañas del navegador.": "Ready. If you notice stutter, try closing other browser tabs.",
   "¡Todo listo!": "All set!",
   "▶ Entrar al valle": "▶ Enter the valley",
   "Pantalla de carga: el juego espera a que todo vaya fluido y te pide pulsar «Entrar» (también activa el sonido).": "Loading screen: the game waits until everything runs smoothly and asks you to tap “Enter” (this also turns on sound).",

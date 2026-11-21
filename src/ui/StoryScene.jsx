@@ -39,7 +39,7 @@ export function buildPages(id, replay = false) {
 }
 
 function Typewriter({ text, shown }) {
-  return <span>{text.slice(0, shown)}<span style={{ opacity: 0 }}>{text.slice(shown)}</span></span>;
+  return <span>{text.slice(0, shown)}<span style={{ opacity: 0 }} aria-hidden="true">{text.slice(shown)}</span></span>;
 }
 
 function Scene({ id, replay }) {
@@ -56,13 +56,16 @@ function Scene({ id, replay }) {
     return () => clearTimeout(h);
   }, [shown, len]);
   const last = i >= pages.length - 1;
-  const finish = () => nextScene();
+  const finish = () => {
+    if (!replay) { const g = useGame.getState(); if (g.coupleId && g.user?.uid) addSeen(g.coupleId, g.user.uid, [id]); } // se da por vista al terminarla (o saltarla), no al encolarla
+    nextScene();
+  };
   const advance = () => {
     if (!page) return finish();
     if (page.kind === 'reward') return; // el botón de recompensa cierra
     if (shown < len) { setShown(len); return; }
     sfx('pop');
-    if (last) finish(); else setI(i + 1);
+    if (last) finish(); else { setI(i + 1); setShown(0); }
   };
   const skip = (e) => {
     e.stopPropagation();
@@ -70,12 +73,13 @@ function Scene({ id, replay }) {
     if (r >= 0) setI(r); else finish();
   };
   useEffect(() => {
-    const k = (e) => { if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); advance(); } };
+    const k = (e) => { if (/^(INPUT|TEXTAREA|BUTTON|SELECT)$/.test(e.target?.tagName || '')) return; if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); advance(); } };
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
   });
   const couple = useGame((s) => s.couple);
   const obj = useMemo(() => objectiveFor({ couple }), [couple]);
+  useEffect(() => { if (!page) nextScene(); }, [page]); // escena sin páginas: no se queda colgada
   if (!page) return null;
   const c = page.kind === 'say' && page.who !== NARRATOR ? castById[page.who] : null;
   const mood = sc.mood || 'day';
@@ -132,10 +136,10 @@ export default function StoryScene() {
     if (!ready || !uid || !coupleId) return;
     const id = setInterval(() => {
       const s = useGame.getState(), sc = useScene.getState();
-      if (noScenes() || !useBoot.getState().entered || s.panel || dialogueNpc() || sc.cur || sc.queue.length) return;
+      if (noScenes() || !useBoot.getState().entered || s.chatOpen || s.panel || dialogueNpc() || sc.cur || sc.queue.length) return;
       const { play, mark } = dueScenes(s, loadSeen(coupleId, uid));
       if (!play.length && !mark.length) return;
-      addSeen(coupleId, uid, [...play, ...mark]);
+      if (mark.length) addSeen(coupleId, uid, mark);
       if (play.length) enqueueScenes(play);
     }, 1000);
     return () => clearInterval(id);

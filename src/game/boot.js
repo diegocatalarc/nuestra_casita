@@ -5,6 +5,7 @@ import { create } from 'zustand';
 export const boot = { smoothRun: 0, frames: 0 };
 export const SMOOTH_FRAMES = 30;
 export const MAX_WAIT_MS = 15000;
+export const HARD_WAIT_MS = 30000; // pasado este tiempo se deja entrar aunque el mundo no esté listo (nunca bloquear al jugador)
 
 export function tickBoot(dt) {
   boot.frames++;
@@ -21,5 +22,5 @@ export function bootStatus({ assetsDone, worldReady, smooth, elapsed }) {
   const timedOut = elapsed >= MAX_WAIT_MS;
   const steps = [!!assetsDone, !!worldReady, !!smooth];
   const done = steps.filter(Boolean).length;
-  return { steps, pct: Math.round((done / steps.length) * 100), ready: (assetsDone && worldReady && smooth) || (timedOut && worldReady), slow: timedOut && !smooth };
+  return { steps, pct: Math.round((done / steps.length) * 100), ready: (assetsDone && worldReady && smooth) || (timedOut && worldReady) || elapsed >= HARD_WAIT_MS, slow: timedOut && !smooth };
 }
