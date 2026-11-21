@@ -15,6 +15,8 @@ async function main() {
     const errors = watchErrors(page);
     await startGame(page, vite.url);
     const nc = (fn, arg) => page.evaluate(fn, arg);
+    // toque directo sobre la escena (sin esperas de «actionability»: el renderizado por software va lento)
+    const tap = async () => { await page.evaluate(() => document.querySelector('.story-scene')?.click()); await page.waitForTimeout(350); };
 
     // 1) Prólogo: tarjeta de libro y páginas del narrador
     await page.waitForSelector('.story-scene', { timeout: 30_000 }).catch(() => {});
@@ -26,13 +28,11 @@ async function main() {
     for (let i = 0; i < 20; i++) {
       const card = await page.locator('.ss-card h1').first().innerText().catch(() => '');
       if (card.includes('Carta de bienvenida')) { sawChapterCard = true; break; }
-      await page.locator('.story-scene').click({ force: true, position: { x: 200, y: 300 } }).catch(() => {});
-      await page.waitForTimeout(700); // el primer toque completa el texto, el segundo pasa de página
+      await tap();
     }
     check(sawChapterCard, 'tras el prólogo llega la intro del capítulo 1 con su tarjeta');
     for (let i = 0; i < 10 && await page.locator('.story-scene').count(); i++) {
-      await page.locator('.story-scene').click({ force: true, position: { x: 200, y: 300 } }).catch(() => {});
-      await page.waitForTimeout(600);
+      await tap();
     }
     check(await page.locator('.story-scene').count() === 0, 'las escenas se cierran al terminar');
 
@@ -49,7 +49,7 @@ async function main() {
     await page.waitForSelector('.story-scene', { timeout: 15_000 }).catch(() => {});
     check((await page.locator('.ss-say').innerText().catch(() => '')).includes('Ya estáis aquí') || (await page.locator('.ss-say').count()) > 0, 'cumplir el paso dispara su escena de reacción');
     await nc(() => window.__nc.useGame.getState().set({}));
-    for (let i = 0; i < 6 && await page.locator('.story-scene').count(); i++) { await page.locator('.story-scene').click({ force: true, position: { x: 200, y: 300 } }).catch(() => {}); await page.waitForTimeout(600); }
+    for (let i = 0; i < 6 && await page.locator('.story-scene').count(); i++) { await tap(); }
 
     // 4) Completar el capítulo → cierre con recompensa
     await nc(async () => {
@@ -57,11 +57,11 @@ async function main() {
       await backend.getBackend().write(s.coupleId, [{ op: 'inc', field: `stats.${wk}.harvest`, by: 3 }, { op: 'inc', field: `stats.${wk}.order`, by: 1 }]);
     });
     await page.waitForSelector('.ss-card.reward', { timeout: 40_000 }).catch(async () => {
-      for (let i = 0; i < 8 && !(await page.locator('.ss-card.reward').count()); i++) { await page.locator('.story-scene').click({ force: true, position: { x: 200, y: 300 } }).catch(() => {}); await page.waitForTimeout(600); }
+      for (let i = 0; i < 8 && !(await page.locator('.ss-card.reward').count()); i++) { await tap(); }
     });
     check(await page.locator('.ss-card.reward').count() === 1, 'al completar el capítulo sale la tarjeta de recompensa');
     const coins0 = await nc(() => window.__nc.useGame.getState().couple.coins || 0);
-    await page.locator('.ss-card.reward button').click({ force: true });
+    await page.evaluate(() => document.querySelector('.ss-card.reward button')?.click());
     await page.waitForTimeout(1500);
     check(await nc(() => !!window.__nc.useGame.getState().couple.story.claimed?.c1), 'recibir la recompensa reclama el capítulo 1');
     check((await nc(() => window.__nc.useGame.getState().couple.coins || 0)) > coins0, 'las monedas de la recompensa llegan');
