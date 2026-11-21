@@ -133,7 +133,7 @@ export default function StoryScene() {
   const replay = useScene((s) => s.replay);
   const uid = useGame((s) => s.user?.uid);
   const coupleId = useGame((s) => s.coupleId);
-  const ready = useGame((s) => !!s.couple?.players?.[s.user?.uid]?.avatar);
+  const ready = useGame((s) => !!s.couple); // la historia es lo PRIMERO que se ve al entrar (antes del avatar y del tutorial)
   useEffect(() => {
     if (!ready || !uid || !coupleId) return;
     const id = setInterval(() => {
@@ -143,7 +143,7 @@ export default function StoryScene() {
       if (!play.length && !mark.length) return;
       if (mark.length) addSeen(coupleId, uid, mark);
       if (play.length) enqueueScenes(play);
-    }, 1000);
+    }, 400);
     return () => clearInterval(id);
   }, [ready, uid, coupleId]);
   if (!cur) return null;
