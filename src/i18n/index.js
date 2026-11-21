@@ -27,7 +27,8 @@ export const lang = detect();
 export async function loadDictionary(force = false) {
   if ((lang !== 'en' && !force) || loaded) return;
   loaded = true;
-  const mods = await Promise.all(Object.entries(loaders).sort(([a], [b]) => (a === './en.js' ? -1 : b === './en.js' ? 1 : 0)).map(([, f]) => f()));
+  let mods;
+  try { mods = await Promise.all(Object.entries(loaders).sort(([a], [b]) => (a === './en.js' ? -1 : b === './en.js' ? 1 : 0)).map(([, f]) => f())); } catch (e) { loaded = false; throw e; } // si falla la descarga se podrá reintentar
   for (const m of mods) Object.assign(en, m.default);
 }
 if (typeof document !== 'undefined') document.documentElement.lang = lang;

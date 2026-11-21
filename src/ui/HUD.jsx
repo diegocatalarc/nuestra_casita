@@ -28,6 +28,7 @@ import { goalProgress } from '../game/actions';
 import { hug, wave, goSleep, wake, reelIn, cancelFish, leaveBoat, rotateDecor, recolorDecor, startMoveDecor, deleteSelectedDecor } from '../game/actions';
 import { vitals } from '../game/logic';
 import { t } from '../i18n';
+import { retryImport } from './lazyRetry';
 
 // Paneles bajo demanda (salen del chunk de entrada); se precargan en reposo para que abrirlos sea inmediato.
 const panelLoaders = {
@@ -54,7 +55,7 @@ const panelLoaders = {
   ProjectPanel: () => import('./ProjectPanel'),
   AvatarPanel: () => import('./AvatarPanel'),
 };
-const L = Object.fromEntries(Object.entries(panelLoaders).map(([k, f]) => [k, lazy(f)]));
+const L = Object.fromEntries(Object.entries(panelLoaders).map(([k, f]) => [k, lazy(() => retryImport(f))]));
 const { BuildPanel, DecorPanel, AnimalsPanel, QuestsPanel, InventoryPanel, FoodPanel, FamilyPanel, MailboxPanel, HelpPanel, FishingPanel, OrdersPanel, MarketPanel, EventsPanel, LandPanel, DatesPanel, ExplorePanel, MinePanel, CraftPanel, MapPanel, TodayPanel, ProjectPanel, AvatarPanel } = L;
 let prefetched = false;
 function prefetchPanels() {

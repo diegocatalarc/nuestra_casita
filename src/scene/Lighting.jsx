@@ -12,7 +12,7 @@ import { camFocus } from './CameraRig';
 
 // Mapa de sombras: tamaño según dispositivo y cobertura ajustada a lo que se ve (zoom y tamaño de pantalla).
 const COARSE = typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
-const SHADOW_PX = COARSE ? 1024 : 1536;
+const SHADOW_PX = COARSE ? 1536 : 2048; // como antes en escritorio; algo menos en iPad
 const SHADOW_MIN = 12, SHADOW_MAX = 26; // semilado (unidades del mundo) del volumen de sombras
 const SIN_PITCH = 0.613; // sin(0.66), la inclinación de la cámara
 
@@ -44,7 +44,7 @@ export default function Lighting() {
     l.target.updateMatrixWorld();
     const hw = state.size.width / 2 / state.camera.zoom, hh = state.size.height / 2 / state.camera.zoom / SIN_PITCH;
     const tanEl = Math.max(0.25, Math.max(14, L.dir.y * 60) / (Math.hypot(L.dir.x, L.dir.z) * 60 || 1));
-    const R = Math.min(SHADOW_MAX, Math.max(SHADOW_MIN, Math.ceil(Math.hypot(hw, hh) + 3 + Math.min(9, 3.5 / tanEl))));
+    const R = Math.min(SHADOW_MAX, Math.max(SHADOW_MIN, Math.ceil((Math.hypot(hw, hh) + 3 + Math.min(9, 3.5 / tanEl)) / 3) * 3)); // a saltos de 3 u: el mapa de sombras no se reescala a cada pellizco
     if (R !== shR.current) {
       shR.current = R;
       const sc = l.shadow.camera; sc.left = -R; sc.right = R; sc.top = R; sc.bottom = -R; sc.updateProjectionMatrix();
