@@ -4,19 +4,17 @@ import * as THREE from 'three';
 import { L, isWet } from '../game/lighting';
 import { me } from '../game/runtime';
 
-const FF = 40, PET = 150, DUST = 20, SPL = 70, FOGN = 9;
-const mistTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'); const r = g.createRadialGradient(64, 64, 0, 64, 64, 64); r.addColorStop(0, 'rgba(255,255,255,0.9)'); r.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = r; g.fillRect(0, 0, 128, 128); const t = new THREE.CanvasTexture(c); return t; })();
+const FF = 40, PET = 150, DUST = 20, SPL = 70;
 const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v3 = new THREE.Vector3(), s3 = new THREE.Vector3();
 
 /** Luciérnagas (noche), pétalos/hojas (primavera/otoño) y polvo al caminar. */
 export default function Ambient() {
-  const ff = useRef(), pet = useRef(), dust = useRef(), spl = useRef(), mist = useRef([]);
+  const ff = useRef(), pet = useRef(), dust = useRef(), spl = useRef();
   const d = useMemo(() => ({
     ff: Array.from({ length: FF }, () => ({ a: Math.random() * 40, x: Math.random(), z: Math.random(), y: 0.5 + Math.random() * 1.8, ph: Math.random() * 6, sp: 0.3 + Math.random() * 0.5 })),
     pet: Array.from({ length: PET }, () => ({ x: Math.random(), z: Math.random(), y: Math.random() * 16, v: 0.5 + Math.random() * 0.6, ph: Math.random() * 6 })),
     dust: Array.from({ length: DUST }, () => ({ life: 0, x: 0, z: 0 })), dt: 0, di: 0,
     spl: Array.from({ length: SPL }, () => ({ life: 0, x: 0, z: 0 })), si: 0, sacc: 0,
-    mist: Array.from({ length: FOGN }, (_, i) => ({ x: Math.random(), z: Math.random(), y: 0.4 + i * 0.13, v: 0.15 + Math.random() * 0.25, s: 14 + Math.random() * 12 })),
   }), []);
   const ffGeo = useMemo(() => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(FF * 3), 3)); return g; }, []);
   const petGeo = useMemo(() => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(PET * 3), 3)); return g; }, []);
@@ -67,16 +65,6 @@ export default function Ambient() {
       spl.current.setMatrixAt(i, m4);
     });
     spl.current.instanceMatrix.needsUpdate = true;
-    // bancos de niebla a ras de suelo
-    const mistTarget = L.weather === 'fog' ? 0.26 : wet ? 0.12 : L.hour < 8 && L.hour > 5.5 ? 0.18 : 0;
-    d.mist.forEach((m, i) => {
-      const el = mist.current[i];
-      if (!el) return;
-      el.material.opacity += (mistTarget - el.material.opacity) * Math.min(1, dt * 1.5);
-      el.visible = el.material.opacity > 0.01;
-      el.position.set(me.x + ((m.x + t * m.v * 0.02) % 1 - 0.5) * 44, m.y, me.z + (m.z - 0.5) * 44);
-      el.scale.set(m.s, m.s, 1);
-    });
     q.identity();
     // polvo al caminar
     d.dt += dt;
@@ -106,12 +94,6 @@ export default function Ambient() {
         <ringGeometry args={[0.7, 1, 14]} />
         <meshBasicMaterial color="#e8f4ff" transparent opacity={0.55} depthWrite={false} toneMapped={false} />
       </instancedMesh>
-      {d.mist.map((m, i) => (
-        <mesh key={i} ref={(el) => (mist.current[i] = el)} rotation={[-Math.PI / 2, 0, 0]} renderOrder={2} frustumCulled={false}>
-          <planeGeometry args={[1, 1]} />
-          <meshBasicMaterial map={mistTex} color="#f3f1ec" transparent opacity={0} depthWrite={false} fog={false} />
-        </mesh>
-      ))}
       <instancedMesh ref={dust} args={[null, null, DUST]} frustumCulled={false}>
         <icosahedronGeometry args={[1, 0]} />
         <meshBasicMaterial color="#f1e6d0" transparent opacity={0.55} depthWrite={false} />

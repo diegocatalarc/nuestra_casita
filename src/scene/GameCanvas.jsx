@@ -6,6 +6,7 @@ import { rebuildCollision } from '../game/movement';
 import { serverNow } from '../game/time';
 import Lighting from './Lighting';
 import { Backdrop, CloudShadows } from './Sky';
+import BootProbe from './BootProbe';
 import Weather from './Weather';
 import LightPool from './LightPool';
 import Terrain from './Terrain';
@@ -53,8 +54,8 @@ export default function GameCanvas() {
       onCreated={({ camera }) => { if (location.search.includes('debug')) window.__cam = camera; }}
     >
       <color attach="background" args={['#bfe3f2']} />
-      <fog attach="fog" args={['#bfe3f2', 120, 420]} />
       <CollisionSync />
+      <BootProbe />
       <Lighting />
       <LightPool />
       <Backdrop />

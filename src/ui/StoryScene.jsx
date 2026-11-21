@@ -10,6 +10,7 @@ import { claimStoryChapter } from '../game/actions';
 import { dialogueNpc } from './DialogueModal';
 import { rewardChips } from './StoryPanel';
 import { sfx } from '../game/audio';
+import { useBoot } from '../game/boot';
 import { t } from '../i18n';
 
 const MOODS = {
@@ -131,7 +132,7 @@ export default function StoryScene() {
     if (!ready || !uid || !coupleId) return;
     const id = setInterval(() => {
       const s = useGame.getState(), sc = useScene.getState();
-      if (noScenes() || s.panel || dialogueNpc() || sc.cur || sc.queue.length) return;
+      if (noScenes() || !useBoot.getState().entered || s.panel || dialogueNpc() || sc.cur || sc.queue.length) return;
       const { play, mark } = dueScenes(s, loadSeen(coupleId, uid));
       if (!play.length && !mark.length) return;
       addSeen(coupleId, uid, [...play, ...mark]);

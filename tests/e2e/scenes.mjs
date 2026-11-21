@@ -10,13 +10,23 @@ async function main() {
   const vite = await startVite();
   const browser = await launch();
   try {
-    const ctx = await newContext(browser, { viewport: { width: 1024, height: 768 }, hasTouch: true, isMobile: true, scenes: true });
+    const ctx = await newContext(browser, { viewport: { width: 1024, height: 768 }, hasTouch: true, isMobile: true, scenes: true, boot: true });
     const page = await ctx.newPage();
     const errors = watchErrors(page);
     await startGame(page, vite.url);
     const nc = (fn, arg) => page.evaluate(fn, arg);
     // toque directo sobre la escena (sin esperas de «actionability»: el renderizado por software va lento)
     const tap = async () => { await page.evaluate(() => document.querySelector('.story-scene')?.click()); await page.waitForTimeout(350); };
+
+    // 0) Pantalla de carga: aparece, acaba pidiendo «Entrar» y las escenas esperan a que se pulse
+    check(await page.locator('.loading-screen').count() === 1, 'se ve la pantalla de carga');
+    await page.waitForSelector('.loading-screen button', { timeout: 60_000 }).catch(() => {});
+    check(await page.locator('.loading-screen button').count() === 1, 'la carga acaba pidiendo pulsar «Entrar al valle»');
+    check(await page.locator('.story-scene').count() === 0, 'las escenas no empiezan hasta entrar');
+    await page.screenshot({ path: '/tmp/claude-0/-home-user/ef51b309-d084-511b-8ea1-b09971a2f27c/scratchpad/loading.png' }).catch(() => {});
+    await page.evaluate(() => document.querySelector('.loading-screen button')?.click());
+    await page.waitForTimeout(500);
+    check(await page.locator('.loading-screen').count() === 0, 'al entrar desaparece la pantalla de carga');
 
     // 1) Prólogo: tarjeta de libro y páginas del narrador
     await page.waitForSelector('.story-scene', { timeout: 30_000 }).catch(() => {});

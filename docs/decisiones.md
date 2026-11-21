@@ -152,3 +152,11 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Lluvia:** la agenda alternativa se genera igual (puesto → portal de casa, resto → dentro). Si el clima cambia, el vecino aparece/desaparece (salto >3 casillas) o corre hacia su sitio (≤3): no se intenta caminar «en directo» hacia el refugio.
 - **Descartamos:** guardar posiciones en Firestore (escrituras constantes, riesgo de desincronía); pathfinding por fotograma; vagabundeo aleatorio (rompe el determinismo entre jugadores).
 - **Detalle:** el embarcadero de Pablo está sobre casillas de agua (bloqueadas): ahora pesca en la orilla. Las horas de salida están calculadas con margen (la caminata más larga ≈ 12 s reales); `tests/routines.test.js` falla si una caminata no llega antes de la siguiente salida.
+
+## Niebla eliminada del todo (v19)
+- Se quitaron: `<fog>` de la escena y su interpolación (`GameCanvas.jsx`, `Lighting.jsx`, `game/lighting.js`), los bancos de bruma a ras de suelo de `Ambient.jsx` (salían también en días despejados al amanecer) y el clima `fog` (`game/time.js` ya no lo genera). Quedan referencias inertes a `'fog'` en audio, LightPool y diálogos (por si se fuerza `?weather=fog`).
+- Se quitó el botón ✨ de efectos (esquina inferior izquierda, `App.jsx`). El postproceso sigue activo según `quality` (por defecto apagado en táctil).
+
+## Pantalla de carga (v19)
+- `ui/LoadingScreen.jsx` cubre el juego hasta que: (1) `useProgress` de drei termina (modelos/texturas), (2) `ctx.ready` (mundo y colisiones) y (3) hay 30 fotogramas seguidos < 45 ms (`scene/BootProbe.jsx` → `game/boot.js`). Entonces pide pulsar «Entrar al valle» (también arranca el audio, que el navegador bloquea sin gesto). Tope de 15 s: entra igualmente con aviso de que puede ir lento. Las escenas de la historia esperan a que se pulse.
+- Pruebas automáticas: `localStorage.nc_noboot='1'` la salta (el harness lo hace; `npm run scenes` la activa con `boot: true`). Es [POR CONFIRMAR] que el umbral de 45 ms sea adecuado en iPad real.

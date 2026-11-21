@@ -138,6 +138,13 @@ export const NEWS = [
       { emoji: '💬', text: t("Al hablar con un vecino te pide lo que necesita y puedes entregárselo ahí mismo. Puedes revivir cualquier escena desde el Diario del Valle.") },
     ],
   },
+  {
+    v: 19, title: t("Cielo despejado de verdad"),
+    items: [
+      { emoji: '☀️', text: t("Quitamos del todo la niebla: ya no hay bruma en el horizonte, ni bancos de niebla al amanecer, ni días de niebla. Y el botón ✨ de efectos desaparece de la esquina.") },
+      { emoji: '⏳', text: t("Pantalla de carga: el juego espera a que todo vaya fluido y te pide pulsar «Entrar» (también activa el sonido).") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

@@ -15,6 +15,7 @@ import LoginScreen from './ui/LoginScreen';
 import CoupleSetup from './ui/CoupleSetup';
 import GameCanvas from './scene/GameCanvas';
 import HUD from './ui/HUD';
+import LoadingScreen from './ui/LoadingScreen';
 import { t } from './i18n';
 
 let unsubWorld = null;
@@ -257,8 +258,8 @@ function Game() {
     <div className="game">
       <GameCanvas />
       <HUD onSignOut={signOut} onSwitchHouse={switchHouse} />
+      <LoadingScreen />
       <button className="signout" onClick={signOut} title={t("Salir")}>⏏</button>
-      <button className="signout fxbtn" onClick={() => { const q = !useGame.getState().quality; try { localStorage.setItem('nc_fx', q ? '1' : '0'); } catch { /* noop */ } useGame.setState({ quality: q }); }} title={t("Efectos visuales (desactívalos si va lento)")}>✨</button>
       <button className="signout sound" onClick={() => setMuted(toggleMute())} title={muted ? t("Activar sonido") : t("Silenciar")}>{muted ? '🔇' : '🔊'}</button>
     </div>
   );

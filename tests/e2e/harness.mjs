@@ -14,7 +14,7 @@ export const GL_ARGS = ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '
 
 // Estado de localStorage que evita avisos y efectos en las pruebas.
 // nc_lang='es': los selectores de las pruebas son los textos en español.
-const TEST_STORAGE = { nc_fx: '0', nc_news: '99', nc_evday: '2099', nc_lang: 'es', nc_noscenes: '1' };
+const TEST_STORAGE = { nc_fx: '0', nc_news: '99', nc_evday: '2099', nc_lang: 'es', nc_noscenes: '1', nc_noboot: '1' };
 
 export function freePort() {
   return new Promise((resolve, reject) => {
@@ -47,7 +47,7 @@ export async function launch() {
 
 /** Contexto con localStorage de pruebas. Acepta opciones extra (p. ej. táctil). */
 export async function newContext(browser, opts = {}) {
-  const { scenes, ...rest } = opts; // scenes: true deja ver las escenas narradas (por defecto se desactivan para no tapar los clics)
+  const { scenes, boot, ...rest } = opts; // scenes: true deja ver las escenas narradas (por defecto se desactivan para no tapar los clics)
   const context = await browser.newContext({ locale: 'es-ES', ...rest });
   await context.addInitScript((storage) => {
     try {
@@ -55,7 +55,7 @@ export async function newContext(browser, opts = {}) {
         if (localStorage.getItem(k) === null) localStorage.setItem(k, v);
       }
     } catch { /* sin localStorage: la prueba seguirá, aunque con avisos */ }
-  }, scenes ? { ...TEST_STORAGE, nc_noscenes: '0' } : TEST_STORAGE);
+  }, { ...TEST_STORAGE, ...(scenes ? { nc_noscenes: '0' } : {}), ...(boot ? { nc_noboot: '0' } : {}) });
   return context;
 }
 

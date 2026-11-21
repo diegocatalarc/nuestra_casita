@@ -35,11 +35,6 @@ export default function Lighting() {
     hemi.current.intensity += (L.ambI + flash.v * 3.5 - hemi.current.intensity) * Math.min(1, dt * 12);
     const sc = state.scene;
     if (sc.background) { sc.background.lerp(L.sky, k); if (flash.v > 0.05) sc.background.lerp(WHITE, flash.v * 0.5); }
-    if (sc.fog) {
-      sc.fog.color.lerp(L.fog, k);
-      sc.fog.near += (L.fogNear - sc.fog.near) * k;
-      sc.fog.far += (L.fogFar - sc.fog.far) * k;
-    }
   });
   return (
     <>

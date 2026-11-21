@@ -97,3 +97,5 @@ Cambios en `worldGen.js`, reglas de Firebase, esquema de datos, balance de econo
 ## Historia narrada (v18)
 - **Hecho:** escenas narradas, director, guía de objetivo con flecha y 📍, misión dentro del diálogo, repetir escenas desde el Diario. Ver «Escenas narradas» en `docs/historia.md`. Tests: `tests/story-scenes.test.js` (guion completo, director, objetivo) y `npm run scenes` (e2e).
 - **Por verificar a mano:** lectura cómoda en iPad (tamaño de texto), que el banner de objetivo no tape otros elementos en pantallas estrechas, escenas con las dos personas conectadas.
+## Sin niebla del todo + pantalla de carga (v19)
+- Quitados `<fog>`, bruma de suelo, clima `fog` y botón ✨. Añadida pantalla de carga con botón «Entrar al valle». Tests: `tests/boot.test.js`; el e2e `npm run scenes` comprueba la pantalla de carga.

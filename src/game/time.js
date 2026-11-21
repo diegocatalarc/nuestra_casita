@@ -33,7 +33,6 @@ export function computeEnv(now, startedAt, seed = 1) {
   const rainP = [0.22, 0.1, 0.26, 0.2][season];
   let weather = 'clear';
   if (r < rainP) weather = season === 3 ? 'snow' : r < rainP * 0.4 ? 'storm' : 'rain';
-  else if (r < rainP + 0.1 && hour < 10) weather = 'fog';
   if (DEBUG.weather) weather = DEBUG.weather;
   return { now, hour, day, season, weather, slot };
 }
