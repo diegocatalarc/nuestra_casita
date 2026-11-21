@@ -1,6 +1,6 @@
 // Escenas narradas de la historia: pantalla completa con retrato, texto que se escribe solo y toque para seguir.
 // También hace de «director»: cada segundo mira si toca alguna escena (director.js) y la encola cuando no estorba.
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { SCENES, NARRATOR } from '../game/story/scenes';
 import { CHAPTERS } from '../game/story/chapters';
@@ -72,6 +72,8 @@ function Scene({ id, replay }) {
     const r = pages.findIndex((p) => p.kind === 'reward');
     if (r >= 0) setI(r); else finish();
   };
+  const box = useRef();
+  useEffect(() => { document.activeElement?.blur?.(); box.current?.focus?.({ preventScroll: true }); }, []); // el foco pasa a la escena: Enter/Espacio avanzan, no activan botones de debajo
   useEffect(() => {
     const k = (e) => { if (/^(INPUT|TEXTAREA|BUTTON|SELECT)$/.test(e.target?.tagName || '')) return; if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); advance(); } };
     window.addEventListener('keydown', k);
@@ -79,14 +81,14 @@ function Scene({ id, replay }) {
   });
   const couple = useGame((s) => s.couple);
   const obj = useMemo(() => objectiveFor({ couple }), [couple]);
-  useEffect(() => { if (!page) nextScene(); }, [page]); // escena sin páginas: no se queda colgada
+  useEffect(() => { if (!page) finish(); }, [page]); // escena sin páginas: no se queda colgada
   if (!page) return null;
   const c = page.kind === 'say' && page.who !== NARRATOR ? castById[page.who] : null;
   const mood = sc.mood || 'day';
   const ink = DARK.has(mood) ? '#fff7ec' : '#4a3828';
   const showGuide = page.kind === 'say' && last && !id.endsWith('.outro') && id !== 'prologue' && obj;
   return (
-    <div className="story-scene" role="dialog" aria-label={t("Escena de la historia")} onClick={advance} style={{ background: MOODS[mood] || MOODS.day, color: ink }}>
+    <div className="story-scene" ref={box} tabIndex={-1} role="dialog" aria-label={t("Escena de la historia")} onClick={advance} style={{ background: MOODS[mood] || MOODS.day, color: ink }}>
       <div className="ss-bar top" /><div className="ss-bar bottom" />
       <button className="ss-skip" onClick={skip}>{t("Saltar ⏭")}</button>
       <div className="ss-body" key={`${id}-${i}`}>

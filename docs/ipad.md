@@ -13,7 +13,7 @@ Objetivo: que en el iPad se pueda **instalar en la pantalla de inicio** y verse 
 - Los menús, el chat, los botones de cámara y los botones redondos respetan las áreas seguras (muesca, barra de inicio y bordes redondeados) con `env(safe-area-inset-*)`.
 - Sin «tirar para refrescar», sin rebote y sin zoom de página: el pellizco es solo para el zoom del juego.
 - Sin selección de texto ni menú de «mantener pulsado» sobre el juego; en cajas de texto (chat, nombre) sí se puede seleccionar.
-- En iPad los botones redondos (ajustes, efectos, sonido, salir) pasan a una fila bajo los recursos, arriba a la derecha, para no tapar la barra inferior ni el chat. En vertical la barra se alinea a la izquierda para dejar sitio al botón del chat. En escritorio no cambia nada.
+- En iPad los botones redondos (ajustes, sonido, salir) pasan a una fila bajo los recursos, arriba a la derecha, para no tapar la barra inferior ni el chat. En vertical la barra se alinea a la izquierda para dejar sitio al botón del chat. En escritorio no cambia nada.
 
 ## Cómo está hecho
 - `public/manifest.webmanifest`, iconos `public/icon-*.png`, `public/apple-touch-icon.png` y `public/icon.svg` (fuente).
@@ -37,10 +37,10 @@ Objetivo: que en el iPad se pueda **instalar en la pantalla de inicio** y verse 
 - [ ] Deslizar hacia abajo desde arriba no refresca ni hace rebote.
 - [ ] Chat: se abre, el teclado no tapa la caja de texto, se puede enviar y cerrar.
 - [ ] Menús de la barra (Hogar, Pareja, Mundo, Comercio) y paneles: se abren, se desplazan y se cierran.
-- [ ] Botones redondos (arriba a la derecha): sonido, efectos, ajustes, salir.
+- [ ] Botones redondos (arriba a la derecha): sonido, ajustes, salir.
 - [ ] Sonido: suena tras el primer toque y el botón de silencio funciona.
 - [ ] Inicio de sesión (Google / código de pareja) funciona dentro de la app instalada y se mantiene al cerrarla y volver a abrirla.
 - [ ] Rendimiento: fluido al mover la cámara.
 
 ## Informe para el desarrollo
-Tras jugar unos minutos en el iPad: ⚙️ → **«⏱️ Medir fluidez (5 s)»** → **«📋 Copiar informe»** y pégalo en el chat. Así sabremos cuántos fps da de verdad, si hubo errores y qué calidad gráfica tenía activa (en táctil empieza en «baja»; se cambia con ✨).
+Tras jugar unos minutos en el iPad: ⚙️ → **«⏱️ Medir fluidez (5 s)»** → **«📋 Copiar informe»** y pégalo en el chat. Así sabremos cuántos fps da de verdad, si hubo errores y qué calidad gráfica tenía activa (en táctil empieza en «baja»).
