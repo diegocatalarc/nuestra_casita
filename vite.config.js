@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     // Los modelos .glb no se incrustan en el JS (base64 dentro del chunk de entrada): se piden por separado.
-    assetsInlineLimit: (file, content) => (file.endsWith('.glb') ? false : content.length < 1000000),
+    assetsInlineLimit: (file, content) => (file.endsWith('.glb') ? !!process.env.NC_INLINE_GLB : content.length < 1000000), // NC_INLINE_GLB=1 (Artifact de claude.ai, que no sirve .glb): los incrusta como antes
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
