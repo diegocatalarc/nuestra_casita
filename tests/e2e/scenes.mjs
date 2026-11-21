@@ -84,6 +84,17 @@ async function main() {
     await page.waitForSelector('.story-scene', { timeout: 15_000 }).catch(() => {});
     check((await page.locator('.ss-card h1').first().innerText().catch(() => '')).includes('Expediente de verano'), 'después llega la intro del capítulo 2');
 
+    // 6) Dos ciudades: la escena del reloj (cap. 6) muestra las dos horas y la zona se guarda en la entrada propia
+    await page.waitForTimeout(1500);
+    for (let i = 0; i < 8 && await page.locator('.story-scene').count(); i++) await tap(); // cierra lo que haya en pantalla
+    check(!!(await nc(() => window.__nc.useGame.getState().couple.players?.[window.__nc.useGame.getState().user.uid]?.tz)), 'la zona horaria de la persona se guarda en couple.players.<uid>.tz');
+    await nc(async () => { const m = await import('/src/game/story/director.js'); m.replayScene('c6.outro'); });
+    await page.waitForSelector('.story-scene', { timeout: 10_000 }).catch(() => {});
+    for (let i = 0; i < 4 && !(await page.locator('.ss-clocks').count()); i++) await tap();
+    check(await page.locator('.ss-clocks').count() === 1, 'la escena del reloj muestra las dos horas');
+    check(/\d\d:\d\d/.test(await page.locator('.ss-clocks').innerText().catch(() => '')), 'los relojes muestran una hora HH:MM');
+    for (let i = 0; i < 6 && await page.locator('.story-scene').count(); i++) await tap();
+
     check(errors.length === 0, `sin errores de página ${errors.slice(0, 2).join(' | ')}`);
   } finally { await browser.close(); await vite.close(); }
   if (failures.length) { console.log(`\n${failures.length} fallo(s)`); process.exit(1); }

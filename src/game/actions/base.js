@@ -5,6 +5,7 @@ import { cropInfo, isPlantable, nodeAlive, nodeAmount, animalStats, animalPos, v
 import { findPath } from '../movement';
 import { me, others } from '../runtime';
 import { HOUSE_DOC } from '../initialState';
+import { localZone } from '../tz';
 import { t } from '../../i18n';
 import { commit, doAnim, earn, fx, gain, heartOps, logActivity, spend, st, statOp, toast, xpOp } from './core';
 import { cancelFish } from './fishing';
@@ -37,6 +38,17 @@ export function walkTo(tx, tz) {
 export function ensureHouse() {
   const s = st();
   if (s.loaded.buildings && !s.buildings.house) commit([{ op: 'set', col: 'buildings', id: 'house', data: HOUSE_DOC }]);
+}
+
+/** Guarda la zona horaria de este dispositivo en la entrada propia de `players` (solo el nombre de la zona). Una escritura por cambio. */
+let tzSent = null;
+export function syncTimezone() {
+  const s = st();
+  const uid = s.user?.uid, p = uid && s.couple?.players?.[uid];
+  const zone = localZone();
+  if (!p || !zone || p.tz === zone || tzSent === zone) return;
+  tzSent = zone;
+  commit([{ op: 'patch', data: { [`players.${uid}.tz`]: zone } }]);
 }
 
 export function dailyLogin() {

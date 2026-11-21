@@ -9,7 +9,7 @@ export const SCENES = {
   "prologue": { mood: "dawn", pages: [
     { who: "narrator", text: t("Todo valle tiene una estación favorita. Este tenía cuatro… hasta que el invierno se quedó a vivir y se negó a pagar el alquiler.") },
     { who: "narrator", text: t("Desde entonces el calendario va con retraso, el reloj de la plaza marca siempre las seis y diez, y el único funcionario del Negociado de Estaciones ficha cada mañana, aunque nadie le ha dicho que ya no cobra.") },
-    { who: "narrator", text: t("Pero esta madrugada, dos personas distintas, en dos casas distintas, a muchos kilómetros y a varias horas de diferencia, han abierto el mismo sobre sin remitente.") },
+    { who: "narrator", text: t("Pero esta madrugada, dos personas distintas, en dos casas distintas ({tuCiudad} y {suCiudad}), con {diferencia} de diferencia horaria, han abierto el mismo sobre sin remitente.") },
     { who: "valle", text: t("«Se solicita su presencia para resolver un asunto pendiente de la estación. Traigan paraguas y sentido del humor. P. D.: aquí nadie se muere; se queda.»") },
     { who: "remedios", text: t("«¡Por fin! Les esperábamos… bueno, a alguien. Pasen, que el papeleo no se firma solo. Eso sí: no toquen el reloj. Todavía.»") },
   ] },
@@ -129,7 +129,7 @@ export const SCENES = {
     { who: "narrator", text: t("Los dos, a la vez, bajo la torre. El muelle encaja con un clic suave, como un corazón recordando su sitio. En algún lugar, un funcionario deja de fichar.") },
   ] },
   "c6.outro": { mood: "dusk", pages: [
-    { who: "inigo", text: t("«Tic. Tac. Tic… ¡tac! ¿Lo oyen? Late. Por fin late. Y no marca las seis y diez: marca la hora que hay donde ustedes están, las dos a la vez.»") },
+    { who: "inigo", text: t("«Tic. Tac. Tic… ¡tac! ¿Lo oyen? Late. Por fin late. Y no marca las seis y diez: marca la hora de {tuCiudad} y la de {suCiudad}, las dos a la vez.»") },
     { who: "funcionario", text: t("«Hoy no he fichado. Es la primera vez en… ¿cuánto? Me han dicho que ya no cobro. Pensaba que era un chiste. Ahora que lo pienso, todos los vecinos se ríen en el mismo sitio.»") },
     { who: "narrator", text: t("Las manecillas se estremecen y se ponen en marcha. En el Ayuntamiento se enciende una luz: Doña Remedios os llama. Hay una carta que debe leerse en voz alta.") },
   ] },
@@ -151,7 +151,7 @@ export const SCENES = {
   "c7.outro": { mood: "dusk", pages: [
     { who: "funcionario", text: t("«Expediente del Valle. Fecha de apertura: la primera vez que ustedes discutieron por videollamada. Primer parte del tiempo: tormenta. Segundo: niebla. Tercero: sol…»") },
     { who: "funcionario", text: t("«Cada parte meteorológico corresponde a un día de ustedes. Lo he leído de arriba abajo cuatro veces. El clima del valle nunca fue del valle: era de ustedes. Cada tormenta fue una discusión; cada sol, una buena noche.»") },
-    { who: "remedios", text: t("«Yo solo soy la que escribe las cartas. Ustedes eran el tiempo, y el valle, el sitio donde guardarlo. Tantos kilómetros… y aun así llueve igual en los dos lados.»") },
+    { who: "remedios", text: t("«Yo solo soy la que escribe las cartas. Ustedes eran el tiempo, y el valle, el sitio donde guardarlo. Entre {tuCiudad} y {suCiudad} hay {diferencia} de reloj, y aun así llueve igual en los dos lados.»") },
     { who: "valle", text: t("«Queridos forasteros: no había nada que arreglar. Solo hacía falta que coincidieran. Con cariño, el Valle (en funciones de ustedes).»") },
     { who: "narrator", text: t("El cielo se despeja de golpe. El sol sale por el este, por el oeste y por las dos pantallas a la vez. Cuatro estaciones, una detrás de otra, en un minuto.") },
     { who: "narrator", text: t("Dos personas lejanas, un mismo huerto, un valle que por fin lleva la hora justa. Fin del Libro I… y quizá el principio de otro.") },

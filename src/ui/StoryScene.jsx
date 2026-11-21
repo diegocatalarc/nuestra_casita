@@ -1,7 +1,8 @@
 // Escenas narradas de la historia: pantalla completa con retrato, texto que se escribe solo y toque para seguir.
 // También hace de «director»: cada segundo mira si toca alguna escena (director.js) y la encola cuando no estorba.
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useGame } from '../store/gameStore';
+import { useGame, partnerUid } from '../store/gameStore';
+import { fillTokens, localZone, cityOf, clockText, minutesApart, diffText } from '../game/tz';
 import { SCENES, NARRATOR } from '../game/story/scenes';
 import { CHAPTERS } from '../game/story/chapters';
 import { speakerById } from '../game/story/speakers';
@@ -32,10 +33,31 @@ export function buildPages(id, replay = false) {
   const pages = [];
   if (id === 'prologue') pages.push({ kind: 'card', kicker: t("Libro I"), title: t("El Valle Atrasado") });
   else if (part === 'intro' && ch) pages.push({ kind: 'card', kicker: t("Capítulo {0}", [CHAPTERS.indexOf(ch) + 1]), title: ch.title });
-  for (const p of sc.pages) pages.push({ kind: 'say', ...p });
+  sc.pages.forEach((p, k) => {
+    pages.push({ kind: 'say', ...p });
+    if (id === 'c6.outro' && k === 0) pages.push({ kind: 'clocks' }); // las dos horas, lado a lado
+  });
   if (id === 'c7.outro') pages.push({ kind: 'card', kicker: t("Fin del Libro I"), title: t("El Valle Atrasado") });
   if (part === 'outro' && ch && !replay) pages.push({ kind: 'reward', ch });
   return pages;
+}
+
+/** Dos relojes con la hora de cada ciudad y la diferencia entre ellas (se actualizan cada segundo). */
+function TwoClocks({ zones }) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => { const id = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(id); }, []);
+  const known = zones.me && zones.partner;
+  const col = (zone, who) => (
+    <div className="ss-clock"><small>{cityOf(zone) || who}</small><b>{zone ? clockText(zone, now) : '--:--'}</b></div>
+  );
+  return (
+    <div className="ss-card clocks" onClick={(e) => e.stopPropagation()}>
+      <small>{t("La torre marca dos horas a la vez")}</small>
+      <div className="ss-clocks">{col(zones.me, t("Tú"))}<span>🕰️</span>{col(zones.partner, t("Tu pareja"))}</div>
+      <p>{known ? t("Entre las dos hay {0} de diferencia.", [diffText(minutesApart(zones.me, zones.partner, now))]) : t("Cuando tu pareja entre, verás aquí su hora.")}</p>
+      <p>{t("Toca para continuar")}</p>
+    </div>
+  );
 }
 
 function Typewriter({ text, shown }) {
@@ -48,7 +70,9 @@ function Scene({ id, replay }) {
   const [i, setI] = useState(0);
   const [shown, setShown] = useState(0);
   const page = pages[i];
-  const len = page?.kind === 'say' ? page.text.length : 0;
+  const zones = useGame((s) => ({ me: s.couple?.players?.[s.user?.uid]?.tz || localZone(), partner: s.couple?.players?.[partnerUid(s)]?.tz || null }), (a, b) => a.me === b.me && a.partner === b.partner);
+  const text = page?.kind === 'say' ? fillTokens(page.text, zones) : '';
+  const len = text.length;
   useEffect(() => { setShown(0); }, [i, id]);
   useEffect(() => {
     if (!len || shown >= len) return;
@@ -107,13 +131,14 @@ function Scene({ id, replay }) {
                 <div><b>{c.name}</b><small>{c.role}</small></div>
               </div>
             )}
-            <p className={c ? '' : 'narr-text'}>{!c && <span className="ss-ico">📜</span>}<Typewriter text={page.text} shown={shown} /></p>
+            <p className={c ? '' : 'narr-text'}>{!c && <span className="ss-ico">📜</span>}<Typewriter text={text} shown={shown} /></p>
             {showGuide && shown >= len && (
               <div className="ss-guide">🎯 <b>{t("Ahora")}:</b> {obj.text}</div>
             )}
             <div className="ss-next">{shown >= len ? (last ? t("Toca para empezar ▶") : '▶') : ''}</div>
           </div>
         )}
+        {page.kind === 'clocks' && <TwoClocks zones={zones} />}
         {page.kind === 'reward' && (
           <div className="ss-card reward" onClick={(e) => e.stopPropagation()}>
             <small>{t("Capítulo completado")}</small>

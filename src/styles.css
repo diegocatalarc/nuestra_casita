@@ -406,3 +406,6 @@ input, textarea, .chatdock, .modal-body, .menu-list { -webkit-user-select: text;
 
 .ss-skip { min-height: 44px; min-width: 44px; }
 .story-scene:focus { outline: none; }
+.ss-card.clocks { background: rgba(255,250,240,.95); color: #4a3828; border: 3px solid #e8d5b8; border-radius: 24px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+.ss-clocks { display: flex; align-items: center; gap: 18px; justify-content: center; } .ss-clocks > span { font-size: 38px; }
+.ss-clock { display: flex; flex-direction: column; align-items: center; } .ss-clock small { letter-spacing: .08em; } .ss-clock b { font-size: clamp(30px, 8vw, 46px); font-variant-numeric: tabular-nums; }

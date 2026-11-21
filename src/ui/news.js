@@ -151,6 +151,12 @@ export const NEWS = [
       { emoji: '🌦️', text: t("Las estaciones del valle llevan años de retraso y un funcionario ficha cada mañana sin cobrar. Dos forasteros reciben una carta sin remitente… La historia empieza ahora con una escena nada más entrar, cada capítulo se abre con una pregunta y el clima del valle cambia con la trama (nieve fuera de temporada, sequía, tormentas). ¿Quién escribió esa carta?") },
     ],
   },
+  {
+    v: 21, title: t("Dos ciudades, dos horas"),
+    items: [
+      { emoji: '🕰️', text: t("La historia ahora conoce la ciudad y la hora de cada uno: la torre del reloj muestra las dos horas a la vez y los vecinos hablan de la diferencia que hay entre vosotros. Solo se guarda el nombre de la zona horaria de cada dispositivo (p. ej. «Santiago»), nunca la ubicación exacta.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 
