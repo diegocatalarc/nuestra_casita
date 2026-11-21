@@ -375,7 +375,7 @@ input, textarea, .chatdock, .modal-body, .menu-list { -webkit-user-select: text;
 .ss-body { width: min(640px, 100%); margin-bottom: 4vh; animation: ss-rise .45s ease both; }
 .ss-card { text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 0 0 12vh; }
 .ss-card small { letter-spacing: .18em; text-transform: uppercase; font-weight: 800; opacity: .8; }
-.ss-card h1 { margin: 0; font-size: clamp(30px, 7vw, 54px); line-height: 1.1; }
+.ss-card h1 { margin: 0; color: inherit; text-shadow: 0 2px 12px rgba(0,0,0,.18); font-size: clamp(30px, 7vw, 54px); line-height: 1.1; }
 .ss-card p { margin: 0; opacity: .7; font-size: 14px; }
 .ss-say { background: rgba(255, 250, 240, .93); color: #4a3828; border: 3px solid #e8d5b8; border-radius: 24px; padding: 16px 18px 12px; box-shadow: 0 10px 30px rgba(0,0,0,.3); position: relative; }
 .ss-say.narr { background: rgba(30, 20, 14, .62); color: #fff7ec; border-color: rgba(255,255,255,.25); text-align: center; }
@@ -393,7 +393,7 @@ input, textarea, .chatdock, .modal-body, .menu-list { -webkit-user-select: text;
 .ss-card.reward h1 { font-size: clamp(24px, 5vw, 34px); }
 .goal-tag { font-size: 26px; animation: ss-bounce .8s ease-in-out infinite alternate; filter: drop-shadow(0 0 6px #ff6a8a); }
 @keyframes ss-bounce { from { transform: translateY(0); } to { transform: translateY(-8px); } }
-.objective { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 5; display: flex; align-items: center; gap: 10px; background: var(--paper); border: 2px solid var(--rose); border-radius: 18px; padding: 7px 12px; box-shadow: var(--shadow); max-width: min(420px, calc(100vw - 360px)); text-align: left; font-family: inherit; color: var(--ink); }
+.objective { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 5; display: flex; align-items: center; gap: 10px; background: var(--paper); border: 2px solid var(--rose); border-radius: 18px; padding: 7px 12px; box-shadow: var(--shadow); max-width: clamp(260px, calc(100vw - 720px), 420px); text-align: left; font-family: inherit; color: var(--ink); }
 .objective.ready { border-color: #e0b84a; background: #fff6d6; animation: ob-pulse 1s ease-in-out infinite alternate; }
 @keyframes ob-pulse { to { box-shadow: 0 0 0 6px rgba(224,184,74,.35); } }
 .ob-main { display: flex; flex-direction: column; min-width: 0; gap: 1px; } .ob-main small { color: var(--ink-l); font-size: 11px; font-weight: 800; } .ob-main b { font-size: 14px; line-height: 1.25; }

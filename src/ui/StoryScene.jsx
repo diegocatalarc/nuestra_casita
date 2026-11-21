@@ -13,9 +13,9 @@ import { sfx } from '../game/audio';
 import { t } from '../i18n';
 
 const MOODS = {
-  dawn: 'linear-gradient(180deg, rgba(255,214,170,.92), rgba(176,120,120,.94))',
-  day: 'linear-gradient(180deg, rgba(190,226,240,.92), rgba(236,214,170,.94))',
-  dusk: 'linear-gradient(180deg, rgba(120,92,140,.94), rgba(240,150,120,.94))',
+  dawn: 'linear-gradient(180deg, rgba(255,214,170,.96), rgba(176,120,120,.97))',
+  day: 'linear-gradient(180deg, rgba(190,226,240,.96), rgba(236,214,170,.97))',
+  dusk: 'linear-gradient(180deg, rgba(120,92,140,.96), rgba(240,150,120,.97))',
   night: 'linear-gradient(180deg, rgba(30,36,70,.95), rgba(70,60,110,.95))',
 };
 const DARK = new Set(['dusk', 'night']);
