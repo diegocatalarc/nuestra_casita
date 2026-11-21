@@ -4,6 +4,7 @@ import { useGame } from '../store/gameStore';
 import { MAP, TILE } from '../game/constants';
 import { idx } from '../game/worldGen';
 import { hashStr } from '../game/rng';
+import { windMaterial } from './wind';
 
 const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), v = new THREE.Vector3(), s = new THREE.Vector3(), c = new THREE.Color();
 const h01 = (k) => (hashStr(k) % 10000) / 10000;
@@ -41,9 +42,10 @@ export default function Details() {
   }, [d, season]);
 
   const std = <meshStandardMaterial roughness={1} />;
+  const reedMat = useMemo(() => windMaterial(0.16), []); // los juncos se mecen con el viento
   return (
     <group>
-      <instancedMesh ref={r.reed} args={[null, null, Math.max(1, d.reeds.length)]} castShadow><coneGeometry args={[1, 1, 4]} />{std}</instancedMesh>
+      <instancedMesh ref={r.reed} args={[null, null, Math.max(1, d.reeds.length)]} castShadow><coneGeometry args={[1, 1, 4]} /><primitive object={reedMat} attach="material" /></instancedMesh>
       <instancedMesh ref={r.pad} args={[null, null, Math.max(1, d.pads.length)]} receiveShadow><cylinderGeometry args={[1, 1, 1, 10]} />{std}</instancedMesh>
       <instancedMesh ref={r.padF} args={[null, null, Math.max(1, d.pads.length)]}><icosahedronGeometry args={[1, 0]} />{std}</instancedMesh>
       <instancedMesh ref={r.mush} args={[null, null, Math.max(1, d.mush.length)]} castShadow><cylinderGeometry args={[1, 1, 1, 6]} />{std}</instancedMesh>

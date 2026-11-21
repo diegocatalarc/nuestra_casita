@@ -10,23 +10,12 @@ import { idx } from '../game/worldGen';
 import { hashStr } from '../game/rng';
 import { useKGeo } from '../game/models';
 import { makeChunks, useChunkSet, ChunkLayer } from './chunks';
+import { WIND, WIND_BY_WEATHER, windMaterial } from './wind';
+import { L as LIGHT } from '../game/lighting';
 
-const U = { uTime: { value: 0 } };
-/** Material con balanceo de viento en el vertex shader (por instancia). */
+/** Material con balanceo de viento (ver wind.js). base=true: textura/colores del modelo (sin flatShading). */
 function swayMaterial(amp, base = false, opts = {}) {
-  const m = new THREE.MeshStandardMaterial({ roughness: 1, flatShading: !base, ...opts });
-  m.onBeforeCompile = (sh) => {
-    sh.uniforms.uTime = U.uTime;
-    sh.vertexShader = 'uniform float uTime;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
-#ifdef USE_INSTANCING
-  float ph = instanceMatrix[3].x * 0.6 + instanceMatrix[3].z * 0.8;
-  float sw = ${base ? 'max(position.y, 0.0) * 0.45' : '(position.y * 0.5 + 0.5)'} * ${amp};
-  transformed.x += sin(uTime * 1.6 + ph) * sw + sin(uTime * 3.1 + ph * 2.0) * sw * 0.3;
-  transformed.z += cos(uTime * 1.3 + ph * 1.1) * sw * 0.7;
-#endif`);
-  };
-  m.customProgramCacheKey = () => 'sway' + amp + base;
-  return m;
+  return windMaterial(amp, { flatShading: !base, ...opts });
 }
 
 const m4 = new THREE.Matrix4();
@@ -47,16 +36,22 @@ export default function Nature() {
   const nodesState = useGame((s) => s.nodes);
   const season = useGame((s) => s.env.season);
   const tick = useGame((s) => Math.floor(s.now / 5000));
-  const swayTree = useMemo(() => swayMaterial(0.05), []);
-  const swayGrass = useMemo(() => swayMaterial(0.35), []);
-  useFrame((st) => { U.uTime.value = st.clock.elapsedTime; });
+  // amp = balanceo por metro de altura: copas y pinos suaves, hierba y flores más
+  const swayTree = useMemo(() => swayMaterial(0.022), []);
+  const swayGrass = useMemo(() => swayMaterial(0.2), []);
+  const swayFlower = useMemo(() => swayMaterial(0.2, false, { roughness: 0.9 }), []);
+  useFrame((st, dt) => {
+    WIND.uTime.value = st.clock.elapsedTime;
+    const w = WIND_BY_WEATHER[LIGHT.weather] ?? 1; // el viento sube y baja poco a poco con el clima
+    WIND.uWind.value += (w - WIND.uWind.value) * Math.min(1, dt * 0.8);
+  });
   // Pino de Kenney (CC0) con paleta estacional
   const treeGeo = useKGeo('tree');
   const treeMaps = useMemo(() => ['spring', 'summer', 'autumn', 'winter'].map((n) => {
     const t = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}models/Textures/colormap_${n}.png`);
     t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; t.magFilter = THREE.NearestFilter; return t;
   }), []);
-  const kMat = useMemo(() => swayMaterial(0.08, true, { map: treeMaps[1] }), [treeMaps]);
+  const kMat = useMemo(() => swayMaterial(0.02, true, { map: treeMaps[1] }), [treeMaps]);
   useLayoutEffect(() => { kMat.map = treeMaps[season]; kMat.needsUpdate = true; }, [season, kMat, treeMaps]);
 
   // Geometrías y materiales compartidos por todos los bloques
@@ -177,9 +172,9 @@ export default function Nature() {
     world.tufts.forEach((t, i) => {
       if (i % 7) return;
       const n = i / 7;
-      const sc = 0.9 + (i % 3) * 0.15;
+      const sc = (0.9 + (i % 3) * 0.15) * (season === 0 ? 1.35 : season === 3 ? 0.001 : 1); // más y mayores en primavera; ninguna bajo la nieve
       put(r.wildStem.current, n, t.x + 0.07, 0.11 * sc, t.z, 0.02, 0.22 * sc, 0.02);
-      put(r.wild.current, n, t.x + 0.07, 0.25 * sc, t.z, 0.06 * sc, 0.06 * sc, 0.06 * sc);
+      put(r.wild.current, n, t.x + 0.07, 0.25 * sc, t.z, 0.07 * sc, 0.07 * sc, 0.07 * sc);
       r.wild.current.setColorAt(n, col.set(WILD[i % 5])); r.wildStem.current.setColorAt(n, col.set('#6aa552'));
     });
     for (const k of ['wild', 'wildStem']) { r[k].current.instanceMatrix.needsUpdate = true; r[k].current.instanceColor.needsUpdate = true; r[k].current.refresh(); }
@@ -197,7 +192,7 @@ export default function Nature() {
       {L(r.crystal, groups.crystal, G.crystal, M.crystal, pick)}
       {L(r.clay, groups.clay, G.clay, M.vc, pick)}
       {L(r.cotton, groups.cotton, G.cotton, M.vc, pick)}
-      {L(r.flower, groups.flower3, G.ico1, M.vc, pick)}
+      {L(r.flower, groups.flower3, G.ico1, swayFlower, pick)}
       {L(r.stem, groups.flower3, G.stem, swayGrass)}
       {L(r.tuft, null, G.tuft, swayGrass, { receiveShadow: true })}
       {L(r.wildStem, null, G.stem, swayGrass)}
