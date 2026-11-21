@@ -406,7 +406,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       </Suspense>
       <Tutorial />
       <AwayModal />
-      {panel === 'family' && <FamilyPanel />}
+      <Suspense fallback={null}>{panel === 'family' && <FamilyPanel />}</Suspense>
       <SleepOverlay />
       <Suspense fallback={null}>
       {(panel === 'avatar' || first) && <AvatarPanel first={first} />}
