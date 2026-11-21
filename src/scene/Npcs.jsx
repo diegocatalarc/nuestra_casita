@@ -2,7 +2,6 @@
 // charlan entre ellos y se les puede hablar tocándolos (táctil primero). Un solo useFrame mueve a los 8 con refs:
 // ningún componente React se re-renderiza por fotograma.
 import { useEffect, useRef } from 'react';
-import { createRoot } from 'react-dom/client';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { useGame } from '../store/gameStore';
@@ -13,7 +12,7 @@ import { ctx, findPath, tileBlocked } from '../game/movement';
 import { DEBUG, serverNow } from '../game/time';
 import { goAndDo } from '../game/actions';
 import { buildRoutines, positionAt, hasNews, isRaining, CHAT_DIST } from '../game/story/routines';
-import DialogueModal, { openDialogue, useDialogue } from '../ui/DialogueModal';
+import { openDialogue, useDialogue } from '../ui/DialogueModal';
 import Avatar from './Avatar';
 import ContactShadow from './shadow';
 
@@ -67,14 +66,8 @@ export default function Npcs() {
   const reg = useRef((id, v) => { if (v) regs.current[id] = v; else delete regs.current[id]; }).current;
   if (typeof window !== 'undefined' && window.location.search.includes('debug')) window.__npcs = { regs: regs.current, tgt }; // solo con ?debug (pruebas)
 
-  // El diálogo es DOM puro: se monta en su propia raíz para no tocar HUD.jsx ni GameCanvas.jsx
-  useEffect(() => {
-    const el = document.createElement('div');
-    document.body.appendChild(el);
-    const root = createRoot(el);
-    root.render(<DialogueModal />);
-    return () => { root.unmount(); el.remove(); useDialogue.setState({ npc: null, n: 0 }); };
-  }, []);
+  // El diálogo se monta en HUD.jsx; aquí solo se limpia al desmontar el mundo
+  useEffect(() => () => useDialogue.setState({ npc: null, n: 0 }), []);
 
   useFrame((_, rawDt) => {
     if (!ctx.ready) return;
