@@ -20,5 +20,12 @@ export default {
   "La historia, contada": "The story, told",
   "La historia del Valle ahora se cuenta con escenas: cada capítulo empieza con una carta narrada, tus avances tienen su reacción y al terminar recibes la recompensa en una pantalla de cierre.": "The Valley story is now told through scenes: each chapter opens with a narrated letter, your progress gets a reaction, and when you finish you collect your reward on a closing screen.",
   "Una guía siempre visible arriba te dice qué toca hacer, con una flecha y la distancia hasta el vecino o el lugar. El vecino al que debes ir lleva un 📍 sobre la cabeza.": "An always-visible guide at the top tells you what to do next, with an arrow and the distance to the neighbour or place. The neighbour you need to visit has a 📍 over their head.",
-  "Al hablar con un vecino te pide lo que necesita y puedes entregárselo ahí mismo. Puedes revivir cualquier escena desde el Diario del Valle.": "When you talk to a neighbour they ask for what they need and you can hand it over right there. You can relive any scene from the Valley Journal."
+  "Al hablar con un vecino te pide lo que necesita y puedes entregárselo ahí mismo. Puedes revivir cualquier escena desde el Diario del Valle.": "When you talk to a neighbour they ask for what they need and you can hand it over right there. You can relive any scene from the Valley Journal.",
+  "El Funcionario": "The Clerk",
+  "Negociado de Estaciones": "Seasons Bureau",
+  "El Valle": "The Valley",
+  "en funciones de ustedes": "acting on your behalf",
+  "El Valle Atrasado": "The Late Valley",
+  "Historia nueva: El Valle Atrasado": "New story: The Late Valley",
+  "Las estaciones del valle llevan años de retraso y un funcionario ficha cada mañana sin cobrar. Dos forasteros reciben una carta sin remitente… La historia empieza ahora con una escena nada más entrar, cada capítulo se abre con una pregunta y el clima del valle cambia con la trama (nieve fuera de temporada, sequía, tormentas). ¿Quién escribió esa carta?": "The valley's seasons are years late and a clerk still clocks in every morning without pay. Two outsiders receive a letter with no sender… The story now opens with a scene the moment you enter, each chapter begins with a question, and the valley's weather changes with the plot (off-season snow, drought, storms). Who wrote that letter?",
 };

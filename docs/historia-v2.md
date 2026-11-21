@@ -1,6 +1,6 @@
-# Historia v2 — «El Valle Atrasado» (BORRADOR para pulir con la persona responsable)
+# Historia v2 — «El Valle Atrasado» (IMPLEMENTADA en v20; guion en `src/game/story/scenes.js`)
 
-Estado: **propuesta**, aún no está en el juego. Decisiones ya tomadas por la persona responsable: tono de **misterio cálido con bastante humor negro**; protagonistas = **dos forasteros elegidos**; hilo conductor = **las estaciones y el clima**; final = **un gran giro**. Todo lo demás está **[POR CONFIRMAR]**.
+Estado: **implementada** (v20) con las decisiones de dos rondas de preguntas; sigue abierta a pulido. Decisiones ya tomadas por la persona responsable: tono de **misterio cálido con bastante humor negro**; protagonistas = **dos forasteros elegidos**; hilo conductor = **las estaciones y el clima**; final = **un gran giro**. Todo lo demás está **[POR CONFIRMAR]**.
 
 ## Regla de producto
 - **La historia es lo primero que se ve.** Al pulsar «Entrar al valle» arranca una escena (antes del avatar y del tutorial). Cada capítulo empieza con una **apertura en frío**: la primera línea plantea una pregunta o un problema (nunca «hola, soy X»), y la escena termina dejando un objetivo concreto en el banner.
@@ -66,3 +66,10 @@ Cada capítulo reutiliza las mecánicas actuales (cultivar, vender, pedidos, pes
 
 ## Cómo se implementa (cuando se apruebe)
 Datos declarativos: reescribir `src/game/story/chapters.js` (pasos y recompensas) y `scenes.js` (guion; se genera desde un fuente + `src/i18n/en-escenas.js`). Cambiar el clima por capítulo exigirá un gancho en `game/time.js` **[POR CONFIRMAR]**: hoy el clima es determinista por semilla; un clima «de trama» debería ser una condición del capítulo, no alterar la partida base.
+
+## Implementación (v20)
+- Escenas: `src/game/story/scenes.js` (+ `speakers.js`: vecinos, **El Funcionario** 🗂️ y **El Valle** 🌦️ como voces) y traducciones en `src/i18n/en-escenas.js`. Títulos/cartas/pasos en `chapters.js` (mismas condiciones y recompensas que antes: los ids de capítulo y proyectos no cambian). Mapa final: c1 fuente (primavera/llovizna) · c2 panadería (sequía) · c3 tienda/cartas (otoño) · c4 escuela (nieve) · c5 café (todos los tiempos) · c6 reloj (6:10, despejado) · c7 fiesta y **el giro** (las cuatro estaciones).
+- Clima de trama: `src/game/story/plot.js` fuerza el tiempo del capítulo activo (determinista por hora; `?weather=` manda). Se fija en `tickStory`.
+- **Pistas del giro sembradas:** la carta del cap. 3 «con letra sospechosamente parecida a la vuestra»; el Funcionario deja de fichar al arreglar el reloj; el parte del cap. 7 lee los «partes del tiempo» con fechas de discusiones por videollamada.
+- **Pendiente [POR CONFIRMAR]:** «dos ciudades y diferencia horaria» (decidido por la persona responsable): el reloj de la torre del cap. 6 marcaría la hora de cada ciudad; requiere guardar la zona horaria de cada persona (`couple.players.<uid>.tz`, escritura propia ya permitida por las reglas) y mostrarla en la escena; no hecho aún.
+- Datos de la pareja (nombres, fechas): decidido **ambiguo y universal**.

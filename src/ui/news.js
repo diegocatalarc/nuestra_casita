@@ -145,6 +145,12 @@ export const NEWS = [
       { emoji: '⏳', text: t("Pantalla de carga: el juego espera a que todo vaya fluido y te pide pulsar «Entrar» (también activa el sonido).") },
     ],
   },
+  {
+    v: 20, title: t("Historia nueva: El Valle Atrasado"),
+    items: [
+      { emoji: '🌦️', text: t("Las estaciones del valle llevan años de retraso y un funcionario ficha cada mañana sin cobrar. Dos forasteros reciben una carta sin remitente… La historia empieza ahora con una escena nada más entrar, cada capítulo se abre con una pregunta y el clima del valle cambia con la trama (nieve fuera de temporada, sequía, tormentas). ¿Quién escribió esa carta?") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

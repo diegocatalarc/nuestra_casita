@@ -6,6 +6,7 @@ import { AVATAR_LOCKS, lockKey } from '../constants';
 import { me, others } from '../runtime';
 import { serverNow } from '../time';
 import { sfx } from '../audio';
+import { plot } from '../story/plot';
 import { t } from '../../i18n';
 import { st, commit, coinOp, gain, heartOps, toast, logActivity } from './core';
 
@@ -104,6 +105,7 @@ function observe(s) {
 /** Cada segundo (App.jsx): arranca la historia y marca los pasos automáticos y de presencia ya cumplidos. */
 export function tickStory() {
   const s = st();
+  plot.chapter = hasStory(s) && currentChapter(s, chaptersNow()) ? storyOf(s).chapter || 1 : null; // clima de trama del capítulo activo
   if (!s.couple || !s.coupleId || !s.user || !chaptersNow().length) return;
   if (!hasStory(s)) return startStory();
   const ch = currentChapter(s, chaptersNow());

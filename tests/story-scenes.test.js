@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { CHAPTERS } from '../src/game/story/chapters';
 import { SCENES } from '../src/game/story/scenes';
 import { castById } from '../src/game/story/characters';
+import { speakerById } from '../src/game/story/speakers';
+import { plotWeather } from '../src/game/story/plot';
 import { dueScenes, stepTarget, objectiveFor, arrowAngle, objectivePos, chapterSceneIds } from '../src/game/story/director';
 
 const state = (story) => ({ couple: { story: { chapter: 1, steps: {}, base: {}, claimed: {}, pieces: 0, flags: {}, ...story }, inventory: {}, stats: {}, friends: {} } });
@@ -19,7 +21,7 @@ describe('guion de escenas', () => {
   it('quien habla es el narrador o un vecino del reparto, y no hay páginas vacías', () => {
     for (const [id, sc] of Object.entries(SCENES)) {
       expect(sc.pages.length, id).toBeGreaterThan(0);
-      for (const p of sc.pages) { expect(p.who === 'narrator' || castById[p.who], `${id}: ${p.who}`).toBeTruthy(); expect(p.text.length).toBeGreaterThan(10); }
+      for (const p of sc.pages) { expect(p.who === 'narrator' || speakerById[p.who], `${id}: ${p.who}`).toBeTruthy(); expect(p.text.length).toBeGreaterThan(10); }
     }
   });
 });
@@ -78,5 +80,21 @@ describe('objetivo y guía', () => {
     const yaw = Math.PI / 4;
     expect(arrowAngle(-Math.sin(yaw), -Math.cos(yaw), yaw)).toBeCloseTo(0);
     expect(arrowAngle(Math.cos(yaw), -Math.sin(yaw), yaw)).toBeCloseTo(Math.PI / 2);
+  });
+});
+
+describe('clima de trama', () => {
+  it('cada capítulo fuerza (o no) un tiempo válido, determinista según la hora', () => {
+    const valid = new Set(['clear', 'rain', 'snow', 'storm', null]);
+    for (let ch = 0; ch <= 8; ch++) for (let h = 0; h < 24; h += 0.5) { expect(valid.has(plotWeather(ch, h)), `${ch}@${h}`).toBe(true); expect(plotWeather(ch, h)).toBe(plotWeather(ch, h)); }
+  });
+  it('el invierno inquilino nieva; el capítulo 3 y fuera de la historia no fuerzan nada', () => {
+    expect(plotWeather(4, 12)).toBe('snow');
+    expect(plotWeather(3, 12)).toBeNull();
+    expect(plotWeather(null, 12)).toBeNull();
+  });
+  it('el final recorre varios tiempos a lo largo del día', () => {
+    const set = new Set([0, 6, 12, 18].map((h) => plotWeather(7, h)));
+    expect(set.size).toBeGreaterThanOrEqual(3);
   });
 });

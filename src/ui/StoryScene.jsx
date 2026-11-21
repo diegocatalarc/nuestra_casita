@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { SCENES, NARRATOR } from '../game/story/scenes';
 import { CHAPTERS } from '../game/story/chapters';
-import { castById } from '../game/story/characters';
+import { speakerById } from '../game/story/speakers';
 import { dueScenes, loadSeen, addSeen, enqueueScenes, nextScene, useScene, objectiveFor } from '../game/story/director';
 import { claimStoryChapter } from '../game/actions';
 import { dialogueNpc } from './DialogueModal';
@@ -30,10 +30,10 @@ export function buildPages(id, replay = false) {
   const [chId, part] = id.split('.');
   const ch = CHAPTERS.find((c) => c.id === chId);
   const pages = [];
-  if (id === 'prologue') pages.push({ kind: 'card', kicker: t("Libro I"), title: t("Despertar el valle") });
+  if (id === 'prologue') pages.push({ kind: 'card', kicker: t("Libro I"), title: t("El Valle Atrasado") });
   else if (part === 'intro' && ch) pages.push({ kind: 'card', kicker: t("Capítulo {0}", [CHAPTERS.indexOf(ch) + 1]), title: ch.title });
   for (const p of sc.pages) pages.push({ kind: 'say', ...p });
-  if (id === 'c7.outro') pages.push({ kind: 'card', kicker: t("Fin del Libro I"), title: t("Despertar el valle") });
+  if (id === 'c7.outro') pages.push({ kind: 'card', kicker: t("Fin del Libro I"), title: t("El Valle Atrasado") });
   if (part === 'outro' && ch && !replay) pages.push({ kind: 'reward', ch });
   return pages;
 }
@@ -83,7 +83,7 @@ function Scene({ id, replay }) {
   const obj = useMemo(() => objectiveFor({ couple }), [couple]);
   useEffect(() => { if (!page) finish(); }, [page]); // escena sin páginas: no se queda colgada
   if (!page) return null;
-  const c = page.kind === 'say' && page.who !== NARRATOR ? castById[page.who] : null;
+  const c = page.kind === 'say' && page.who !== NARRATOR ? speakerById[page.who] : null;
   const mood = sc.mood || 'day';
   const ink = DARK.has(mood) ? '#fff7ec' : '#4a3828';
   const showGuide = page.kind === 'say' && last && !id.endsWith('.outro') && id !== 'prologue' && obj;

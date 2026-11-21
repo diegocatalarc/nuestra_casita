@@ -31,13 +31,13 @@ async function main() {
     // 1) Prólogo: tarjeta de libro y páginas del narrador
     await page.waitForSelector('.story-scene', { timeout: 30_000 }).catch(() => {});
     check(await page.locator('.story-scene').count() === 1, 'el prólogo aparece solo al empezar');
-    check((await page.locator('.ss-card').innerText().catch(() => '')).includes('Despertar el valle'), 'la primera pantalla es la tarjeta del libro');
+    check((await page.locator('.ss-card').innerText().catch(() => '')).includes('El Valle Atrasado'), 'la primera pantalla es la tarjeta del libro');
     await page.screenshot({ path: '/tmp/claude-0/-home-user/ef51b309-d084-511b-8ea1-b09971a2f27c/scratchpad/scene-card.png' }).catch(() => {});
     // avanzar tocando hasta que cambie la escena (prólogo: tarjeta + 4 páginas; luego tarjeta del capítulo 1)
     let sawChapterCard = false;
     for (let i = 0; i < 20; i++) {
       const card = await page.locator('.ss-card h1').first().innerText().catch(() => '');
-      if (card.includes('Carta de bienvenida')) { sawChapterCard = true; break; }
+      if (card.includes('La primavera que no llegó')) { sawChapterCard = true; break; }
       await tap();
     }
     check(sawChapterCard, 'tras el prólogo llega la intro del capítulo 1 con su tarjeta');
@@ -48,7 +48,7 @@ async function main() {
 
     // 2) Guía de objetivo
     check(await page.locator('.objective').count() === 1, 'aparece la guía de objetivo');
-    check((await page.locator('.objective').innerText()).includes('Doña Remedios'), 'el objetivo inicial es saludar a Doña Remedios');
+    check((await page.locator('.objective').innerText()).includes('Doña Remedios'), 'el objetivo inicial es presentarse a Doña Remedios');
     await page.screenshot({ path: '/tmp/claude-0/-home-user/ef51b309-d084-511b-8ea1-b09971a2f27c/scratchpad/objective.png' }).catch(() => {});
 
     // 3) Hablar con ella: recuadro de misión en el diálogo y, al cumplirse el paso, escena de reacción
@@ -59,7 +59,7 @@ async function main() {
     await nc(async () => { const m = await import('/src/ui/DialogueModal.jsx'); m.closeDialogue(); });
     await page.waitForSelector('.story-scene', { timeout: 15_000 }).catch(() => {});
     await page.waitForTimeout(2500); // el texto se escribe solo
-    check((await page.locator('.ss-say').innerText().catch(() => '')).includes('Ya estáis aquí'), 'cumplir el paso dispara su escena de reacción');
+    check((await page.locator('.ss-say').innerText().catch(() => '')).includes('forasteros en prácticas'), 'cumplir el paso dispara su escena de reacción');
     await nc(() => window.__nc.useGame.getState().set({}));
     for (let i = 0; i < 6 && await page.locator('.story-scene').count(); i++) { await tap(); }
 
@@ -80,7 +80,7 @@ async function main() {
 
     // 5) Empieza el capítulo 2 con su intro
     await page.waitForSelector('.story-scene', { timeout: 15_000 }).catch(() => {});
-    check((await page.locator('.ss-card h1').first().innerText().catch(() => '')).includes('El horno apagado'), 'después llega la intro del capítulo 2');
+    check((await page.locator('.ss-card h1').first().innerText().catch(() => '')).includes('Expediente de verano'), 'después llega la intro del capítulo 2');
 
     check(errors.length === 0, `sin errores de página ${errors.slice(0, 2).join(' | ')}`);
   } finally { await browser.close(); await vite.close(); }

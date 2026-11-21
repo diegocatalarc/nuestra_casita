@@ -19,7 +19,9 @@ Hace años el **Reloj de la Plaza** marcaba la *Hora de las Cartas*: cada atarde
 
 El **Café del Puente** y la **Capilla** quedan como escenarios: el café lo reabre Luna (rincón de arte) en el capítulo 5; la capilla acoge el final.
 
-## Estructura: «Libro I — Despertar el valle» (7 capítulos)
+> **Actualización (v20):** la trama y los textos pasaron a «El Valle Atrasado» (ver `docs/historia-v2.md`). Se mantienen los ids de capítulo (`c1`…`c7`), proyectos, pasos y recompensas de abajo; cambian títulos, cartas, escenas y el clima de trama (`src/game/story/plot.js`).
+
+## Estructura: «Libro I — Despertar el valle» (7 capítulos; mecánicas vigentes, textos antiguos)
 Cada capítulo = una **Carta** (de Remedios u otro vecino) con **3 pasos** (siempre uno que use el bucle que ya os gusta: sembrar/cosechar/pedidos) y una **recompensa** (monedas, corazones, un objeto o un desbloqueo) y casi siempre una **pieza del reloj** (5 en total).
 1. **Carta de bienvenida** (Remedios): conocer a Remedios, plantar y cosechar algo, entregar el primer pedido. *Proyecto:* reparar la **fuente** de la plaza. Pieza 0: el pueblo empieza a «despertar» (farolas).
 2. **El horno apagado** (Rosa): entregar harina/cosecha, hornear con vuestra cocina. *Proyecto:* **panadería** abierta → vende pan y da un bonus de energía. Pieza 1.

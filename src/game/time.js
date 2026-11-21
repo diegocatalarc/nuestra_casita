@@ -1,3 +1,4 @@
+import { plot, plotWeather } from './story/plot';
 import { hashStr, mulberry32 } from './rng';
 
 // ---- Reloj de servidor (corregido por .info/serverTimeOffset en Firebase) ----
@@ -33,6 +34,8 @@ export function computeEnv(now, startedAt, seed = 1) {
   const rainP = [0.22, 0.1, 0.26, 0.2][season];
   let weather = 'clear';
   if (r < rainP) weather = season === 3 ? 'snow' : r < rainP * 0.4 ? 'storm' : 'rain';
+  const pw = plotWeather(plot.chapter, hour);
+  if (pw && !DEBUG.weather) weather = pw;
   if (DEBUG.weather) weather = DEBUG.weather;
   return { now, hour, day, season, weather, slot };
 }
