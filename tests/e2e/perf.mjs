@@ -251,6 +251,9 @@ async function sceneProfile(browser, url, key) {
   await page.waitForSelector('canvas', { timeout: 120000 });
   await page.waitForFunction(() => !!window.__nc?.runtime?.me && !!window.__gl && !!window.__r3f, null, { timeout: 120000 });
   await page.waitForSelector('.toolbar', { timeout: 120000 });
+  await page.evaluate(() => { const g = window.__nc.useGame.getState(); return window.__nc.backend.getBackend().write(g.coupleId, [{ op: 'patch', data: { seed: 4242 } }]); }); // misma casita siempre (la semilla de la demo es aleatoria)
+  await page.waitForFunction(() => window.__nc.useGame.getState().world?.seed === 4242, null, { timeout: 120000 });
+  await page.waitForTimeout(2500);
   const seed = await page.evaluate(() => window.__nc.useGame.getState().couple?.seed);
   await page.waitForTimeout(WARMUP_MS); // compilación de shaders, primer montaje
   await page.evaluate(installProbes);
@@ -262,7 +265,7 @@ async function sceneProfile(browser, url, key) {
   const jsIdle = await phase(page, cdp, 'quieta (solo JS)', 'idle', true);
   const jsMove = await phase(page, cdp, 'movimiento (solo JS)', 'walk', true);
   const camera = await phase(page, cdp, 'zoom+giro (solo JS)', 'camera', true);
-  await page.evaluate(() => { window.__perf.stub = false; });
+  await page.evaluate(() => { window.__perf.stub = true; }); // sin render por software: así se mide solo el JS de abrir el panel
   const panels = await page.evaluate(openPanels, { ids: ['today', 'inventory', 'market', 'quests', 'orders', 'mailbox', 'help'] });
   const top = await page.evaluate(() => Object.entries(window.__perf.ufNames).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, v]) => [k, Math.round(v)]));
   const subs = await page.evaluate(() => window.__perf.subs);
