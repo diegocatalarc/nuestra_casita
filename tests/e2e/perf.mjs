@@ -22,6 +22,8 @@ const argv = process.argv.slice(2);
 const flag = (n) => argv.includes(`--${n}`);
 const opt = (n, d) => { const i = argv.indexOf(`--${n}`); return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[i + 1] : d; };
 const LABEL = opt('label', 'actual');
+// --root <dir>: mide otra copia del repo (p. ej. un worktree de la revisión «antes»); node_modules debe estar enlazado en ella.
+const TARGET = opt('root', ROOT);
 const QUICK = flag('quick');
 const PHASE_MS = QUICK ? 6000 : 20000;
 const WARMUP_MS = QUICK ? 2500 : 5000;
@@ -49,7 +51,7 @@ const summ = (a) => ({ mean: r2(mean(a)), p50: r2(pct(a, 0.5)), p95: r2(pct(a, 0
 // ---------------------------------------------------------------- tamaños de build
 function gz(file) { return zlib.gzipSync(fs.readFileSync(file), { level: 9 }).length; }
 function bundleSizes() {
-  const dist = path.join(ROOT, 'dist');
+  const dist = path.join(TARGET, 'dist');
   const html = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
   const entry = new Set();
   for (const m of html.matchAll(/<(?:script|link)[^>]+(?:src|href)="([^"]+\.js)"/g)) entry.add(m[1].replace(/^\//, ''));
@@ -96,7 +98,7 @@ function installProbes() {
   P.frames = []; P.ufMs = 0; P.renderMs = 0; P.renders = 0; P.ufNames = {};
   gl.info.autoReset = false;
   const orig = gl.render.bind(gl);
-  gl.render = (s, c) => { const t = performance.now(); orig(s, c); P.renderMs += performance.now() - t; P.renders++; };
+  gl.render = (s, c) => { if (P.stub) { P.renders++; return; } const t = performance.now(); orig(s, c); P.renderMs += performance.now() - t; P.renders++; };
   const wrap = () => {
     for (const sub of st.internal.subscribers) {
       const ref = sub.ref;
@@ -184,7 +186,9 @@ async function cdpMetrics(cdp) {
   const o = {}; for (const m of metrics) o[m.name] = m.value; return o;
 }
 
-async function phase(page, cdp, name, mode) {
+async function phase(page, cdp, name, mode, stub = false) {
+  await page.evaluate((v) => { window.__perf.stub = v; }, stub);
+  if (stub) await page.waitForTimeout(500);
   const startIdx = await page.evaluate(() => window.__perf.frames.length);
   const t0 = await page.evaluate(() => performance.now());
   const m0 = await cdpMetrics(cdp);
@@ -251,19 +255,25 @@ async function sceneProfile(browser, url, key) {
   await page.waitForTimeout(WARMUP_MS); // compilación de shaders, primer montaje
   await page.evaluate(installProbes);
   await page.waitForTimeout(1500);
+  // Fases con render real (draw calls, triángulos, memoria) y fases «solo JS» con gl.render anulado: ahí no pesa la GPU por
+  // software, salen cientos de fotogramas y se ve el coste puro de JS (useFrame, React, tareas largas).
   const idle = await phase(page, cdp, 'quieta', 'idle');
   const move = await phase(page, cdp, 'movimiento', 'walk');
-  const camera = await phase(page, cdp, 'zoom+giro', 'camera');
+  const jsIdle = await phase(page, cdp, 'quieta (solo JS)', 'idle', true);
+  const jsMove = await phase(page, cdp, 'movimiento (solo JS)', 'walk', true);
+  const camera = await phase(page, cdp, 'zoom+giro (solo JS)', 'camera', true);
+  await page.evaluate(() => { window.__perf.stub = false; });
   const panels = await page.evaluate(openPanels, { ids: ['today', 'inventory', 'market', 'quests', 'orders', 'mailbox', 'help'] });
   const top = await page.evaluate(() => Object.entries(window.__perf.ufNames).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, v]) => [k, Math.round(v)]));
   const subs = await page.evaluate(() => window.__perf.subs);
   const info = await page.evaluate(() => ({ dpr: devicePixelRatio, coarse: matchMedia('(pointer: coarse)').matches, fx: window.__nc.useGame.getState().quality, canvas: [document.querySelector('canvas').width, document.querySelector('canvas').height] }));
   await page.screenshot({ path: path.join(OUT_DIR, `${LABEL}-${key}.png`) });
   await ctx.close();
-  return { profile: prof.label, seed, info, useFrameSubscribers: subs, idle, move, camera, panels, topUseFrameTotalMs: top, errors: errors.slice(0, 5) };
+  return { profile: prof.label, seed, info, useFrameSubscribers: subs, idle, move, jsIdle, jsMove, camera, panels, topUseFrameTotalMs: top, errors: errors.slice(0, 5) };
 }
 
 // ---------------------------------------------------------------- carga
+const gzOf = (names) => names.reduce((a, n) => { const f = path.join(TARGET, 'dist', n); try { return a + gz(f); } catch { return a; } }, 0);
 async function loadProfile(browser, url) {
   const runs = [];
   for (let i = 0; i < LOAD_RUNS; i++) {
@@ -278,6 +288,8 @@ async function loadProfile(browser, url) {
     await page.goto(`${url}/?hour=12&weather=clear&debug=1`, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('input[placeholder="Tu nombre"]', { timeout: 120000 });
     const tLogin = Date.now() - T0;
+    const jsNames = () => page.evaluate(() => performance.getEntriesByType('resource').filter((r) => /\.js(\?|$)/.test(r.name)).map((r) => new URL(r.name).pathname.replace(/^\//, '')));
+    const namesLogin = await jsNames();
     const nav = await page.evaluate(() => {
       const n = performance.getEntriesByType('navigation')[0] || {};
       const res = performance.getEntriesByType('resource').filter((r) => /\.js(\?|$)/.test(r.name));
@@ -295,11 +307,12 @@ async function loadProfile(browser, url) {
     await page.waitForSelector('.loading-screen button', { timeout: 120000 });
     const tEnter = Date.now() - T1; // con swiftshader suele toparse en los 15 s de seguridad: solo valen comparaciones relativas
     const jsAtEnter = jsAtAvatar;
-    runs.push({ tLoginMs: tLogin, tLoadingScreenMs: tLoading, tEnterMs: tEnter, ...nav, jsAtAvatar, jsAtEnter });
+    const namesEnter = await jsNames();
+    runs.push({ gzLogin: gzOf(namesLogin), gzEnter: gzOf(namesEnter), tLoginMs: tLogin, tLoadingScreenMs: tLoading, tEnterMs: tEnter, ...nav, jsAtAvatar, jsAtEnter });
     await ctx.close();
   }
   const med = (k) => pct(runs.map((r) => r[k]), 0.5);
-  return { runs: LOAD_RUNS, cpuThrottle: 2, tLoginMs: med('tLoginMs'), tLoadingScreenMs: med('tLoadingScreenMs'), tEnterMs: med('tEnterMs'), fcpMs: r2(med('fcp')), jsRequests: med('jsReq'), jsBytesEncoded: med('jsBytes'), raw: runs };
+  return { runs: LOAD_RUNS, cpuThrottle: 2, tLoginMs: med('tLoginMs'), tLoadingScreenMs: med('tLoadingScreenMs'), tEnterMs: med('tEnterMs'), fcpMs: r2(med('fcp')), jsRequests: med('jsReq'), jsGzipAtLogin: med('gzLogin'), jsGzipAtEnter: med('gzEnter'), jsBytesEncoded: med('jsBytes'), raw: runs };
 }
 
 // ---------------------------------------------------------------- principal
@@ -307,15 +320,15 @@ async function main() {
   const only = opt('only', null);
   let server, url;
   if (flag('dev')) {
-    server = await startVite(); url = server.url;
+    server = await startVite(); url = server.url; // (--dev mide siempre el repo actual)
   } else {
     if (!flag('no-build')) {
       console.log('Compilando (vite build)…');
-      const r = spawnSync('npx', ['vite', 'build', '--logLevel', 'error'], { cwd: ROOT, stdio: 'inherit' });
+      const r = spawnSync('npx', ['vite', 'build', '--logLevel', 'error'], { cwd: TARGET, stdio: 'inherit' });
       if (r.status !== 0) throw new Error('falló el build');
     }
     const port = await freePort();
-    const pv = await vitePreview({ root: ROOT, logLevel: 'error', preview: { host: '127.0.0.1', port, strictPort: true } });
+    const pv = await vitePreview({ root: TARGET, logLevel: 'error', preview: { host: '127.0.0.1', port, strictPort: true } });
     url = `http://127.0.0.1:${port}`;
     server = { close: () => new Promise((res) => pv.httpServer.close(res)) };
   }
@@ -331,7 +344,7 @@ async function main() {
       console.log(`escena ${key}…`);
       result[key] = await sceneProfile(browser, url, key);
       const s = result[key];
-      for (const ph of [s.idle, s.move, s.camera]) console.log(`  ${ph.name.padEnd(10)} fps=${ph.fps} calls p50=${ph.drawCalls.p50} tris p50=${ph.triangles.p50} jsFrame p50/p95=${ph.jsPerFrameMs.p50}/${ph.jsPerFrameMs.p95} ms commits/s=${ph.reactCommitsPerSec} longtasks=${ph.longTasks} geo=${ph.memory.geometries} tex=${ph.memory.textures} leak=${ph.memory.leak}`);
+      for (const ph of [s.idle, s.move, s.jsIdle, s.jsMove, s.camera]) console.log(`  ${ph.name.padEnd(22)} fps=${ph.fps} calls p50=${ph.drawCalls.p50} tris p50=${ph.triangles.p50} useFrame p50/p95=${ph.useFrameMs.p50}/${ph.useFrameMs.p95} render p50=${ph.glRenderJsMs.p50} ms commits/s=${ph.reactCommitsPerSec} longtasks=${ph.longTasks} geo=${ph.memory.geometries} tex=${ph.memory.textures} leak=${ph.memory.leak}`);
       console.log('  paneles (1ª/2ª apertura, ms):', s.panels.map((p) => `${p.id}=${p.firstMs}/${p.repeatMs}`).join(' '));
     }
   } finally {
