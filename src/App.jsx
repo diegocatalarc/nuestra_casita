@@ -11,6 +11,7 @@ import { eventsFor } from './game/logic';
 import { explainError } from './game/errors';
 import { touchSeen, computeAway } from './game/actions';
 import { L } from './game/lighting';
+import { plot } from './game/story/plot';
 import LoginScreen from './ui/LoginScreen';
 import CoupleSetup from './ui/CoupleSetup';
 import GameCanvas from './scene/GameCanvas';
@@ -37,7 +38,7 @@ function enterGame(coupleId) {
 }
 
 async function handleUser(user) {
-  if (!user) { unsubWorld?.(); useGame.getState().resetSession(); return; }
+  if (!user) { unsubWorld?.(); plot.chapter = null; useGame.getState().resetSession(); return; }
   if (useGame.getState().coupleId) return;
   useGame.setState({ user });
   const cid = await getBackend().couple.find(user.uid);

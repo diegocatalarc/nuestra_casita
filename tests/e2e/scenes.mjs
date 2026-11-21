@@ -23,14 +23,10 @@ async function main() {
       await page.waitForTimeout(500);
       check(await page.locator('.loading-screen').count() === 0, 'al entrar desaparece la pantalla de carga');
     };
-    await startGame(page, vite.url, { onLoading });
-    const nc = (fn, arg) => page.evaluate(fn, arg);
-    // toque directo sobre la escena (sin esperas de «actionability»: el renderizado por software va lento)
-    const tap = async () => { await page.evaluate(() => document.querySelector('.story-scene')?.click()); await page.waitForTimeout(350); };
-
-    // 1) Prólogo: tarjeta de libro y páginas del narrador
+    // El prólogo es lo PRIMERO que se ve (antes del editor de avatar)
+    const beforeAvatar = async () => {
     await page.waitForSelector('.story-scene', { timeout: 30_000 }).catch(() => {});
-    check(await page.locator('.story-scene').count() === 1, 'el prólogo aparece solo al empezar');
+    check(await page.locator('.story-scene').count() === 1, 'el prólogo aparece solo, antes del editor de avatar');
     check((await page.locator('.ss-card').innerText().catch(() => '')).includes('El Valle Atrasado'), 'la primera pantalla es la tarjeta del libro');
     await page.screenshot({ path: '/tmp/claude-0/-home-user/ef51b309-d084-511b-8ea1-b09971a2f27c/scratchpad/scene-card.png' }).catch(() => {});
     // avanzar tocando hasta que cambie la escena (prólogo: tarjeta + 4 páginas; luego tarjeta del capítulo 1)
@@ -45,6 +41,12 @@ async function main() {
       await tap();
     }
     check(await page.locator('.story-scene').count() === 0, 'las escenas se cierran al terminar');
+
+    };
+    await startGame(page, vite.url, { onLoading, beforeAvatar });
+    const nc = (fn, arg) => page.evaluate(fn, arg);
+    // toque directo sobre la escena (sin esperas de «actionability»: el renderizado por software va lento)
+    const tap = async () => { await page.evaluate(() => document.querySelector('.story-scene')?.click()); await page.waitForTimeout(350); };
 
     // 2) Guía de objetivo
     check(await page.locator('.objective').count() === 1, 'aparece la guía de objetivo');

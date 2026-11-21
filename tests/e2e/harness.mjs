@@ -71,7 +71,7 @@ export function watchErrors(page) {
  * Entra en modo demo, crea la casita y pasa la pantalla de avatar.
  * Deja el juego en marcha (canvas y HUD montados).
  */
-export async function startGame(page, url, { name = 'Tester', timeout = 120_000, onLoading } = {}) {
+export async function startGame(page, url, { name = 'Tester', timeout = 120_000, onLoading, beforeAvatar } = {}) {
   await page.goto(`${url}/?hour=12&weather=clear&debug=1`, { waitUntil: 'domcontentloaded' });
   await page.fill('input[placeholder="Tu nombre"]', name);
   await page.click('button.btn.big:not(.primary)');
@@ -80,6 +80,7 @@ export async function startGame(page, url, { name = 'Tester', timeout = 120_000,
   await page.click('.btn.primary.big');
   await page.waitForSelector('text=Empezar', { timeout });
   if (onLoading) await onLoading(); // pantalla de carga (si está activa): el llamador la comprueba y pulsa «Entrar»
+  if (beforeAvatar) await beforeAvatar(); // la historia sale ANTES del editor de avatar: el llamador la recorre
   await page.click('.btn.primary.big:has-text("Empezar")');
   await page.waitForSelector('canvas', { timeout });
   await page.waitForSelector('.toolbar', { timeout });

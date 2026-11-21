@@ -20,7 +20,7 @@ export const SCENES = {
     { who: "narrator", text: t("Presentaos a Doña Remedios en el Ayuntamiento. Y, por si acaso, no toquéis nada que haga tic.") },
   ] },
   "c1.a": { mood: "day", pages: [
-    { who: "remedios", text: t("«Perfecto: ya constan en acta. Les he puesto de «forasteros en prácticas». Es un cargo sin sueldo, pero con muy buenas vistas.»") },
+    { who: "remedios", text: t("«Perfecto: ya constan en acta. Les he puesto de “forasteros en prácticas”. Es un cargo sin sueldo, pero con muy buenas vistas.»") },
   ] },
   "c1.b": { mood: "day", pages: [
     { who: "narrator", text: t("Tres cosechas. La tierra del valle ha dado un pequeño suspiro, como quien cumple un trámite que llevaba años archivado.") },
@@ -36,7 +36,7 @@ export const SCENES = {
   "c2.intro": { mood: "day", pages: [
     { who: "narrator", text: t("El termómetro del Ayuntamiento lleva años marcando 31 grados. Es un récord. Es un récord tristísimo.") },
     { who: "rosa", text: t("«Hola. Soy Rosa. Mi horno solo hornea lo que ya se ha comido: pan de ayer, galletas de la semana pasada, recuerdos con corteza. Me falta una receta que no sea nostalgia.»") },
-    { who: "rosa", text: t("«Si me traéis zanahorias para una masa dulce y un plato casero para estrenar el calor, habrá pan de hoy. Dicen que el pan de hoy es el único que sabe a futuro.»") },
+    { who: "rosa", text: t("«Si me traen zanahorias para una masa dulce y un plato casero para estrenar el calor, habrá pan de hoy. Dicen que el pan de hoy es el único que sabe a futuro.»") },
     { who: "narrator", text: t("Conoced a Rosa en la panadería. Aquí no llueve: tendréis que regar vosotros.") },
   ] },
   "c2.a": { mood: "day", pages: [
@@ -56,14 +56,14 @@ export const SCENES = {
   "c3.intro": { mood: "dusk", pages: [
     { who: "narrator", text: t("Hay 214 cartas en un cajón de la tienda. Ninguna es para quien creéis.") },
     { who: "tomas", text: t("«Buenas. Tomás. Llevo diez años a punto de cerrar y trescientos días a punto de entregar estas cartas. Son de gente que ya no está… y de alguien que sí. Larga historia; mejor con algo caliente.»") },
-    { who: "tomas", text: t("«Escribíos tres cartas entre vosotros, que me dé pie. Vendedme algo, que la caja está más triste que yo. Y luego coincidid en la plaza los dos, que las cartas se reparten mejor a coro.»") },
+    { who: "tomas", text: t("«Escríbanse tres cartas entre ustedes, que me dé pie. Véndanme algo, que la caja está más triste que yo. Y luego coincidan en la plaza los dos, que las cartas se reparten mejor a coro.»") },
     { who: "narrator", text: t("Aquí las hojas no caen: esperan a que alguien las despida. Escribid, vended y encontraos en la plaza.") },
   ] },
   "c3.a": { mood: "dusk", pages: [
     { who: "narrator", text: t("Tres cartas cruzan el valle de una casa a otra. Cada sobre pesa un poco menos que la distancia que recorre; aun así, a veces llegan a deshora.") },
   ] },
   "c3.b": { mood: "dusk", pages: [
-    { who: "tomas", text: t("«¡Seis ventas! La caja ha hecho un ruido que no oía desde 2014. Creo que se llama «cling». Lo guardaré para cuando me muera, que aquí tampoco es tan grave.»") },
+    { who: "tomas", text: t("«¡Seis ventas! La caja ha hecho un ruido que no oía desde 2014. Creo que se llama “cling”. Lo guardaré para cuando me muera, que aquí tampoco es tan grave.»") },
   ] },
   "c3.c": { mood: "dusk", pages: [
     { who: "narrator", text: t("La plaza os ve llegar, a los dos, a la vez. Las hojas, por fin, empiezan a caer: no por el viento, sino por si acaso.") },
@@ -75,28 +75,28 @@ export const SCENES = {
   ] },
   "c4.intro": { mood: "dawn", pages: [
     { who: "narrator", text: t("El invierno llamó a la puerta del valle hace años. Con llave. Y se quedó.") },
-    { who: "celia", text: t("«Soy Celia, maestra de la escuela más pequeña del valle: Lola, Biel, Nuri y un invierno que no se va. Quieren un huerto de «cosas que crecen rápido». Con nieve. Les expliqué que no se puede. Les pareció una falta de ambición.»") },
-    { who: "celia", text: t("«Enseñadles cómo se cosecha de verdad y traedles lechugas y zanahorias para sembrar bajo plástico. Que no lo rieguen con el bote de la cola, por favor.»") },
+    { who: "celia", text: t("«Soy Celia, maestra de la escuela más pequeña del valle: Lola, Biel, Nuri y un invierno que no se va. Quieren un huerto de “cosas que crecen rápido”. Con nieve. Les expliqué que no se puede. Les pareció una falta de ambición.»") },
+    { who: "celia", text: t("«Enséñenles cómo se cosecha de verdad y tráiganles lechugas y zanahorias para sembrar bajo plástico. Que no lo rieguen con el bote de la cola, por favor.»") },
     { who: "narrator", text: t("Cosechad más y llevad a Celia las lechugas y las zanahorias. La nieve no es un villano: solo espera que alguien la reclame.") },
   ] },
   "c4.a": { mood: "day", pages: [
     { who: "narrator", text: t("Cinco cosechas con la nariz roja. Biel declara que va a cavar. Nadie le dice dónde, y esa es la mejor noticia del trimestre.") },
   ] },
   "c4.b": { mood: "day", pages: [
-    { who: "celia", text: t("«Lechugas. Lola las ha contado tres veces y sigue sin creerlo. «Son verdes de verdad», dice. Hay generaciones enteras que no las vieron en invierno.»") },
+    { who: "celia", text: t("«Lechugas. Lola las ha contado tres veces y sigue sin creerlo. “Son verdes de verdad”, dice. Hay generaciones enteras que no las vieron en invierno.»") },
   ] },
   "c4.c": { mood: "day", pages: [
     { who: "celia", text: t("«Y zanahorias. Nuri pregunta si crecen hacia abajo. Respuesta: sí. Segunda pregunta: ¿por qué? Respuesta: la vida es así. Ha habido un silencio filosófico.»") },
   ] },
   "c4.outro": { mood: "day", pages: [
     { who: "celia", text: t("«Han sembrado en filas. ¡En filas! Es lo más cerca del orden que ha estado esta escuela desde su fundación, y la fundó un reloj parado.»") },
-    { who: "funcionario", text: t("«Detecto un invierno con temperaturas superiores a cero. Procedo a derivarlo a «Asuntos Imprevistos». Por cierto: ¿alguien sabe qué día es?»") },
+    { who: "funcionario", text: t("«Detecto un invierno con temperaturas superiores a cero. Procedo a derivarlo a “Asuntos Imprevistos”. Por cierto: ¿alguien sabe qué día es?»") },
     { who: "narrator", text: t("En el patio aparece un columpio nuevo y la nieve, por primera vez, no se queda quieta: baja a ratos, como si tuviera sitio al que ir.") },
   ] },
   "c5.intro": { mood: "dusk", pages: [
     { who: "narrator", text: t("Hoy el cielo no se decide. Llueve, nieva, brilla y vuelve a llover en menos tiempo del que tardáis en abrir el paraguas.") },
     { who: "luna", text: t("«Hola, parejita. Me falta un color: el de todos los tiempos juntos. El que tiene la tarde cuando alguien está lejos y uno mira por la ventana por si acaso. He pintado esa colina veintidós veces; siempre sale distinta.»") },
-    { who: "luna", text: t("«Para mezclarlo necesito recuerdos vuestros y un poco de río. Id a pescar con Pablo: no habla, pero con una caña en la mano es un poeta con barba.»") },
+    { who: "luna", text: t("«Para mezclarlo necesito recuerdos de ustedes y un poco de río. Vayan a pescar con Pablo: no habla, pero con una caña en la mano es un poeta con barba.»") },
     { who: "narrator", text: t("Guardad recuerdos en el álbum, pescad en el río y dejad algo de caja con pedidos: el Café del Puente espera a su primer cliente (y a su primer fantasma, que ya tiene mesa reservada).") },
   ] },
   "c5.a": { mood: "dusk", pages: [
@@ -135,7 +135,7 @@ export const SCENES = {
   ] },
   "c7.intro": { mood: "dusk", pages: [
     { who: "narrator", text: t("Esto es lo que pasa cuando dos personas, por fin, coinciden.") },
-    { who: "remedios", text: t("«Queridos míos: terminad la torre con las cinco piezas, preparad la fiesta con unos pedidos y, al atardecer, quiero veros a los dos en la plaza, a la vez, aunque cada uno la vea desde su pantalla y su ventana.»") },
+    { who: "remedios", text: t("«Queridos míos: terminen la torre con las cinco piezas, preparen la fiesta con unos pedidos y, al atardecer, quiero verlos a los dos en la plaza, a la vez, aunque cada uno la vea desde su pantalla y su ventana.»") },
     { who: "remedios", text: t("«Os debo una confesión y el Funcionario os debe un expediente. Las dos cosas se leerán en voz alta. Traigan paraguas. Y, si pueden, un pañuelo.»") },
     { who: "narrator", text: t("Terminad la reparación de la torre, preparad la fiesta y estad los dos en la plaza al atardecer.") },
   ] },
