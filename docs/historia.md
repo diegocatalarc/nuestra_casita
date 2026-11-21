@@ -63,3 +63,11 @@ Recompensas: `{ coins, hearts, items:{item:n}, unlock:'cosmetic id' | flag, piec
 
 ### Lo que SIEMPRE se respeta
 Textos con `t("…")` y traducciones en `src/i18n/en-historia.js` (o el fichero propio de cada tema); sin atajos de teclado ni textos que supongan teclado (una persona juega en iPad); botones grandes; nada de `Math.random()` en lo que ambas personas deben ver igual; no tocar `worldGen.js`; no borrar datos ni ids existentes.
+
+## Escenas narradas y guía de objetivo (v18)
+La historia se **cuenta** en vez de mostrarse como lista de tareas. Sin cambios en el esquema de datos (no se escribe nada nuevo en la nube).
+- **Guion:** `src/game/story/scenes.js` (generado a partir del guion; textos con `t()` y traducciones en `src/i18n/en-escenas.js`). Ids: `prologue`, `<cap>.intro`, `<cap>.<paso>` (reacción al cumplir un paso; sirve en cualquier orden), `<cap>.outro` (cierre + tarjeta de recompensa). Cada página: `{ who: 'narrator' | id de CAST, text }`.
+- **Director** (`src/game/story/director.js`, puro): `dueScenes(state, seen)` decide qué escena toca. Parejas ya avanzadas no ven el prólogo ni capítulos pasados; quien se une a mitad de capítulo no ve de golpe los pasos hechos; si el capítulo se completa de golpe solo sale el cierre. Las escenas **vistas se guardan en localStorage por dispositivo** (`nc_scenes_<pareja>_<uid>`): cada persona ve cada escena una vez en su aparato. `objectiveFor(state)` da el objetivo actual (primer paso pendiente o «recibir recompensa»); `stepTarget` dice a qué vecino/lugar apunta.
+- **UI:** `ui/StoryScene.jsx` (pantalla completa, retrato, texto que se escribe, toque para seguir, «Saltar», tarjeta de recompensa que llama a `claimStoryChapter`) · `ui/Objective.jsx` (banner arriba con flecha hacia el objetivo calculada con `cam.yaw`, distancia y barra de progreso) · en `scene/Npcs.jsx` el vecino objetivo lleva 📍 (`runtime.goal`, posiciones vivas en `runtime.npcPos`) · `DialogueModal` muestra la misión y deja entregar ahí mismo · el Diario permite revivir escenas.
+- Las escenas esperan a que no haya panel ni diálogo abierto y exista avatar. Para desactivarlas en pruebas: `localStorage.nc_noscenes = '1'` (el harness e2e lo hace; `npm run scenes` las activa).
+- **Por hacer:** escenas con la pareja presente (festival al atardecer), música/ambiente por escena, escenas para proyectos del pueblo y para amistad.

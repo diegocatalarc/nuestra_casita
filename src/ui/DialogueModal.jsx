@@ -9,7 +9,9 @@ import { lineFor as stubLine } from '../game/story/dialogueStub'; // ← cambiar
 import { NEIGHBORS, FRIEND_LEVELS } from '../game/constants';
 import { friendLevel, friendPts, dayUTC } from '../game/logic';
 import { serverNow } from '../game/time';
-import { talkNeighbor, doAnim, storyTalk } from '../game/actions';
+import { talkNeighbor, doAnim, storyTalk, completeStep } from '../game/actions';
+import { objectiveFor, enqueueScenes } from '../game/story/director';
+import { ITEMS } from '../game/constants';
 import { sfx } from '../game/audio';
 import { t } from '../i18n';
 
@@ -46,6 +48,12 @@ export default function DialogueModal() {
   }, [npc]);
   if (!open) return null;
   const c = castById[npc];
+  const obj = objectiveFor({ couple });
+  const mission = obj && !obj.ready && obj.npc === npc ? obj : null;
+  const cond = mission?.step?.cond;
+  const canDeliver = cond?.type === 'deliver' && (couple?.inventory?.[cond.item] || 0) >= (cond.n || 1);
+  const deliver = () => { if (completeStep(mission.step.id)) closeDialogue(); };
+  const claim = obj?.ready && obj.npc === npc;
   if (!c) return null;
   const pts = friendPts(couple, npc), lvl = friendLevel(pts);
   const canGift = NEIGHBORS.some((x) => x.id === npc); // el selector de regalos vive en el panel de vecinos
@@ -65,6 +73,13 @@ export default function DialogueModal() {
           </div>
         </div>
         <p className="say" style={{ margin: 0, fontSize: 18, lineHeight: 1.35, fontStyle: 'italic', minHeight: 48 }}>{text(npc, n)}</p>
+        {mission && (
+          <div style={{ background: '#fff3c9', border: '2px dashed #e0b84a', borderRadius: 14, padding: '8px 12px', fontSize: 15 }}>
+            🎯 <b>{t("Ahora")}:</b> {mission.text}
+            {cond?.type === 'deliver' && <button className="btn primary" style={{ ...big, marginTop: 8, width: '100%' }} disabled={!canDeliver} onClick={deliver}>{t("Entregar")} {ITEMS[cond.item]?.emoji} {cond.n || 1}{canDeliver ? '' : ' · ' + t("os falta")}</button>}
+          </div>
+        )}
+        {claim && <button className="btn primary" style={big} onClick={() => { closeDialogue(); enqueueScenes([`${obj.chapter.id}.outro`]); }}>{t("💌 Recibir recompensa")}</button>}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button className="btn primary" style={big} onClick={again}>{t("💬 Hablar de nuevo")}</button>
           {canGift && <button className="btn" style={big} onClick={gift}>{t("🎁 Regalar")}</button>}

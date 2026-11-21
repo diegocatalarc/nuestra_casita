@@ -130,6 +130,14 @@ export const NEWS = [
       { emoji: '😊', text: t("Nuevos emotes para saludar, bailar o aplaudir juntos, y una plaza con pájaros y campana.") },
     ],
   },
+  {
+    v: 18, title: t("La historia, contada"),
+    items: [
+      { emoji: '🎬', text: t("La historia del Valle ahora se cuenta con escenas: cada capítulo empieza con una carta narrada, tus avances tienen su reacción y al terminar recibes la recompensa en una pantalla de cierre.") },
+      { emoji: '📍', text: t("Una guía siempre visible arriba te dice qué toca hacer, con una flecha y la distancia hasta el vecino o el lugar. El vecino al que debes ir lleva un 📍 sobre la cabeza.") },
+      { emoji: '💬', text: t("Al hablar con un vecino te pide lo que necesita y puedes entregárselo ahí mismo. Puedes revivir cualquier escena desde el Diario del Valle.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

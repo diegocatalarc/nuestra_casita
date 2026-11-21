@@ -13,7 +13,8 @@
     "bench": "node tests/e2e/bench.mjs",
     "test:rules": "npx --yes firebase-tools@13 emulators:exec --only firestore --project demo-nuestra-casita \"node --test tests/rules/firestore.rules.test.mjs\"",
     "story": "node tests/e2e/story.mjs",
-    "emotes": "node tests/e2e/emotes.mjs"
+    "emotes": "node tests/e2e/emotes.mjs",
+    "scenes": "node tests/e2e/scenes.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

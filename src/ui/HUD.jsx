@@ -29,6 +29,8 @@ import ChatFab from './ChatFab';
 import TouchControls, { isTouchDevice } from './TouchControls';
 import TodayPanel from './TodayPanel';
 import StoryPanel from './StoryPanel';
+import StoryScene from './StoryScene';
+import Objective from './Objective';
 import Emotes from './Emotes';
 import DialogueModal from './DialogueModal';
 import ProjectPanel from './ProjectPanel';
@@ -379,6 +381,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       {chatOpen && <ChatPanel />}
       <ChatFab />
       <Emotes />
+      <Objective />
       <DialogueModal />
       <TouchControls />
       <button className="signout gear" onClick={open('help')} title={t("Ajustes y ayuda")}>⚙️</button>
@@ -390,6 +393,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       <SleepOverlay />
       {(panel === 'avatar' || first) && <AvatarPanel first={first} />}
       <MemoryViewer />
+      <StoryScene />
     </div>
   );
 }

@@ -156,3 +156,8 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 - Un solo botón grande «Fabricar». Al terminar, el objeto llega **solo a la mochila** (`autoCollectCrafts`, cada segundo, solo los trabajos propios).
 - Estaciones, materiales intermedios, Artesanía y ayuda de la pareja siguen en «Mostrar recetas avanzadas» (apagado por defecto, se recuerda en `nc_craft_adv`). Los trabajos en curso y los objetos ya fabricados no cambian.
 - Hoy → Taller y el último paso del tutorial sugieren recetas sencillas.
+
+## La historia, contada (v18)
+- Escenas narradas a pantalla completa: prólogo, introducción de cada capítulo, reacción al cumplir cada paso y cierre con recompensa. Toca para avanzar; «Saltar» salta al final.
+- Guía siempre visible arriba (qué toca hacer, flecha y distancia); el vecino objetivo lleva 📍. Al hablar con él te pide lo que necesita y se le entrega ahí mismo.
+- El Diario del Valle permite revivir cualquier escena.

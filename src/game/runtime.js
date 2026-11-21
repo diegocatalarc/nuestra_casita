@@ -16,6 +16,10 @@ export const cam = { yaw: Math.PI / 4, zoom: 46 };
 
 /** Jugadores remotos: uid → {x,z,rot,anim,tx,tz,trot,name,online,t,inside} */
 export const others = {};
+/** Posición viva de cada vecino del Valle (la escribe scene/Npcs.jsx; la lee la guía de objetivos). */
+export const npcPos = {};
+/** Vecino al que apunta el objetivo de la historia (scene/Npcs.jsx le pone un marcador). */
+export const goal = { npc: null };
 
 /** Ids de edificios con alguien dentro (para desvanecer techos) */
 export const occupied = new Set();

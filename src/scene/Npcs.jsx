@@ -8,7 +8,7 @@ import { Html } from '@react-three/drei';
 import { useGame } from '../store/gameStore';
 import { CAST } from '../game/story/characters';
 import { NEIGHBORS } from '../game/constants';
-import { me } from '../game/runtime';
+import { me, npcPos, goal } from '../game/runtime';
 import { ctx, findPath, tileBlocked } from '../game/movement';
 import { DEBUG, serverNow } from '../game/time';
 import { goAndDo } from '../game/actions';
@@ -30,8 +30,8 @@ const hourNow = (env) => {
 
 function Npc({ c, reg }) {
   const st = useRef({ anim: 'idle' }).current;
-  const g = useRef(), tag = useRef(), nameEl = useRef(), bubbleEl = useRef(), newsEl = useRef();
-  useEffect(() => { reg(c.id, { st, g, nameEl, bubbleEl, newsEl, tag }); return () => reg(c.id, null); }, [c.id, reg, st]);
+  const g = useRef(), tag = useRef(), nameEl = useRef(), bubbleEl = useRef(), newsEl = useRef(), goalEl = useRef();
+  useEffect(() => { reg(c.id, { st, g, nameEl, bubbleEl, newsEl, goalEl, tag }); return () => reg(c.id, null); }, [c.id, reg, st]);
   const can = () => useGame.getState().tool === 'interact';
   const hover = (on) => () => { if (can() && !st.hidden) document.body.style.cursor = on ? 'pointer' : ''; };
   const talk = (e) => {
@@ -52,6 +52,7 @@ function Npc({ c, reg }) {
           <span ref={nameEl} style={{ display: 'none', background: 'rgba(255,255,255,.92)', border: '2px solid #e8d5b8', borderRadius: 10, padding: '0 8px', fontSize: 12, fontWeight: 800, color: '#5a4636' }}>{c.name}</span>
           <span ref={bubbleEl} style={{ display: 'none', fontSize: 22 }}>💬</span>
           <span ref={newsEl} className="gift-tag" style={{ display: 'none', fontSize: 22 }}>❗</span>
+          <span ref={goalEl} className="goal-tag" style={{ display: 'none' }}>📍</span>
         </div>
       </Html>
     </group>
@@ -107,6 +108,7 @@ export default function Npcs() {
       } else { // hablando con la persona: se queda quieto y la mira
         st.anim = 'idle'; st.rot = Math.atan2(me.x - st.x, me.z - st.z);
       }
+      const np = npcPos[id] || (npcPos[id] = {}); np.x = st.x; np.z = st.z; np.hidden = !!st.hidden;
       g.current.visible = !st.hidden;
       g.current.position.set(st.x, 0, st.z);
       g.current.rotation.y = st.rot;
@@ -118,13 +120,14 @@ export default function Npcs() {
       if (bubble && !hold) st.rot = Math.atan2(tgt[T.chat].x - st.x, tgt[T.chat].z - st.z);
       const near = Math.hypot(me.x - st.x, me.z - st.z) < NEAR || talking === id;
       if (doNews) news.v[id] = hasNews(id, s);
-      const flags = (near ? 1 : 0) | (bubble ? 2 : 0) | (news.v[id] ? 4 : 0);
+      const flags = (near ? 1 : 0) | (bubble ? 2 : 0) | (news.v[id] ? 4 : 0) | (goal.npc === id ? 8 : 0);
       if (flags !== st.flags || st.tagOn !== true) {
         st.flags = flags; st.tagOn = true;
         r.tag.current.style.display = flags ? 'flex' : 'none';
         r.nameEl.current.style.display = flags & 1 ? 'inline' : 'none';
         r.bubbleEl.current.style.display = flags & 2 ? 'inline' : 'none';
         r.newsEl.current.style.display = flags & 4 ? 'inline' : 'none';
+        if (r.goalEl.current) r.goalEl.current.style.display = flags & 8 ? 'inline' : 'none';
       }
     }
   });

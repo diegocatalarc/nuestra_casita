@@ -3,10 +3,11 @@ import { CHAPTERS } from '../game/story/chapters';
 import { currentChapter, chapterStatus, canClaim, claimedChapters, storyFinished, hasStory, storyOf } from '../game/story/engine';
 import { completeStep, claimStoryChapter, startStory } from '../game/actions';
 import { ITEMS } from '../game/constants';
+import { replayScene, sceneExists } from '../game/story/director';
 import Modal from './Modal';
 import { t } from '../i18n';
 
-const rewardChips = (rw = {}) => [
+export const rewardChips = (rw = {}) => [
   rw.coins && `+${rw.coins} 🪙`,
   rw.hearts && `+${rw.hearts} 💗`,
   ...Object.entries(rw.items || {}).map(([k, n]) => `${ITEMS[k]?.emoji || '🎁'} ×${n}`),
@@ -69,6 +70,7 @@ export default function StoryPanel() {
               <h3>💌 {cur.title}</h3>
               <span className="chip">{status.doneCount}/{status.total}</span>
             </div>
+            {sceneExists(`${cur.id}.intro`) && <button className="btn ghost" onClick={() => { useGame.getState().set({ panel: null }); replayScene(`${cur.id}.intro`); }}>{t("▶ Ver la escena otra vez")}</button>}
             {cur.from && <div className="who">{t("De")}: {cur.from}</div>}
             {cur.letter && <p className="hint" style={{ whiteSpace: 'pre-line' }}>{cur.letter}</p>}
             {status.steps.map((row) => <Step key={row.step.id} row={row} inv={s.couple?.inventory} />)}
@@ -86,6 +88,7 @@ export default function StoryPanel() {
               <details key={c.id} className="goal done" style={{ marginTop: 8 }}>
                 <summary><b>✅ {c.title}</b></summary>
                 {c.letter && <p className="hint" style={{ whiteSpace: 'pre-line' }}>{c.letter}</p>}
+                {sceneExists(`${c.id}.outro`) && <button className="btn ghost" onClick={() => { useGame.getState().set({ panel: null }); replayScene(`${c.id}.outro`); }}>{t("▶ Ver la escena otra vez")}</button>}
               </details>
             ))}
           </div>
