@@ -6,6 +6,7 @@ import { explainError } from '../game/errors';
 import { notifState, askNotify } from '../game/notify';
 import { serverNow } from '../game/time';
 import { LEGACY_BEFORE } from '../game/unlocks';
+import { isIpad, isStandalone } from '../game/install';
 import Modal from './Modal';
 import LangSwitch from './LangSwitch';
 import { t } from '../i18n';
@@ -115,6 +116,12 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
         <div className="row">
           <button className={'btn ' + (showAll ? 'primary' : 'ghost')} onClick={() => { try { localStorage.setItem('nc_showall', showAll ? '0' : '1'); } catch { /* noop */ } s.set({ uiTick: (s.uiTick || 0) + 1 }); }}>{showAll ? t("Mostrando todas las funciones") : t("Mostrar todas las funciones")}</button>
         </div>
+      </>)}
+
+      {isIpad() && !isStandalone() && (<>
+        <h3>{t("Instalar como app")}</h3>
+        <p className="sub">{t("Ábrelo con un toque desde tu pantalla de inicio, a pantalla completa.")}</p>
+        <div className="row"><button className="btn ghost" onClick={() => s.set({ installOpen: true, panel: null })}>{t("📲 Cómo instalarlo")}</button></div>
       </>)}
 
       <h3>{t('Idioma')} / Language</h3>

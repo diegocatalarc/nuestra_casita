@@ -18,7 +18,7 @@ export const CHAPTERS = [
       { id: 'b', text: t("Plantad y cosechad 3 cultivos: la primavera necesita pruebas de que vais en serio."), cond: { type: 'stat', metric: 'harvest', n: 3 } },
       { id: 'c', text: t("Entregad vuestro primer pedido del Tablón para que el Negociado lo registre."), cond: { type: 'stat', metric: 'order', n: 1 } },
     ],
-    reward: { coins: 100, hearts: 10, items: { wood: 10 }, unlock: 'village:lamps' },
+    reward: { coins: 100, hearts: 10, items: { wood: 10, egg: 2 }, unlock: 'village:lamps' },
   },
   {
     id: 'c2', title: t("Expediente de verano"), from: 'rosa', project: 'bakery',

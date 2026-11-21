@@ -171,6 +171,12 @@ export const NEWS = [
       { emoji: '🌱', text: t("Las partidas nuevas empiezan con la pantalla limpia: sembrar, cosechar y los pedidos. El resto de funciones (construir, mercado, cartas, pesca, pueblo, citas…) aparece según avanza la historia, con un aviso de «Desbloqueado». Tu partida actual no cambia. Puedes verlo todo desde Ajustes → «Mostrar todas las funciones».") },
     ],
   },
+  {
+    v: 24, title: t("Instálalo como app"),
+    items: [
+      { emoji: '📲', text: t("En iPad, el juego te recuerda cómo instalarlo como app (Compartir → Añadir a pantalla de inicio) para abrirlo con un toque y a pantalla completa. También lo encuentras en Ajustes → «Cómo instalarlo».") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

@@ -14,10 +14,11 @@ export const FEATURE_CHAPTER = {
   hand: 1, plant: 1, orders: 1, story: 1, help: 1, chat: 1,
   // Capítulo 2 — «Expediente de verano»: cocinar exige construir la cocina; aparecen hambre y energía
   today: 2, food: 2, sleep: 2, build: 2, avatar: 2, vitals: 2, inv: 2,
+  animals: 2, // las gallinas son la única fuente de huevos: la tortilla del capítulo 2 los necesita (si se gastan los iniciales)
   // Capítulo 3 — «Otoño, pendiente de firma»: vender, cartas y pareja
   market: 3, mail: 3, quests: 3, hug: 3, wave: 3, decor: 3, emotes: 3,
   // Capítulo 4 — «El invierno inquilino»
-  animals: 4, land: 4, craft: 4, market_shop: 4,
+  land: 4, craft: 4, market_shop: 4,
   // Capítulo 5 — «El color de todos los tiempos»: pesca, recuerdos y el pueblo
   fish: 5, mem: 5, explore: 5, market_up: 5,
   // Capítulo 6 — «La hora de las 6:10»
@@ -25,6 +26,9 @@ export const FEATURE_CHAPTER = {
   // Capítulo 7 — «La estación que falta»
   family: 7,
 };
+
+/** Función que da acceso a cada objeto que la historia pide entregar (se comprueba en tests: nunca un callejón sin salida). */
+export const ITEM_SOURCE = { carrot: 'plant', lettuce: 'plant', omelette: 'food', egg: 'animals' };
 
 /** Función que exige cada métrica de las condiciones `stat` de los capítulos (se comprueba en tests). */
 export const METRIC_FEATURE = { harvest: 'plant', sell: 'market', order: 'orders', fish: 'fish', memory: 'mem', letter: 'mail', feed: 'animals', hug: 'hug', build: 'build', quest: 'quests', gather: 'hand', date: 'dates' };

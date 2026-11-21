@@ -17,7 +17,8 @@
     "story": "node tests/e2e/story.mjs",
     "emotes": "node tests/e2e/emotes.mjs",
     "scenes": "node tests/e2e/scenes.mjs",
-    "progressive": "node tests/e2e/progressive.mjs"
+    "progressive": "node tests/e2e/progressive.mjs",
+    "install-prompt": "node tests/e2e/install.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

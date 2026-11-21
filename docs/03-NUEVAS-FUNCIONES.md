@@ -169,3 +169,6 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 
 ## Funciones poco a poco (v23)
 - Descubrimiento progresivo: las parejas **nuevas** empiezan con Mano, Plantar, Pedidos, Mochila, Diario y Ajustes; el resto se desbloquea por capítulos de la historia con un aviso 🆕 «Desbloqueado». Las parejas anteriores al 22/11/2026 conservan todo. Ajustes → «Pantalla limpia» → «Mostrar todas las funciones» (por dispositivo). Tabla en `src/game/unlocks.js`.
+
+## Instálalo como app (v24)
+- En iPad (Safari, fuera del modo app) el juego muestra una vez la tarjeta «Para Bri 💗» con los pasos de Compartir → «Añadir a pantalla de inicio». «Entendido» la pospone 14 días; «No volver a mostrar» la silencia. También en Ajustes → «Cómo instalarlo». Lógica en `src/game/install.js`; `?ipad` en la URL la fuerza (pruebas).

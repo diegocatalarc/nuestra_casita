@@ -9,6 +9,7 @@ import ChatFab from './ChatFab';
 import TouchControls, { isTouchDevice } from './TouchControls';
 import StoryPanel from './StoryPanel';
 import StoryScene from './StoryScene';
+import InstallPrompt from './InstallPrompt';
 import Objective from './Objective';
 import Emotes from './Emotes';
 import DialogueModal from './DialogueModal';
@@ -433,6 +434,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       </Suspense>
       <MemoryViewer />
       <StoryScene />
+      <InstallPrompt />
     </div>
   );
 }

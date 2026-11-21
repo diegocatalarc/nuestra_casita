@@ -41,7 +41,7 @@ export default function Tutorial() {
   }, []);
   useEffect(() => { if (!s.tutorialSkip) return; setSkip(false); }, [s.tutorialSkip]);
 
-  const step = useMemo(() => currentTutorialStep(s, moved), [s.crops, s.nodes, s.buildings, s.questLog, s.couple, s.crafts, moved]);
+  const step = useMemo(() => currentTutorialStep(s, moved), [s.crops, s.nodes, s.buildings, s.questLog, s.couple, s.crafts, moved, s.uiTick]);
   const list = tutorialSteps(s);
   const idx = step ? list.indexOf(step) : list.length;
   useEffect(() => { useGame.setState({ tutorialHl: skip ? null : step?.hl || null }); }, [step, skip]);
