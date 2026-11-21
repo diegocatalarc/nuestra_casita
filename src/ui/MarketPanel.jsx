@@ -1,3 +1,4 @@
+import { useUnlocked } from './useUnlocked';
 import { useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { ITEMS, PRICES, CROPS, AVATAR_LOCKS, AVATAR_OPTS, UPGRADES, SKILLS, lockKey, skillLevel, skillNext } from '../game/constants';
@@ -12,6 +13,7 @@ const CAT = { hat: '🎩', glasses: '👓', neck: '🧣', back: '🎒', topStyle
 /** Mercado: vender, comprar semillas raras y ropa, y mejorar herramientas y habilidades. */
 export default function MarketPanel() {
   const [tab, setTab] = useState('sell');
+  const unlocked = useUnlocked();
   const couple = useGame((s) => s.couple);
   const now = useGame((s) => s.now);
   const inv = couple.inventory || {};
@@ -25,7 +27,7 @@ export default function MarketPanel() {
     <Modal title={t("🏪 Mercado")} wide>
       <div className="vitals-line"><span>🪙 <b>{coins}</b></span><span>🔥 {t("Hoy se paga más:")} <b>{ITEMS[hot].emoji} {ITEMS[hot].label}</b></span></div>
       <div className="tabs">
-        {[['sell', t("💰 Vender")], ['shop', t("🛍️ Tienda")], ['up', t("⬆️ Mejoras")]].map(([id, l]) => <button key={id} className={tab === id ? 'on' : ''} onClick={() => setTab(id)}>{l}</button>)}
+        {[['sell', t("💰 Vender")], ['shop', t("🛍️ Tienda")], ['up', t("⬆️ Mejoras")]].filter(([id]) => id === 'sell' || unlocked('market_' + id)).map(([id, l]) => <button key={id} className={tab === id ? 'on' : ''} onClick={() => setTab(id)}>{l}</button>)}
       </div>
 
       {tab === 'sell' && (<>

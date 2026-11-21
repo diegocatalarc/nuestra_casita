@@ -5,6 +5,7 @@ import { getBackend } from '../services/backend';
 import { explainError } from '../game/errors';
 import { notifState, askNotify } from '../game/notify';
 import { serverNow } from '../game/time';
+import { LEGACY_BEFORE } from '../game/unlocks';
 import Modal from './Modal';
 import LangSwitch from './LangSwitch';
 import { t } from '../i18n';
@@ -15,6 +16,7 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
   const s = useGame();
   const [res, setRes] = useState(null);
   const [busy, setBusy] = useState(false);
+  const showAll = (() => { try { return localStorage.getItem('nc_showall') === '1'; } catch { return false; } })();
   const [notif, setNotif] = useState(notifState());
   const be = getBackend();
   const [code, setCode] = useState('');
@@ -106,6 +108,14 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
         <button className={'btn ' + (s.quality ? 'ghost' : 'primary')} onClick={() => setQuality(false)}>{t("Normal")}</button>
         <button className={'btn ' + (s.quality ? 'primary' : 'ghost')} onClick={() => setQuality(true)}>{t("Alta")}</button>
       </div>
+
+      {(s.couple?.startedAt || 0) >= LEGACY_BEFORE && (<>
+        <h3>{t("Pantalla limpia")}</h3>
+        <p className="sub">{t("Las funciones aparecen poco a poco según avanza la historia. Actívalo para verlas todas desde ya (solo en este dispositivo).")}</p>
+        <div className="row">
+          <button className={'btn ' + (showAll ? 'primary' : 'ghost')} onClick={() => { try { localStorage.setItem('nc_showall', showAll ? '0' : '1'); } catch { /* noop */ } s.set({ uiTick: (s.uiTick || 0) + 1 }); }}>{showAll ? t("Mostrando todas las funciones") : t("Mostrar todas las funciones")}</button>
+        </div>
+      </>)}
 
       <h3>{t('Idioma')} / Language</h3>
       <LangSwitch />

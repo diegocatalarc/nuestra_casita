@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { rareCrop } from '../game/logic';
 import { CROPS, RESOURCES, SEASONS, WEATHER_EMOJI, WEATHER_LABEL, DECOR, BUILDINGS } from '../game/constants';
@@ -20,7 +20,9 @@ import Modal from './Modal';
 import { me as meRt } from '../game/runtime';
 import { eventsFor, meteorActive, dayUTC } from '../game/logic';
 import NewsModal from './NewsModal';
-import { isNewTab, markTab } from './news';
+import { isNewTab, markTab, tabSeen } from './news';
+import { useUnlocked } from './useUnlocked';
+import { FEATURE_CHAPTER, progressiveMode, unlockedIds } from '../game/unlocks';
 import Tutorial from './Tutorial';
 import AwayModal from './AwayModal';
 import { weeklyGoals, weekKey } from '../game/logic';
@@ -270,10 +272,14 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
   const inv = couple?.inventory || {};
   const open = (p) => () => set({ panel: panel === p ? null : p });
   const hl = useGame((s) => s.tutorialHl);
+  const unlocked = useUnlocked();
+  const prog = progressiveMode(couple);
+  // 🆕: las funciones nuevas del modo progresivo se marcan hasta que se abren por primera vez
+  const isNew = (id) => isNewTab(id) || (prog && (FEATURE_CHAPTER[id] || 0) > 1 && !tabSeen(id));
   const chatOpen = useGame((s) => s.chatOpen);
   const unread = useGame((s) => Object.values(s.mailbox).filter((m) => m.to === s.user.uid && !m.readAt).length);
   const tb = (id, icon, label, on, active) => (
-    <button key={id} className={`tb ${active ? 'on' : ''} ${hl === id ? 'hl' : ''}`} onClick={() => { if (isNewTab(id)) { markTab(id); } on(); }} title={label}><span>{icon}{isNewTab(id) ? <em className="badge new">🆕</em> : null}{id === 'mail' && unread > 0 ? <em className="badge">{unread}</em> : null}</span><small>{label}</small></button>
+    <button key={id} className={`tb ${active ? 'on' : ''} ${hl === id ? 'hl' : ''}`} onClick={() => { if (isNew(id)) { markTab(id); } on(); }} title={label}><span>{icon}{isNew(id) ? <em className="badge new">🆕</em> : null}{id === 'mail' && unread > 0 ? <em className="badge">{unread}</em> : null}</span><small>{label}</small></button>
   );
 
   const [menu, setMenu] = useState(null);
@@ -310,6 +316,19 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       ['market', '🏪', t("Mercado"), open('market'), panel === 'market', t("Vende cosecha y compra semillas")],
     ] },
   ];
+  const VISIBLE = GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => unlocked(i[0])) })).filter((g) => g.items.length);
+  // aviso cuando se desbloquea algo nuevo (no al cargar)
+  const known = useRef(null);
+  const unlockKey = unlockedIds(couple).join(',');
+  useEffect(() => {
+    const now = unlockKey ? unlockKey.split(',') : [];
+    if (known.current && prog) {
+      const added = now.filter((id) => !known.current.includes(id));
+      const names = GROUPS.flatMap((g) => g.items).filter((it) => added.includes(it[0])).map((it) => `${it[1]} ${it[2]}`);
+      if (names.length) useGame.getState().toast(t("🆕 Desbloqueado: {0}", [names.join(', ')]));
+    }
+    known.current = now;
+  }, [unlockKey]);
   return (
     <div className="hud">
       <div className="top-left">
@@ -320,17 +339,17 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
           <span>{WEATHER_EMOJI[env.weather]} {WEATHER_LABEL[env.weather]}</span>
         </div>
         <PartnerChip />
-        <EventChip />
-        <DateChip />
-        <GiftChip />
-        <CraftChip />
+        {unlocked('events') && <EventChip />}
+        {unlocked('dates') && <DateChip />}
+        {unlocked('mail') && <GiftChip />}
+        {unlocked('craft') && <CraftChip />}
       </div>
 
       <div className="top-right">
         <div className="hearts" title={t("Corazones: se ganan con casi todo y se gastan en decoración del corazón, animales y familia")}>💗 <b>{couple?.hearts ?? 0}</b><span className="coins" title={t("Monedas")}>🪙 <b>{couple?.coins ?? 0}</b></span></div>
-        <Vitals />
+        {unlocked('vitals') && <Vitals />}
         <div className="res">
-          {Object.entries(RESOURCES).map(([k, r]) => <span key={k} title={r.label}>{r.emoji} {inv[k] || 0}</span>)}
+          {Object.entries(RESOURCES).filter(([k]) => !prog || (inv[k] || 0) > 0).map(([k, r]) => <span key={k} title={r.label}>{r.emoji} {inv[k] || 0}</span>)}
         </div>
       </div>
 
@@ -339,12 +358,12 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       {hint && <div className="helper">{isTouchDevice() ? t("Toca el suelo para moverte · pellizca para el zoom · gira dos dedos para la cámara · toca árboles, rocas y cultivos para actuar") : t("WASD o clic para moverte · Q/E girar cámara · rueda: zoom · clic en árboles, rocas y cultivos para actuar")}</div>}
 
       {menu && <div className="menu-catch" onClick={() => setMenu(null)} />}
-      {menu && (() => { const g = GROUPS.find((x) => x.id === menu); return (
+      {menu && (() => { const g = VISIBLE.find((x) => x.id === menu); if (!g) return null; return (
         <div className="menu-pop">
           <div className="menu-title">{g.label}</div>
           <div className="menu-list">{g.items.map(([id, icon, label, on, active, desc]) => (
-            <button key={id} className={`mrow ${active ? 'on' : ''} ${hl === id ? 'hl' : ''}`} onClick={() => { setMenu(null); if (isNewTab(id)) markTab(id); on(); }}>
-              <span className="mi">{icon}{id === 'mail' && unread > 0 ? <em className="badge">{unread}</em> : isNewTab(id) ? <em className="badge new">🆕</em> : null}</span>
+            <button key={id} className={`mrow ${active ? 'on' : ''} ${hl === id ? 'hl' : ''}`} onClick={() => { setMenu(null); if (isNew(id)) markTab(id); on(); }}>
+              <span className="mi">{icon}{id === 'mail' && unread > 0 ? <em className="badge">{unread}</em> : isNew(id) ? <em className="badge new">🆕</em> : null}</span>
               <span className="mt"><b>{label}</b><small>{desc}</small></span>
             </button>
           ))}</div>
@@ -353,13 +372,13 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       <div className="toolbar">
         {tb('hand', '✋', t("Mano"), () => { setMenu(null); useGame.getState().setTool('interact', { panel: null }); }, tool === 'interact')}
         {tb('plant', '🌱', t("Plantar"), () => { setMenu(null); useGame.getState().setTool('plant', { panel: null }); }, tool === 'plant')}
-        {tb('build', '🔨', t("Construir"), () => { setMenu(null); open('build')(); }, tool === 'build' || panel === 'build')}
-        {tb('decor', '🛋️', t("Decorar"), () => { setMenu(null); open('decor')(); }, tool === 'decor' || panel === 'decor')}
+        {unlocked('build') && tb('build', '🔨', t("Construir"), () => { setMenu(null); open('build')(); }, tool === 'build' || panel === 'build')}
+        {unlocked('decor') && tb('decor', '🛋️', t("Decorar"), () => { setMenu(null); open('decor')(); }, tool === 'decor' || panel === 'decor')}
         <span className="tb-sep" />
-        {tb('today', '☀️', t("Hoy"), open('today'), panel === 'today')}
-        {GROUPS.map((g) => {
+        {unlocked('today') && tb('today', '☀️', t("Hoy"), open('today'), panel === 'today')}
+        {VISIBLE.map((g) => {
           const ids = g.items.map((i) => i[0]);
-          const badge = g.items.reduce((n, [id]) => n + (id === 'mail' ? unread : 0) + (isNewTab(id) ? 1 : 0), 0);
+          const badge = g.items.reduce((n, [id]) => n + (id === 'mail' ? unread : 0) + (isNew(id) ? 1 : 0), 0);
           const act = g.items.some((i) => i[4]);
           return (
             <button key={g.id} className={`tb group ${menu === g.id || act ? 'on' : ''} ${ids.includes(hl) ? 'hl' : ''}`} onClick={() => setMenu(menu === g.id ? null : g.id)} title={g.label}>
@@ -396,7 +415,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       <NewsModal />
       {chatOpen && <ChatPanel />}
       <ChatFab />
-      <Emotes />
+      {unlocked('emotes') && <Emotes />}
       <Objective />
       <DialogueModal />
       <TouchControls />

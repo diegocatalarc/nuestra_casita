@@ -1,3 +1,4 @@
+import { useUnlocked } from './useUnlocked';
 import { useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { COLLECT, COLLECT_PAGES, FISH, DIG, NEIGHBORS, STORIES, FRIEND_LEVELS, NEIGHBOR_LINES, ITEMS, AVATAR_OPTS, PET_CONTEST } from '../game/constants';
@@ -96,10 +97,11 @@ function Diary() {
 export default function ExplorePanel() {
   const tab0 = useGame((s) => s.exploreTab);
   const [tab, setTab] = useState(tab0 || 'album');
+  const unlocked = useUnlocked();
   return (
     <Modal title={t("🧭 Exploración y pueblo")} wide>
       <div className="tabs">
-        {[['album', t("📚 Álbum")], ['neighbors', t("🏘️ Vecinos")], ['diary', t("🧭 Diario")]].map(([id, l]) => <button key={id} className={tab === id ? 'on' : ''} onClick={() => setTab(id)}>{l}</button>)}
+        {[['album', t("📚 Álbum")], ['neighbors', t("🏘️ Vecinos")], ['diary', t("🧭 Diario")]].filter(([id]) => id !== 'diary' || unlocked('explore_diary')).map(([id, l]) => <button key={id} className={tab === id ? 'on' : ''} onClick={() => setTab(id)}>{l}</button>)}
       </div>
       {tab === 'album' && <Album />}
       {tab === 'neighbors' && <Neighbors />}

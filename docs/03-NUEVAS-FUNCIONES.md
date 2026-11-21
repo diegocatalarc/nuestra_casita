@@ -166,3 +166,6 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 - **Contorno global** (postproceso por profundidad, ver `docs/visual.md`): línea fina marrón cálida en las siluetas de todo el mundo y realce de nitidez ligero; ya no hay efecto «maqueta» (TiltShift).
 - **Calidad gráfica** (⚙️ Ayuda → «Calidad gráfica»: Normal / Alta, se guarda en `nc_fx`). Escritorio = Alta (bloom, color, contorno). Tablet = Normal (contorno solo en personajes) hasta que se active Alta, que usa una versión barata de un solo pase.
 - Mariposas, libélulas y pajarillos junto a la casa; hierba y flores extra; humo de chimenea más vivo; «pop» al sembrar, regar y cosechar.
+
+## Funciones poco a poco (v23)
+- Descubrimiento progresivo: las parejas **nuevas** empiezan con Mano, Plantar, Pedidos, Mochila, Diario y Ajustes; el resto se desbloquea por capítulos de la historia con un aviso 🆕 «Desbloqueado». Las parejas anteriores al 22/11/2026 conservan todo. Ajustes → «Pantalla limpia» → «Mostrar todas las funciones» (por dispositivo). Tabla en `src/game/unlocks.js`.

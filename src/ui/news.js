@@ -165,6 +165,12 @@ export const NEWS = [
       { emoji: '⚙️', text: t("Nuevo ajuste «Calidad gráfica» (Normal / Alta) en ⚙️ Ayuda. En escritorio viene en Alta; en tablet, en Normal.") },
     ],
   },
+  {
+    v: 23, title: t("Funciones poco a poco"),
+    items: [
+      { emoji: '🌱', text: t("Las partidas nuevas empiezan con la pantalla limpia: sembrar, cosechar y los pedidos. El resto de funciones (construir, mercado, cartas, pesca, pueblo, citas…) aparece según avanza la historia, con un aviso de «Desbloqueado». Tu partida actual no cambia. Puedes verlo todo desde Ajustes → «Mostrar todas las funciones».") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 
@@ -175,5 +181,7 @@ export const markNewsSeen = () => { try { localStorage.setItem(KEY, String(NEWS_
 /** Botones de la barra marcados con 🆕 hasta que se abren por primera vez. */
 const NEW_TABS = ['orders', 'market', 'events', 'land', 'dates', 'explore', 'craft', 'map'];
 const seenTabs = () => { try { return JSON.parse(localStorage.getItem(TABS) || '[]'); } catch { return []; } };
+/** ¿Se abrió ya esta función (botón/entrada de menú)? Para el 🆕 de las funciones que se van desbloqueando. */
+export const tabSeen = (id) => seenTabs().includes(id);
 export const isNewTab = (id) => NEW_TABS.includes(id) && !seenTabs().includes(id);
 export const markTab = (id) => { try { const a = seenTabs(); if (!a.includes(id)) localStorage.setItem(TABS, JSON.stringify([...a, id])); } catch { /* noop */ } };

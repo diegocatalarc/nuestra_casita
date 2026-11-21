@@ -166,3 +166,9 @@ Formato: qué elegimos / qué descartamos / por qué. Lo que no se pudo confirma
 - **Descartado:** horneado genérico de mallas estáticas en `Buildings`/`Props` (rompe raycasting de grupos con `onClick` y animaciones por `ref`); el recorte de draw calls queda en −12 %/−21 %, no −30 %.
 - **Cuidado:** `main.jsx` espera `loadDictionary()` antes de importar `App` (los módulos llaman a `t()` al evaluarse); los tests que comprueban inglés deben llamarlo. `GameCanvas` está memoizado: no pasarle props que cambien cada segundo.
 - Cajas redondeadas con 2 segmentos (`scene/rb.js`) y mapa de sombras 1536² (1024² táctil): no volver a subirlos sin medir con `npm run perf`.
+
+## Descubrimiento progresivo (v23)
+- **Decisiones de la persona responsable:** desbloqueo **por capítulos de la historia**; las partidas existentes **mantienen todo visible**; lo que más abrumaba: barra inferior, chips/avisos y pestañas dentro de los paneles.
+- `game/unlocks.js` (puro): `FEATURE_CHAPTER` (qué capítulo abre cada función), `isUnlocked(couple, id)`. «Partida existente» = `couple.startedAt < LEGACY_BEFORE` (22/11/2026 UTC): sin migraciones ni campos nuevos en la nube. Interruptor por dispositivo `nc_showall`; `?progressive`/`nc_progressive=1` fuerzan el modo (pruebas). Afecta a: menús y barra (HUD.jsx), chips, barras de energía/hambre, recursos con 0, emotes, el tutorial (solo enseña lo desbloqueado), pestañas de Mercado (Tienda c4, Mejoras c5) y Exploración (Diario c6).
+- **Cuidado al cambiar la historia:** si un capítulo pide una acción, su función debe desbloquearse en ese capítulo o antes (hay un test: `tests/unlocks.test.js`). Cocinar (c2) exige construir la cocina → Construir y Comer se abren en c2.
+- **[POR CONFIRMAR]** el reparto por capítulos, y si conviene también que las funciones tengan una escena/aviso más narrativo al abrirse.

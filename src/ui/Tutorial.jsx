@@ -3,6 +3,7 @@ import { useGame } from '../store/gameStore';
 import { me } from '../game/runtime';
 import { SPAWN } from '../game/constants';
 import { isTouchDevice } from './TouchControls';
+import { isUnlocked } from '../game/unlocks';
 import { t } from '../i18n';
 
 /** Pasos del tutorial. `done` se calcula del estado del mundo: no escribe nada. */
@@ -22,7 +23,10 @@ const STEPS = [
   // Paso final opcional: el Taller (crafteo) no se explicaba en ningún sitio. Se completa al fabricar (o empezar a fabricar) algo.
   { id: 'craft', hl: 'craft', title: t("Fabrica algo"), text: t("Abre 🏡 Hogar → 🛠️ Taller y toca «Fabricar» en algo sencillo, como un taburete. Llega solo a tu mochila."), done: (s) => Object.values(s.couple?.stats || {}).some((w) => (w?.craft || 0) > 0) || Object.values(s.crafts || {}).some((j) => j.by === s.user.uid) },
 ];
-export const currentTutorialStep = (s, moved) => STEPS.find((st) => !st.done(s, { moved }));
+// Función del juego que exige cada paso: en el modo progresivo (game/unlocks.js) solo se enseña lo ya desbloqueado.
+const STEP_FEATURE = { plant: 'plant', water: 'hand', gather: 'hand', build: 'build', quest: 'quests', sell: 'market', order: 'orders', fish: 'fish', eat: 'food', craft: 'craft' };
+export const tutorialSteps = (s) => STEPS.filter((st) => !STEP_FEATURE[st.id] || isUnlocked(s.couple, STEP_FEATURE[st.id]));
+export const currentTutorialStep = (s, moved) => tutorialSteps(s).find((st) => !st.done(s, { moved }));
 
 export default function Tutorial() {
   const s = useGame();
@@ -38,7 +42,8 @@ export default function Tutorial() {
   useEffect(() => { if (!s.tutorialSkip) return; setSkip(false); }, [s.tutorialSkip]);
 
   const step = useMemo(() => currentTutorialStep(s, moved), [s.crops, s.nodes, s.buildings, s.questLog, s.couple, s.crafts, moved]);
-  const idx = step ? STEPS.indexOf(step) : STEPS.length;
+  const list = tutorialSteps(s);
+  const idx = step ? list.indexOf(step) : list.length;
   useEffect(() => { useGame.setState({ tutorialHl: skip ? null : step?.hl || null }); }, [step, skip]);
   useEffect(() => { if (!step && !skip && !closing.current) { closing.current = true; setTimeout(() => { try { localStorage.setItem(`nc_tut_${uid}`, '1'); } catch { /* noop */ } setSkip(true); }, 6000); } }, [step, skip, uid]);
 
@@ -46,8 +51,8 @@ export default function Tutorial() {
   const close = () => { try { localStorage.setItem(`nc_tut_${uid}`, '1'); } catch { /* noop */ } setSkip(true); };
   return (
     <div className="tutorial">
-      <div className="t-dots">{STEPS.map((st, i) => <i key={st.id} className={i < idx ? 'done' : i === idx ? 'cur' : ''} />)}</div>
-      {step ? (<><h4>{idx + 1}/{STEPS.length} · {step.title}</h4><p>{step.text}</p></>) : (<><h4>{t("🎉 ¡Ya sabes lo básico!")}</h4><p>{t("Mira las metas de la semana en 💌 Misiones y dejad cartas en el 📬 buzón.")}</p></>)}
+      <div className="t-dots">{list.map((st, i) => <i key={st.id} className={i < idx ? 'done' : i === idx ? 'cur' : ''} />)}</div>
+      {step ? (<><h4>{idx + 1}/{list.length} · {step.title}</h4><p>{step.text}</p></>) : (<><h4>{t("🎉 ¡Ya sabes lo básico!")}</h4><p>{t("Mira las metas de la semana en 💌 Misiones y dejad cartas en el 📬 buzón.")}</p></>)}
       <button className="link" onClick={close}>{step ? t("Saltar tutorial") : t("Cerrar")}</button>
     </div>
   );
