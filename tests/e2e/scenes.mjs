@@ -13,6 +13,9 @@ async function main() {
     const ctx = await newContext(browser, { viewport: { width: 1024, height: 768 }, hasTouch: true, isMobile: true, scenes: true, boot: true });
     const page = await ctx.newPage();
     const errors = watchErrors(page);
+    const nc = (fn, arg) => page.evaluate(fn, arg);
+    // toque directo sobre la escena (sin esperas de «actionability»: el renderizado por software va lento)
+    const tap = async () => { await page.evaluate(() => document.querySelector('.story-scene')?.click()); await page.waitForTimeout(350); };
     const onLoading = async () => {
       check(await page.locator('.loading-screen').count() === 1, 'se ve la pantalla de carga');
       await page.waitForSelector('.loading-screen button', { timeout: 90_000 }).catch(() => {});
@@ -44,9 +47,6 @@ async function main() {
 
     };
     await startGame(page, vite.url, { onLoading, beforeAvatar });
-    const nc = (fn, arg) => page.evaluate(fn, arg);
-    // toque directo sobre la escena (sin esperas de «actionability»: el renderizado por software va lento)
-    const tap = async () => { await page.evaluate(() => document.querySelector('.story-scene')?.click()); await page.waitForTimeout(350); };
 
     // 2) Guía de objetivo
     check(await page.locator('.objective').count() === 1, 'aparece la guía de objetivo');
