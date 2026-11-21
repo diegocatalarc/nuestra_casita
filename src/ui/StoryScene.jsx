@@ -70,7 +70,7 @@ function Scene({ id, replay }) {
   const [i, setI] = useState(0);
   const [shown, setShown] = useState(0);
   const page = pages[i];
-  const zones = useGame((s) => ({ me: s.couple?.players?.[s.user?.uid]?.tz || localZone(), partner: s.couple?.players?.[partnerUid(s)]?.tz || null }), (a, b) => a.me === b.me && a.partner === b.partner);
+  const zones = useGame((s) => ({ me: localZone() || s.couple?.players?.[s.user?.uid]?.tz || null, partner: s.couple?.players?.[partnerUid(s)]?.tz || null }), (a, b) => a.me === b.me && a.partner === b.partner);
   const text = page?.kind === 'say' ? fillTokens(page.text, zones) : '';
   const len = text.length;
   useEffect(() => { setShown(0); }, [i, id]);

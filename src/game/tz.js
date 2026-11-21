@@ -19,7 +19,7 @@ export function cityOf(zone) {
 export function zoneOffset(zone, date = new Date()) {
   const f = new Intl.DateTimeFormat('en-US', { timeZone: zone, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
   const p = Object.fromEntries(f.formatToParts(date).map((x) => [x.type, x.value]));
-  const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second);
+  const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second); // Safari antiguo escribe «24» a medianoche
   return Math.round((asUTC - Math.floor(date.getTime() / 1000) * 1000) / 60000);
 }
 
@@ -31,7 +31,7 @@ export function minutesApart(a, b, date = new Date()) {
 
 /** «HH:MM» en esa zona. */
 export function clockText(zone, date = new Date()) {
-  try { return new Intl.DateTimeFormat('es-ES', { timeZone: zone || undefined, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date); } catch { return '--:--'; }
+  try { return new Intl.DateTimeFormat('es-ES', { timeZone: zone || undefined, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date).replace(/^24:/, '00:'); } catch { return '--:--'; }
 }
 
 /** 0 → «cero horas», 60 → «una hora», 180 → «3 horas», 210 → «3 horas y media», 195 → «3 h 15 min». */
@@ -50,8 +50,9 @@ export function fillTokens(text, ctx = {}) {
   const date = ctx.date || new Date();
   const mine = cityOf(ctx.me), theirs = cityOf(ctx.partner);
   const apart = ctx.me && ctx.partner ? diffText(minutesApart(ctx.me, ctx.partner, date)) : t("unas horas");
+  // replace con regex (no replaceAll): compatible con iPads antiguos
   return text
-    .replaceAll('{tuCiudad}', mine || t("tu ciudad"))
-    .replaceAll('{suCiudad}', theirs || t("la suya"))
-    .replaceAll('{diferencia}', apart);
+    .replace(/\{tuCiudad\}/g, mine || t("tu ciudad"))
+    .replace(/\{suCiudad\}/g, theirs || t("la suya"))
+    .replace(/\{diferencia\}/g, apart);
 }

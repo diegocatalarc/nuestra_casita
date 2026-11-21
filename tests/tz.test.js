@@ -28,6 +28,11 @@ describe('dos ciudades y diferencia horaria', () => {
     expect(minutesApart('No/Existe', 'Asia/Tokyo', D)).toBe(0);
     expect(clockText('No/Existe', D)).toBe('--:--');
   });
+  it('con horario de verano la diferencia cambia en las semanas en que solo uno lo aplica', () => {
+    const a = minutesApart('America/Santiago', 'Europe/Madrid', new Date('2026-01-15T12:00:00Z'));
+    const b = minutesApart('America/Santiago', 'Europe/Madrid', new Date('2026-07-15T12:00:00Z'));
+    expect(a).toBe(240); expect(b).toBe(360); // enero: 4 h · julio: 6 h
+  });
   it('hora local formateada', () => { expect(clockText('Asia/Tokyo', D)).toBe('21:00'); });
   it('la diferencia se dice en palabras', () => {
     expect(diffText(0)).toBe('cero horas'); expect(diffText(60)).toBe('una hora'); expect(diffText(180)).toBe('3 horas');
