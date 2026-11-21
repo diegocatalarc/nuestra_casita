@@ -61,6 +61,16 @@ function makeNoise(S = 128) {
   return t;
 }
 
+/** Sol: disco con degradado suave y corona (textura de 128² pintada una vez; mezcla aditiva). */
+function sunTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const g = c.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gr.addColorStop(0, 'rgba(255,252,226,1)'); gr.addColorStop(0.16, 'rgba(255,240,190,1)'); gr.addColorStop(0.3, 'rgba(255,214,130,0.85)');
+  gr.addColorStop(0.5, 'rgba(255,176,88,0.35)'); gr.addColorStop(0.75, 'rgba(255,160,90,0.1)'); gr.addColorStop(1, 'rgba(255,150,80,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
 function SkyDome() {
   const m = useRef();
   const noise = useMemo(() => makeNoise(), []);
@@ -98,6 +108,8 @@ function SkyDome() {
 /** Estrellas, sol y luna pegados a la cámara: se ven en el vacío que rodea el diorama. */
 export function Backdrop() {
   const g = useRef(), stars = useRef(), sun = useRef(), moon = useRef();
+  const sunTex = useMemo(sunTexture, []);
+  useEffect(() => () => sunTex.dispose(), [sunTex]);
   const geo = useMemo(() => {
     const n = 700;
     const a = new Float32Array(n * 3);
@@ -126,8 +138,8 @@ export function Backdrop() {
       <points ref={stars} geometry={geo} frustumCulled={false}>
         <pointsMaterial color="#ffffff" size={2.2} sizeAttenuation={false} transparent depthWrite={false} fog={false} toneMapped={false} />
       </points>
-      <mesh ref={sun} frustumCulled={false}><circleGeometry args={[2.5, 28]} /><meshBasicMaterial color={[2.3, 1.25, 0.45]} fog={false} toneMapped={false} /></mesh>
-      <mesh ref={moon} position={[11, 8, -400]} frustumCulled={false}><circleGeometry args={[4, 24]} /><meshBasicMaterial color="#f4f1ff" fog={false} toneMapped={false} /></mesh>
+      <mesh ref={sun} frustumCulled={false} renderOrder={2}><planeGeometry args={[11, 11]} /><meshBasicMaterial map={sunTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} fog={false} toneMapped={false} /></mesh>
+      <mesh ref={moon} position={[11, 8, -400]} frustumCulled={false}><circleGeometry args={[4, 24]} /><meshBasicMaterial color="#f4f1ff" depthWrite={false} fog={false} toneMapped={false} /></mesh>
     </group>
     </>
   );
@@ -136,10 +148,10 @@ export function Backdrop() {
 /** Nubes "solo sombra": no se ven, pero proyectan sombras suaves que cruzan el terreno. */
 export function CloudShadows() {
   const refs = useRef([]);
-  const clouds = useMemo(() => Array.from({ length: 8 }, (_, i) => ({ x: i * 11, z: 4 + ((i * 17) % 44), s: 3.5 + (i % 3) * 1.6, v: 0.25 + (i % 4) * 0.08 })), []);
+  const clouds = useMemo(() => Array.from({ length: 5 }, (_, i) => ({ x: i * 11, z: 4 + ((i * 17) % 44), s: 3.5 + (i % 3) * 1.6, v: 0.25 + (i % 4) * 0.08 })), []);
   useFrame((s) => {
     const t = s.clock.elapsedTime;
-    const size = 0.3 + L.cloud * 0.45;
+    const size = 0.22 + L.cloud * 0.3;
     clouds.forEach((c, i) => {
       const el = refs.current[i];
       if (!el) return;

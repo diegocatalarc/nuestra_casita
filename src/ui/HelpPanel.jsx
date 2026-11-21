@@ -26,6 +26,7 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
     try { await onSwitchHouse(code); } catch (e) { setErr(explainError(e)); setConfirm(false); }
     setJoining(false);
   };
+  const setQuality = (on) => { try { localStorage.setItem('nc_fx', on ? '1' : '0'); } catch { /* noop */ } s.set({ quality: on }); };
   const members = s.couple?.members?.length || 1;
   const partner = s.partner;
 
@@ -97,6 +98,13 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
           : notif === 'unsupported' ? <span className="hint">{t("Tu navegador no admite avisos.")}</span>
           : notif === 'denied' ? <span className="hint">{t("Bloqueados: actívalos en los permisos del sitio de tu navegador.")}</span>
           : <button className="btn ghost" onClick={async () => setNotif(await askNotify())}>{t("🔔 Activar avisos")}</button>}
+      </div>
+
+      <h3>{t("Calidad gráfica")}</h3>
+      <p className="sub">{t("Alta dibuja un contorno fino en todo el mundo, brillo y color de cine. En tablet gasta más batería: si va a tirones, vuelve a Normal.")}</p>
+      <div className="row">
+        <button className={'btn ' + (s.quality ? 'ghost' : 'primary')} onClick={() => setQuality(false)}>{t("Normal")}</button>
+        <button className={'btn ' + (s.quality ? 'primary' : 'ghost')} onClick={() => setQuality(true)}>{t("Alta")}</button>
       </div>
 
       <h3>{t('Idioma')} / Language</h3>

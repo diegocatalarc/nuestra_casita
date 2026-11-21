@@ -32,10 +32,12 @@ const DESKTOP = [
   ['agua-h12', 12, 1, 'clear', { px: 8, pz: 16, zoom: 62 }], ['agua-h18', 18, 1, 'clear', { px: 8, pz: 16, zoom: 62 }],
 ];
 const QUICK = [['h12-primavera', 12, 0, 'clear'], ['h18-verano', 18, 1, 'clear'], ['h22-primavera', 22, 0, 'clear'], ['h12-otono', 12, 2, 'clear']];
+const IPAD_ALTA = [['ipad-alta-h12-primavera', 12, 0, 'clear'], ['ipad-alta-h18-otono', 18, 2, 'clear']];
 const IPAD = [['ipad-h12-primavera', 12, 0, 'clear'], ['ipad-h18-otono', 18, 2, 'clear'], ['ipad-h22-verano', 22, 1, 'clear']];
 
 const PROFILES = {
   desktop: { ctx: { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1 }, fx: '1', shots: SET === 'quick' ? QUICK : DESKTOP },
+  ipadAlta: { ctx: null, fx: '1', shots: SET === 'quick' ? [] : IPAD_ALTA }, // iPad con «Calidad gráfica: Alta» (nc_fx=1)
   ipad: {
     ctx: {
       viewport: { width: 1024, height: 768 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true,
@@ -55,7 +57,7 @@ async function run(browser, url, key) {
   const prof = PROFILES[key];
   const list = prof.shots.filter(([n]) => !ONLY || ONLY.includes(n));
   if (!list.length) return;
-  const ctx = await newContext(browser, prof.ctx);
+  const ctx = await newContext(browser, prof.ctx || PROFILES.ipad.ctx);
   await ctx.addInitScript(initScript, { fx: prof.fx });
   const page = await ctx.newPage();
   const errors = watchErrors(page);
@@ -81,7 +83,7 @@ async function run(browser, url, key) {
     }, [hour, season, weather]);
     await page.evaluate((c) => { const t = window.__camTarget; t.px = c?.px ?? 0; t.pz = c?.pz ?? 0; t.zoom = c?.zoom ?? 46; t.off = 0; }, cam);
     await page.waitForFunction((s) => window.__nc.useGame.getState().env?.season === s, season, { timeout: 30000 }).catch(() => {});
-    await page.waitForTimeout(key === 'ipad' ? 9000 : 7000); // transiciones de luz, terreno nuevo, precalentamiento, lluvia/nieve
+    await page.waitForTimeout(key.startsWith('ipad') ? 9000 : 7000); // transiciones de luz, terreno nuevo, precalentamiento, lluvia/nieve
     const file = path.join(OUT, `${name}.png`);
     await page.screenshot({ path: file });
     const info = await page.evaluate(() => ({ calls: window.__gl.info.render.calls, tris: window.__gl.info.render.triangles }));
@@ -100,6 +102,7 @@ async function main() {
   try {
     await run(browser, url, 'desktop');
     await run(browser, url, 'ipad');
+    await run(browser, url, 'ipadAlta');
   } finally { await browser.close(); await server.close(); }
 }
 main().catch((e) => { console.error(e); process.exit(1); });

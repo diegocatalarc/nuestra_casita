@@ -238,7 +238,10 @@ export default function Terrain() {
     WATER_U.uTime.value = t;
     WATER_U.uSky.value.copy(L.horizon);
     WATER_U.uSunCol.value.copy(L.sun);
-    WATER_U.uGlint.value = (isWet(L.weather) ? 0.12 : 0.5) * (1 - L.night) * Math.min(1, L.sunI / 1.4) + L.night * 0.16;
+    // con el sol bajo (amanecer/atardecer) el agua refleja más el cielo dorado y destella más
+    const low = 1 - Math.sin(Math.min(1, Math.max(0, (L.hour - 6) / 12)) * Math.PI);
+    WATER_U.uGlint.value = (isWet(L.weather) ? 0.12 : 0.5 * (1 + low * 0.9)) * (1 - L.night) * Math.min(1, L.sunI / 1.2) + L.night * 0.16;
+    WATER_U.uReflect.value = (isWet(L.weather) ? 0.14 : 0.14 + low * 0.26) * (1 - L.night * 0.5);
     if (waterMat.current) waterMat.current.color.setHSL(0.52, 0.55, 0.52 + Math.sin(t * 1.2) * 0.03);
     if (landMat.current) {
       const wet = isWet(L.weather), k = Math.min(1, dt * 1.2);

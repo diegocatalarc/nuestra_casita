@@ -12,7 +12,7 @@ import * as THREE from 'three';
 export const WATER_Y = -0.26;
 export const WATER_U = {
   uTime: { value: 0 }, uSky: { value: new THREE.Color('#cfe8ee') }, uSunCol: { value: new THREE.Color('#fff0cc') },
-  uGlint: { value: 0.4 }, uShore: { value: null }, uMap: { value: 50 }, uN: { value: 200 },
+  uGlint: { value: 0.4 }, uReflect: { value: 0.14 }, uShore: { value: null }, uMap: { value: 50 }, uN: { value: 200 },
 };
 
 /** Alturas del terreno (R8: de -0,5 a 0,2) para saber qué profundidad tiene el agua en cada punto. */
@@ -31,7 +31,7 @@ export function makeWaterMaterial(coarse) {
     Object.assign(sh.uniforms, WATER_U);
     sh.vertexShader = 'varying vec3 vWp;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  vWp = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     sh.fragmentShader = `varying vec3 vWp;
-uniform float uTime, uGlint, uMap, uN;
+uniform float uTime, uGlint, uMap, uN, uReflect;
 uniform vec3 uSky, uSunCol;
 uniform sampler2D uShore;
 ${sh.fragmentShader
@@ -42,7 +42,7 @@ ${sh.fragmentShader
   vec3 shallow = diffuseColor.rgb * vec3(0.92, 1.12, 1.06) + vec3(0.0, 0.03, 0.02);
   vec3 deep = diffuseColor.rgb * vec3(0.5, 0.72, 1.0);
   vec3 wcol = mix(shallow, deep, smoothstep(0.0, 0.22, dep));
-  wcol = mix(wcol, uSky * 0.9, 0.14);                               // REFLECT: reflejo falso del cielo
+  wcol = mix(wcol, uSky * 0.9, uReflect);                               // REFLECT: reflejo falso del cielo
   float wave = 0.5 + 0.5 * sin(uTime * 1.3 + (vWp.x + vWp.z) * 2.5 + sin(vWp.x * 3.1) * 1.5);
   float brk = smoothstep(-0.6, 0.25, sin(vWp.x * 13.0 + uTime * 0.6) * sin(vWp.z * 11.0 - uTime * 0.5)); // espuma rota
   float edge = 0.035 + 0.035 * wave;                                // FOAM: ancho de la franja que va y viene

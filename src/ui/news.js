@@ -157,6 +157,14 @@ export const NEWS = [
       { emoji: '🕰️', text: t("La historia ahora conoce la ciudad y la hora de cada uno: la torre del reloj muestra las dos horas a la vez y los vecinos hablan de la diferencia que hay entre vosotros. Solo se guarda el nombre de la zona horaria de cada dispositivo (p. ej. «Santiago»), nunca la ubicación exacta.") },
     ],
   },
+  {
+    v: 22, title: t("Un mundo más vivo y dibujado"),
+    items: [
+      { emoji: '✏️', text: t("Contorno fino en todo el mundo (casa, árboles, vallas, vecinos), imagen más nítida, cielo con nubes y luz dorada al amanecer y al atardecer.") },
+      { emoji: '🦋', text: t("Mariposas, libélulas y pajarillos junto a la casa, hierba y flores que se mecen con el viento y agua con espuma y destellos.") },
+      { emoji: '⚙️', text: t("Nuevo ajuste «Calidad gráfica» (Normal / Alta) en ⚙️ Ayuda. En escritorio viene en Alta; en tablet, en Normal.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

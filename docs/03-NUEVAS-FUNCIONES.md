@@ -161,3 +161,8 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 - Escenas narradas a pantalla completa: prólogo, introducción de cada capítulo, reacción al cumplir cada paso y cierre con recompensa. Toca para avanzar; «Saltar» salta al final.
 - Guía siempre visible arriba (qué toca hacer, flecha y distancia); el vecino objetivo lleva 📍. Al hablar con él te pide lo que necesita y se le entrega ahí mismo.
 - El Diario del Valle permite revivir cualquier escena.
+
+## Un mundo más vivo y dibujado (v22)
+- **Contorno global** (postproceso por profundidad, ver `docs/visual.md`): línea fina marrón cálida en las siluetas de todo el mundo y realce de nitidez ligero; ya no hay efecto «maqueta» (TiltShift).
+- **Calidad gráfica** (⚙️ Ayuda → «Calidad gráfica»: Normal / Alta, se guarda en `nc_fx`). Escritorio = Alta (bloom, color, contorno). Tablet = Normal (contorno solo en personajes) hasta que se active Alta, que usa una versión barata de un solo pase.
+- Mariposas, libélulas y pajarillos junto a la casa; hierba y flores extra; humo de chimenea más vivo; «pop» al sembrar, regar y cosechar.

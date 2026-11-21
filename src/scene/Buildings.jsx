@@ -4,6 +4,7 @@ import { useGame } from '../store/gameStore';
 import { BUILDINGS } from '../game/constants';
 import { occupied } from '../game/runtime';
 import { serverNow } from '../game/time';
+import { WIND } from './wind';
 import { L } from '../game/lighting';
 import { hashStr, mulberry32, clamp } from '../game/rng';
 import { DecorModel } from './Decor';
@@ -59,19 +60,22 @@ function Lantern({ p }) {
 /** Humo de chimenea: 4 bocanadas que suben y se desvanecen. */
 function Smoke({ p }) {
   const refs = useRef([]);
+  const N = 7;
   useFrame((s) => {
     const t = s.clock.elapsedTime;
+    const w = WIND.uWind.value; // el humo se inclina con el viento y se ensancha al subir
+    const tint = L.night * 0.3 + (L.season === 3 ? 0.4 : 0);
     refs.current.forEach((m, i) => {
       if (!m) return;
-      const k = ((t * 0.35 + i / 4) % 1);
-      m.position.set(Math.sin(t + i) * 0.1 + k * 0.5, k * 1.6, Math.cos(t * 0.8 + i) * 0.1);
-      m.scale.setScalar(0.1 + k * 0.32);
-      m.material.opacity = (1 - k) * 0.5 * (0.5 + L.night * 0.3 + (L.season === 3 ? 0.4 : 0));
+      const k = ((t * 0.3 + i / N) % 1);
+      m.position.set(Math.sin(t * 1.1 + i * 2.1) * 0.12 * (0.4 + k) + k * (0.45 + 0.35 * w), k * 2.0, Math.cos(t * 0.8 + i * 1.7) * 0.12 * (0.4 + k));
+      m.scale.setScalar(0.09 + k * 0.4 + Math.sin(t * 2 + i) * 0.015);
+      m.material.opacity = Math.sin(Math.min(1, k * 1.2) * Math.PI) * 0.55 * (0.5 + tint);
     });
   });
   return (
     <group position={p}>
-      {[0, 1, 2, 3].map((i) => <mesh key={i} ref={(el) => (refs.current[i] = el)}><icosahedronGeometry args={[1, 1]} /><meshBasicMaterial color="#e8e4e0" transparent opacity={0.4} depthWrite={false} /></mesh>)}
+      {Array.from({ length: N }, (_, i) => <mesh key={i} ref={(el) => (refs.current[i] = el)}><icosahedronGeometry args={[1, 1]} /><meshBasicMaterial color="#efe9e2" transparent opacity={0.4} depthWrite={false} /></mesh>)}
     </group>
   );
 }

@@ -105,10 +105,19 @@ function Plant({ type, stage, p }) {
   );
 }
 
+const T0 = typeof performance !== 'undefined' ? performance.now() : 0;
 const Crop = memo(function Crop({ crop, now }) {
   const info = cropInfo(crop, now);
   const spark = useRef(), sway = useRef();
-  useFrame((s) => {
+  // «pop» de escala al nacer (plantado tras la carga inicial) y al pasar a la siguiente fase de crecimiento
+  const pop = useRef(typeof performance !== 'undefined' && performance.now() - T0 > 6000 ? 1 : 0), prevStage = useRef(info.stage);
+  if (info.stage > prevStage.current) pop.current = 1;
+  prevStage.current = info.stage;
+  useFrame((s, dt) => {
+    if (sway.current) {
+      if (pop.current > 0) { pop.current = Math.max(0, pop.current - dt * 2.4); const k = 1 - pop.current; sway.current.scale.setScalar(1 + 0.28 * Math.sin(k * Math.PI) * (1 - k * 0.3)); }
+      else if (sway.current.scale.x !== 1) sway.current.scale.setScalar(1);
+    }
     if (sway.current) { const t = s.clock.elapsedTime, a = 0.012 + info.stage * 0.012; sway.current.rotation.z = Math.sin(t * 1.5 + crop.x * 0.7 + crop.z) * a; sway.current.rotation.x = Math.cos(t * 1.2 + crop.z * 0.9) * a * 0.7; }
     if (spark.current) { const t = s.clock.elapsedTime; spark.current.position.y = 1.15 + Math.sin(t * 3) * 0.08; spark.current.rotation.y = t * 2; }
   });

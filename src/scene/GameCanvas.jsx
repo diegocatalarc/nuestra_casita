@@ -11,6 +11,7 @@ import BootProbe from './BootProbe';
 import Weather from './Weather';
 import LightPool from './LightPool';
 import Halos from './Halos';
+import Life from './Life';
 import { OutlineSync } from './toon';
 import Terrain from './Terrain';
 import Nature from './Nature';
@@ -109,6 +110,7 @@ export default memo(function GameCanvas() {
         <BiteMark />
         <Interaction />
         <FloatingFx />
+        <Life />
       </Suspense>
       <Halos />
       <OutlineSync />

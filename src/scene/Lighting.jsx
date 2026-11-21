@@ -59,7 +59,7 @@ export default function Lighting() {
       <hemisphereLight ref={hemi} args={['#ffffff', '#ecc9a4', 0.7]} />
       <directionalLight
         ref={sun} castShadow intensity={1.5}
-        shadow-mapSize={[SHADOW_PX, SHADOW_PX]} shadow-bias={-0.0004} shadow-normalBias={0.04} shadow-radius={4}
+        shadow-mapSize={[SHADOW_PX, SHADOW_PX]} shadow-bias={-0.0004} shadow-normalBias={0.04} shadow-radius={5} shadow-intensity={0.88}
         shadow-camera-left={-26} shadow-camera-right={26} shadow-camera-top={26} shadow-camera-bottom={-26}
         shadow-camera-near={1} shadow-camera-far={220}
       />
