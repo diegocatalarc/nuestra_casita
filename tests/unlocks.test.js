@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { CHAPTERS } from '../src/game/story/chapters';
+import { DISHES } from '../src/game/constants';
 import { FEATURE_CHAPTER, METRIC_FEATURE, ITEM_SOURCE, LEGACY_BEFORE, progressiveMode, isUnlocked, chapterOf, unlockedIds } from '../src/game/unlocks';
 
 const fresh = (chapter = 1) => ({ startedAt: LEGACY_BEFORE + 1000, story: { chapter } });
@@ -54,8 +55,12 @@ describe('la historia nunca pide algo que aún no está desbloqueado', () => {
       expect(ITEM_SOURCE[item], `${ch.id}.${s.id}: falta la fuente de «${item}»`).toBeTruthy();
       expect(FEATURE_CHAPTER[ITEM_SOURCE[item]], `${ch.id}.${s.id}: «${item}» viene de «${ITEM_SOURCE[item]}»`).toBeLessThanOrEqual(i + 1);
     }));
-    // la tortilla necesita huevos: su fuente (animales) debe estar abierta en el capítulo en que se pide
-    expect(FEATURE_CHAPTER[ITEM_SOURCE.egg]).toBeLessThanOrEqual(2);
+    // y los ingredientes de cada plato que se pide: su fuente también debe estar abierta en ese capítulo
+    CHAPTERS.forEach((ch, i) => ch.steps.forEach((s) => {
+      const dish = s.cond?.type === 'deliver' && DISHES[s.cond.item];
+      if (!dish) return;
+      for (const ing of Object.keys(dish.need)) { expect(ITEM_SOURCE[ing], `${ch.id}.${s.id}: ingrediente «${ing}» sin fuente`).toBeTruthy(); expect(FEATURE_CHAPTER[ITEM_SOURCE[ing]], `${ch.id}.${s.id}: «${ing}»`).toBeLessThanOrEqual(i + 1); }
+    }));
   });
   it('el capítulo 1 recompensa con huevos para la tortilla del capítulo 2', () => { expect(CHAPTERS[0].reward.items.egg).toBeGreaterThanOrEqual(2); });
   it('cocinar (capítulo 2) exige construir la cocina: Construir y Comer están desde el capítulo 2', () => {

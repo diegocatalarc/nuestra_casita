@@ -411,7 +411,8 @@ input, textarea, .chatdock, .modal-body, .menu-list { -webkit-user-select: text;
 .ss-clock { display: flex; flex-direction: column; align-items: center; } .ss-clock small { letter-spacing: .08em; } .ss-clock b { font-size: clamp(30px, 8vw, 46px); font-variant-numeric: tabular-nums; }
 
 /* ---- instalar como app (iPad) ---- */
-.install-prompt { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(110px + env(safe-area-inset-bottom, 0px)); z-index: 55; width: min(420px, calc(100vw - 24px)); background: var(--paper, #fffaf0); border: 3px solid var(--rose, #e8688a); border-radius: 22px; box-shadow: var(--shadow, 0 8px 24px rgba(0,0,0,.25)); padding: 14px 16px; animation: ss-rise .4s ease both; }
+.install-prompt { position: fixed; left: 0; right: 0; margin: 0 auto; top: 50%; transform: translateY(-50%); z-index: 55; width: min(420px, calc(100vw - 24px)); animation: ip-in .4s ease both; background: var(--paper, #fffaf0); border: 3px solid var(--rose, #e8688a); border-radius: 22px; box-shadow: var(--shadow, 0 8px 24px rgba(0,0,0,.25)); padding: 14px 16px; }
+@keyframes ip-in { from { opacity: 0; transform: translateY(-46%); } to { opacity: 1; transform: translateY(-50%); } }
 .ip-head { display: flex; gap: 10px; align-items: center; font-size: 20px; } .ip-ico { font-size: 28px; }
 .install-prompt p { margin: 6px 0; font-size: 15px; } .install-prompt ol { margin: 4px 0 8px; padding-left: 22px; font-size: 15px; line-height: 1.5; }
 .ip-btns { display: flex; gap: 8px; flex-wrap: wrap; } .ip-btns .btn { min-height: 44px; flex: 1 1 140px; }
