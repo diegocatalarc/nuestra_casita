@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { useFrame } from '@react-three/fiber';
 import { useGame } from '../store/gameStore';
 import { DECOR } from '../game/constants';
@@ -32,6 +33,15 @@ function KModel({ name, scale = 1 }) {
   return <mesh geometry={geo} material={kmat} scale={scale} castShadow receiveShadow />;
 }
 
+// Geometrías simples compartidas por parámetros (antes cada pieza creaba la suya: cientos de buffers duplicados).
+const geoCache = new Map();
+const geo = (kind, ...args) => {
+  const key = `${kind}|${args.join('|')}`;
+  let g = geoCache.get(key);
+  if (!g) { g = new THREE[`${kind}Geometry`](...args); geoCache.set(key, g); }
+  return g;
+};
+
 const lighten = (c, k) => '#' + new THREE.Color(c).offsetHSL(0, 0, k).getHexString();
 const darken = (c, k) => lighten(c, -k);
 
@@ -47,12 +57,10 @@ const GLASS = new THREE.MeshStandardMaterial({ color: '#d6f1fa', transparent: tr
 import { WINMAT, LAMPMAT } from './nightmats';
 const tints = new Map();
 const tint = (c, op) => { const k = c + op; if (!tints.has(k)) tints.set(k, new THREE.MeshStandardMaterial({ color: c, transparent: true, opacity: op, roughness: 0.1, depthWrite: false })); return tints.get(k); };
-function Part({ part, c }) {
-  const [k, p, sz, col, o = {}] = part;
-  const ref = useRef();
-  const cc = col === 'v' ? c : col === 'v+' ? lighten(c, 0.1) : col === 'v-' ? darken(c, 0.12) : col;
+/** Animación por pieza. Solo las piezas con `anim` se suscriben a useFrame (las demás no gastan nada por fotograma). */
+function useAnim(ref, p, o) {
   useFrame((s) => {
-    const g = ref.current; if (!g || !o.anim) return;
+    const g = ref.current; if (!g) return;
     const t = s.clock.elapsedTime, ph = (p[0] * 3.1 + p[2] * 1.7);
     if (o.anim === 'sway') g.rotation.z = (o.r?.[2] || 0) + Math.sin(t * 1.6 + ph) * (o.amp ?? 0.06);
     else if (o.anim === 'spin') g.rotation.y = t * (o.amp ?? 0.6);
@@ -63,28 +71,109 @@ function Part({ part, c }) {
     else if (o.anim === 'pulse') g.scale.setScalar(1 + Math.sin(t * 3 + ph) * (o.amp ?? 0.06));
     else if (o.anim === 'glow' && g.material) g.material.opacity = 0.55 + Math.sin(t * 2.4 + ph) * 0.2;
   });
+}
+function AnimPart({ part, c }) {
+  const ref = useRef();
+  useAnim(ref, part[1], part[4]);
+  return <PartMesh part={part} c={c} meshRef={ref} />;
+}
+function Part({ part, c }) {
+  return part[4]?.anim ? <AnimPart part={part} c={c} /> : <PartMesh part={part} c={c} />;
+}
+function PartMesh({ part, c, meshRef }) {
+  const [k, p, sz, col, o = {}] = part;
+  const ref = meshRef;
+  const cc = col === 'v' ? c : col === 'v+' ? lighten(c, 0.1) : col === 'v-' ? darken(c, 0.12) : col;
   const rot = o.r;
-  if (o.win || o.lamp) return <mesh ref={ref} position={p} rotation={rot} material={o.win ? WINMAT : LAMPMAT} geometry={k === 'c' ? new THREE.CylinderGeometry(sz[0], sz[0], sz[1], 14) : rbGeo(sz[0], sz[1], sz[2])} />;
+  if (o.win || o.lamp) return <mesh ref={ref} position={p} rotation={rot} material={o.win ? WINMAT : LAMPMAT} geometry={k === 'c' ? geo('Cylinder', sz[0], sz[0], sz[1], 14) : rbGeo(sz[0], sz[1], sz[2])} />;
   if (k === 'b') return <B p={p} s={sz} c={cc} r={rot} meshRef={ref} />;
   if (k === 'g') return <mesh ref={ref} position={p} rotation={rot} geometry={rbGeo(sz[0], sz[1], sz[2])} material={col ? tint(col, o.op ?? 0.3) : GLASS} renderOrder={2} />;
   if (o.glow) {
-    const geo = k === 'o' ? <icosahedronGeometry args={[sz[0], 1]} /> : k === 'd' ? <octahedronGeometry args={[sz[0], 0]} /> : <sphereGeometry args={[sz[0], 8, 6]} />;
-    return <mesh ref={ref} position={p} rotation={rot} scale={[sz[1] ?? 1, sz[2] ?? 1, sz[3] ?? 1]}>{geo}<meshBasicMaterial color={cc} transparent opacity={o.op ?? 0.85} toneMapped={false} depthWrite={false} /></mesh>;
+    const g = k === 'o' ? geo('Icosahedron', sz[0], 1) : k === 'd' ? geo('Octahedron', sz[0], 0) : geo('Sphere', sz[0], 8, 6);
+    return <mesh ref={ref} position={p} rotation={rot} scale={[sz[1] ?? 1, sz[2] ?? 1, sz[3] ?? 1]} geometry={g}><meshBasicMaterial color={cc} transparent opacity={o.op ?? 0.85} toneMapped={false} depthWrite={false} /></mesh>;
   }
   const mat = <meshStandardMaterial color={cc} roughness={o.rough ?? 0.85} metalness={o.metal ?? 0} flatShading={k === 'd'} />;
-  if (k === 'c') return <mesh ref={ref} position={p} rotation={rot} castShadow receiveShadow><cylinderGeometry args={[sz[0], sz[2] ?? sz[0], sz[1], o.seg ?? 14]} />{mat}</mesh>;
-  if (k === 'k') return <mesh ref={ref} position={p} rotation={rot} castShadow><coneGeometry args={[sz[0], sz[1], o.seg ?? 10]} />{mat}</mesh>;
-  if (k === 't') return <mesh ref={ref} position={p} rotation={rot} castShadow><torusGeometry args={[sz[0], sz[1], 8, 20, sz[2] ?? Math.PI * 2]} />{mat}</mesh>;
-  if (k === 'd') return <mesh ref={ref} position={p} rotation={rot} scale={[sz[1] ?? 1, sz[2] ?? 1, sz[3] ?? 1]} castShadow><octahedronGeometry args={[sz[0], 0]} />{mat}</mesh>;
-  return <mesh ref={ref} position={p} rotation={rot} scale={[sz[1] ?? 1, sz[2] ?? 1, sz[3] ?? 1]} castShadow><icosahedronGeometry args={[sz[0], 1]} />{mat}</mesh>;
+  if (k === 'c') return <mesh ref={ref} position={p} rotation={rot} geometry={geo('Cylinder', sz[0], sz[2] ?? sz[0], sz[1], o.seg ?? 14)} castShadow receiveShadow>{mat}</mesh>;
+  if (k === 'k') return <mesh ref={ref} position={p} rotation={rot} geometry={geo('Cone', sz[0], sz[1], o.seg ?? 10)} castShadow>{mat}</mesh>;
+  if (k === 't') return <mesh ref={ref} position={p} rotation={rot} geometry={geo('Torus', sz[0], sz[1], 8, 20, sz[2] ?? Math.PI * 2)} castShadow>{mat}</mesh>;
+  if (k === 'd') return <mesh ref={ref} position={p} rotation={rot} scale={[sz[1] ?? 1, sz[2] ?? 1, sz[3] ?? 1]} geometry={geo('Octahedron', sz[0], 0)} castShadow>{mat}</mesh>;
+  return <mesh ref={ref} position={p} rotation={rot} scale={[sz[1] ?? 1, sz[2] ?? 1, sz[3] ?? 1]} geometry={geo('Icosahedron', sz[0], 1)} castShadow>{mat}</mesh>;
+}
+// ---- Piezas estáticas fusionadas -------------------------------------------------------------------
+// Cada pieza opaca y sin animación ni brillo se hornea (posición, giro, escala y color por vértice) en UNA malla por
+// tipo de material. Un objeto de 25 piezas pasaba de 25 llamadas de dibujo (50 con sombras) a 2-3. El aspecto es el
+// mismo: color de vértice = color de la pieza × sombreado horneado, con los mismos parámetros de material.
+const isStatic = ([k, , , , o = {}]) => !o.anim && !o.win && !o.lamp && !o.glow && k !== 'g';
+const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color();
+const bakedMats = new Map();
+function bakedMat(sig, rough, metal, flat) {
+  if (!bakedMats.has(sig)) bakedMats.set(sig, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: rough, metalness: metal, flatShading: flat }));
+  return bakedMats.get(sig);
+}
+function bakePart([k, p, sz, , o = {}], cc) {
+  let g, scl = null, sig;
+  if (k === 'b') { g = rbGeo(sz[0], sz[1], sz[2]); sig = ['b', 0.95, 0, false, true, true]; }
+  else if (k === 'c') { g = geo('Cylinder', sz[0], sz[2] ?? sz[0], sz[1], o.seg ?? 14); sig = ['c', o.rough ?? 0.85, o.metal ?? 0, false, true, true]; }
+  else if (k === 'k') { g = geo('Cone', sz[0], sz[1], o.seg ?? 10); sig = ['k', o.rough ?? 0.85, o.metal ?? 0, false, true, false]; }
+  else if (k === 't') { g = geo('Torus', sz[0], sz[1], 8, 20, sz[2] ?? Math.PI * 2); sig = ['t', o.rough ?? 0.85, o.metal ?? 0, false, true, false]; }
+  else if (k === 'd') { g = geo('Octahedron', sz[0], 0); scl = [sz[1] ?? 1, sz[2] ?? 1, sz[3] ?? 1]; sig = ['d', o.rough ?? 0.85, o.metal ?? 0, true, true, false]; }
+  else { g = geo('Icosahedron', sz[0], 1); scl = [sz[1] ?? 1, sz[2] ?? 1, sz[3] ?? 1]; sig = ['o', o.rough ?? 0.85, o.metal ?? 0, false, true, false]; }
+  const r = o.r || [0, 0, 0];
+  _m.compose(_v.set(p[0], p[1], p[2]), _q.setFromEuler(_e.set(r[0], r[1], r[2])), _s.set(scl ? scl[0] : 1, scl ? scl[1] : 1, scl ? scl[2] : 1));
+  const out = g.index ? g.toNonIndexed() : g.clone();
+  out.applyMatrix4(_m);
+  out.deleteAttribute('uv');
+  const n = out.attributes.position.count, col = new Float32Array(n * 3), ao = out.attributes.color;
+  _c.set(cc);
+  for (let i = 0; i < n; i++) {
+    const f = ao ? ao.getX(i) : 1;
+    col[i * 3] = _c.r * f; col[i * 3 + 1] = _c.g * f; col[i * 3 + 2] = _c.b * f;
+  }
+  out.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  return { g: out, sig };
+}
+const colorOf = (col, c) => (col === 'v' ? c : col === 'v+' ? lighten(c, 0.1) : col === 'v-' ? darken(c, 0.12) : col);
+const splitCache = new WeakMap(), contentCache = new Map();
+function splitParts(parts, c) {
+  // Caché por identidad del array y, si es un array nuevo con el mismo contenido (listas en línea), por contenido: así no se rehornea ni se pierde memoria de GPU.
+  let byC = splitCache.get(parts);
+  if (!byC) { const ck = JSON.stringify(parts); byC = contentCache.get(ck); if (!byC) contentCache.set(ck, (byC = new Map())); splitCache.set(parts, byC); }
+  if (byC.has(c)) return byC.get(c);
+  const groups = new Map(), rest = [];
+  for (const pt of parts) {
+    if (!isStatic(pt)) { rest.push(pt); continue; }
+    const { g, sig } = bakePart(pt, colorOf(pt[3], c));
+    const key = sig.join('|');
+    if (!groups.has(key)) groups.set(key, { sig, list: [] });
+    groups.get(key).list.push(g);
+  }
+  const merged = [];
+  for (const { sig, list } of groups.values()) {
+    const geom = list.length === 1 ? list[0] : mergeGeometries(list, false);
+    if (!geom) { rest.push(...parts.filter(isStatic)); continue; }
+    geom.computeBoundingSphere();
+    merged.push({ geom, mat: bakedMat(sig.slice(0, 4).join('|'), sig[1], sig[2], sig[3]), cast: sig[4], recv: sig[5] });
+  }
+  const res = { merged, rest };
+  byC.set(c, res);
+  return res;
+}
+function PartsGroup({ parts, c }) {
+  const { merged, rest } = useMemo(() => splitParts(parts, c), [parts, c]);
+  return (
+    <group>
+      {merged.map((m, i) => <mesh key={'m' + i} geometry={m.geom} material={m.mat} castShadow={m.cast} receiveShadow={m.recv} />)}
+      {rest.map((pt, i) => <Part key={i} part={pt} c={c} />)}
+    </group>
+  );
 }
 /** Lista de piezas suelta (descubrimientos y pueblo) */
 export function PartsList({ parts, c = '#b98254' }) {
-  return <group>{parts.map((pt, i) => <Part key={i} part={pt} c={c} />)}</group>;
+  return <PartsGroup parts={parts} c={c} />;
 }
 function PartsModel({ def, variant }) {
   const c = def.colors[variant % def.colors.length];
-  return <group>{def.parts.map((pt, i) => <Part key={i} part={pt} c={c} />)}</group>;
+  return <PartsGroup parts={def.parts} c={c} />;
 }
 
 export function DecorModel({ type, variant = 0 }) {
