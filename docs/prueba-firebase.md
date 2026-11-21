@@ -25,5 +25,9 @@ Hasta hoy todo el multijugador se verificó en **modo demo** (dos pestañas, loc
 ## iPad (Safari)
 Ver la lista de `docs/ipad.md` (gestos, instalación en pantalla de inicio, sonido, inicio de sesión con Google en Safari).
 
+## Al terminar (importante)
+1. En el dispositivo: ⚙️ → **«⏱️ Medir fluidez (5 s)»** (sin tocar nada mientras mide) → **«Probar ahora»** → **«📋 Copiar informe»**.
+2. Pega el informe en el chat con tus notas. Incluye versión del juego, dispositivo, fluidez, conexión con Firestore/Realtime DB y los errores recientes. No lleva correos ni contraseñas.
+
 ## Si algo falla
 Copiar el informe de «Probar conexión» y el texto exacto del aviso rojo. Los errores más comunes (dominio no autorizado, URL de Realtime Database, reglas) tienen mensaje propio en la pantalla de ajustes.

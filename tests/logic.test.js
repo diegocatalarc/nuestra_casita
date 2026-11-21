@@ -99,3 +99,20 @@ describe('decoración del corazón', () => {
     expect(total).toBeGreaterThan(500);
   });
 });
+
+import { logError, recentErrors, clearErrors, summarizeFrames } from '../src/game/diagnostics';
+describe('diagnóstico', () => {
+  it('el registro de errores es circular (30) y no guarda saltos de línea', () => {
+    clearErrors();
+    for (let i = 0; i < 40; i++) logError('error', `fallo ${i}\nlinea2`);
+    const r = recentErrors();
+    expect(r).toHaveLength(30);
+    expect(r[0]).toContain('fallo 10');
+    expect(r.every((x) => !x.includes('\n'))).toBe(true);
+  });
+  it('resume fotogramas: fps, p95 y fotogramas largos', () => {
+    const r = summarizeFrames([16, 16, 16, 16, 120]);
+    expect(r.frames).toBe(5); expect(r.long).toBe(1); expect(r.max).toBe(120); expect(r.fps).toBeGreaterThan(10);
+    expect(summarizeFrames([]).frames).toBe(0);
+  });
+});

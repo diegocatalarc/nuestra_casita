@@ -1,3 +1,4 @@
+import { BUILD, deviceInfo, recentErrors, measureFps } from '../game/diagnostics';
 import { useState } from 'react';
 import { useGame } from '../store/gameStore';
 import { getBackend } from '../services/backend';
@@ -28,6 +29,9 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
   const members = s.couple?.members?.length || 1;
   const partner = s.partner;
 
+  const [fps, setFps] = useState(null);
+  const [measuring, setMeasuring] = useState(false);
+  const measure = async () => { setMeasuring(true); setFps(null); setFps(await measureFps(5000)); setMeasuring(false); };
   const run = async () => {
     setBusy(true); setRes(null);
     try { setRes(await be.diagnose(s.coupleId)); } catch (e) { setRes({ firestore: e.code || 'error', error: e }); }
@@ -39,7 +43,12 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
     t("Pareja en línea: {0}", [partner.online ? t("sí") : t("no")]),
     res ? t("Firestore: {0} (escribir {1} ms, leer {2} ms) · Realtime DB: {3}", [res.firestore, res.writeMs ?? '-', res.readMs ?? '-', res.rtdb ? t('conectada') : t("SIN conexión")]) : t("Prueba no ejecutada"),
     res?.error ? `Error: ${res.error.code || ''} ${String(res.error.message || '').slice(0, 200)}` : '',
-    `Navegador: ${navigator.userAgent.slice(0, 100)}`,
+    `Versión: ${BUILD}`,
+    (() => { const d = deviceInfo(); return `Dispositivo: ${d.screen} · ventana ${d.viewport} · táctil ${d.touch ? 'sí' : 'no'} · instalada ${d.standalone ? 'sí' : 'no'} · núcleos ${d.cores ?? '?'} · memoria ${d.memGb ?? '?'} GB · conexión ${d.online ? 'sí' : 'NO'} · ${d.lang}`; })(),
+    `Navegador: ${deviceInfo().ua}`,
+    `Calidad gráfica: ${s.quality ? 'alta' : 'baja'}`,
+    fps ? `Fluidez (5 s): ${fps.fps} fps · fotograma medio ${fps.avg} ms · p95 ${fps.p95} ms · máx ${fps.max} ms · ${fps.long} fotogramas > 100 ms` : '',
+    recentErrors().length ? `Errores recientes:\n  ${recentErrors().join('\n  ')}` : 'Errores recientes: ninguno',
   ].filter(Boolean).join('\n');
 
   return (
@@ -71,6 +80,7 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
       <p className="sub">{t("Escribe y lee un dato de prueba en el servidor y comprueba la presencia en tiempo real.")}</p>
       <div className="row">
         <button className="btn primary" onClick={run} disabled={busy}>{busy ? t("Probando…") : t("Probar ahora")}</button>
+        <button className="btn ghost" onClick={measure} disabled={measuring}>{measuring ? t("Midiendo… (no toques nada)") : t("⏱️ Medir fluidez (5 s)")}</button>
         <button className="btn ghost" onClick={() => navigator.clipboard?.writeText(report())}>{t("📋 Copiar informe")}</button>
       </div>
       {res && (

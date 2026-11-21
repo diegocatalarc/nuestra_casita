@@ -1,5 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import './styles.css';
+import { installDiagnostics } from './game/diagnostics';
+installDiagnostics();
 import App from './App';
 import Showroom from './Showroom';
 

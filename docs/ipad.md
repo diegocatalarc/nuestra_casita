@@ -41,3 +41,6 @@ Objetivo: que en el iPad se pueda **instalar en la pantalla de inicio** y verse 
 - [ ] Sonido: suena tras el primer toque y el botón de silencio funciona.
 - [ ] Inicio de sesión (Google / código de pareja) funciona dentro de la app instalada y se mantiene al cerrarla y volver a abrirla.
 - [ ] Rendimiento: fluido al mover la cámara (si no, probar `?nofog`).
+
+## Informe para el desarrollo
+Tras jugar unos minutos en el iPad: ⚙️ → **«⏱️ Medir fluidez (5 s)»** → **«📋 Copiar informe»** y pégalo en el chat. Así sabremos cuántos fps da de verdad, si hubo errores y qué calidad gráfica tenía activa (en táctil empieza en «baja»; se cambia con ✨).
