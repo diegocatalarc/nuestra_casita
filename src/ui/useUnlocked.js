@@ -15,7 +15,7 @@ function evidenceKey(s) {
     Object.values(s.buildings || {}).filter((b) => b.type !== 'house').length, Object.keys(s.decor || {}).length,
     Object.keys(s.memories || {}).length, Object.keys(s.questLog || {}).length, Object.keys(s.mailbox || {}).length,
     Object.keys(c.fishLog || {}).length, Object.keys(c.zones || {}).length, Object.keys(c.discovered || {}).length,
-    totalStat(c, 'craft'), totalStat(c, 'sell'), totalStat(c, 'hug'), totalStat(c, 'date'),
+    totalStat(c, 'craft'), totalStat(c, 'sell'), totalStat(c, 'hug'), totalStat(c, 'date'), c.family?.plan || c.family?.babyDue ? 1 : 0,
   ].join(',');
 }
 
@@ -24,8 +24,8 @@ export function useUnlocked() {
   useGame((s) => s.uiTick); // el ajuste de Ajustes fuerza un nuevo cálculo
   const key = useGame(evidenceKey);
   const evidence = useMemo(() => {
-    const [animals, children, buildings, decor, memories, quests, mails, fish, zones, discovered, crafted, sold, hugs, dates] = key.split(',').map(Number);
-    return evidenceFeatures({ animals, children, buildings, decor, memories, quests, mails, fish, zones, discovered, crafted, sold, hugs, dates });
+    const [animals, children, buildings, decor, memories, quests, mails, fish, zones, discovered, crafted, sold, hugs, dates, familyPlan] = key.split(',').map(Number);
+    return evidenceFeatures({ animals, children, buildings, decor, memories, quests, mails, fish, zones, discovered, crafted, sold, hugs, dates, familyPlan });
   }, [key]);
   const f = (id) => isUnlocked(couple, id, { evidence });
   f.ids = () => unlockedIds(couple, { evidence });

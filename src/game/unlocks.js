@@ -63,24 +63,26 @@ export function evidenceFeatures(ev = {}) {
   if (has('buildings')) { out.add('build'); out.add('food'); out.add('sleep'); }
   if (has('decor')) out.add('decor');
   if (has('crafted')) out.add('craft');
-  if (has('sold')) out.add('market');
+  if (has('sold')) { out.add('market'); out.add('market_shop'); out.add('market_up'); out.add('events'); }
   if (has('fish')) out.add('fish');
   if (has('memories')) out.add('mem');
   if (has('quests')) out.add('quests');
   if (has('mails')) out.add('mail');
   if (has('hugs')) { out.add('hug'); out.add('wave'); out.add('emotes'); }
-  if (has('dates')) out.add('dates');
-  if (has('discovered')) out.add('explore');
-  if ((ev.zones || 0) > 1) out.add('land');
-  // quien ya ha jugado de verdad conserva también lo básico de la vida diaria
-  if (out.size) for (const id of ['today', 'inv', 'vitals', 'avatar']) out.add(id);
+  if (has('dates')) { out.add('dates'); out.add('events'); }
+  if (has('discovered')) { out.add('explore'); out.add('explore_diary'); }
+  if (has('zones')) out.add('land'); // `couple.zones` solo guarda las zonas de pago (las gratuitas no se escriben)
+  if (has('familyPlan')) out.add('family');
   return out;
 }
 
 /** ¿Está disponible la función `id`? Fuera del modo progresivo (o sin datos), todo lo está. `opts.evidence`: Set de evidenceFeatures. */
+/** Una partida existente (anterior a LEGACY_BEFORE) siempre conserva lo básico de la vida diaria. */
+const LEGACY_BASICS = ['today', 'inv', 'vitals', 'avatar', 'food', 'sleep'];
 export function isUnlocked(couple, id, opts) {
   if (!progressiveMode(couple, opts)) return true;
   if (opts?.evidence?.has(id)) return true;
+  if ((couple?.startedAt || 0) < LEGACY_BEFORE && LEGACY_BASICS.includes(id)) return true;
   const need = FEATURE_CHAPTER[id];
   return need === undefined || chapterOf(couple) >= need;
 }

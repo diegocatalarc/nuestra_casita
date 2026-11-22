@@ -13,8 +13,10 @@ export default {
   "Instálalo como app": "Install it as an app",
   "En iPad, el juego te recuerda cómo instalarlo como app (Compartir → Añadir a pantalla de inicio) para abrirlo con un toque y a pantalla completa. También lo encuentras en Ajustes → «Cómo instalarlo».": "On iPad, the game reminds you how to install it as an app (Share → Add to Home Screen) so you can open it with one tap, full screen. You can also find it in Settings → “How to install it”.",
   "Empezar una casita nueva": "Start a new house",
-  "Sales de esta casita y creas una nueva desde cero (con la pantalla limpia y la historia desde el principio). La partida actual no se borra del servidor, pero dejaréis de verla. Tu pareja tendrá que unirse a la casita nueva con su código (⚙️ → Casita actual).": "You leave this house and create a new one from scratch (with the clean screen and the story from the beginning). The current game is not deleted from the server, but you will stop seeing it. Your partner will need to join the new house with its code (⚙️ → Current house).",
+  "Sales de esta casita y creas una nueva desde cero (con la pantalla limpia y la historia desde el principio). La partida actual no se borra del servidor, pero dejarás de verla. Tu pareja tendrá que unirse a la casita nueva con su código (⚙️ → Casita actual).": "You leave this house and create a new one from scratch (with the clean screen and the story from the beginning). The current game is not deleted from the server, but you will stop seeing it. Your partner will need to join the new house with its code (⚙️ → Current house).",
   "🧹 Empezar una casita nueva": "🧹 Start a new house",
   "Sí, dejar esta casita y empezar de cero": "Yes, leave this house and start over",
   "Cancelar": "Cancel",
+  "Ojo: eres la única persona en esta casita. Si sales, la partida quedará guardada pero inaccesible: nadie podrá volver a entrar.": "Careful: you are the only person in this house. If you leave, the game stays saved but inaccessible: nobody will be able to get back in.",
+  "Tu pareja se queda en la casita actual hasta que se una a la nueva; mientras tanto, tú podrías volver con el código si ella sigue dentro.": "Your partner stays in the current house until they join the new one; meanwhile, you could come back with the code while they are still inside.",
 };

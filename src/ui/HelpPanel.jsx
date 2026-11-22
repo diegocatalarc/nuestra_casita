@@ -89,7 +89,8 @@ export default function HelpPanel({ onSignOut, onSwitchHouse, onStartOver }) {
 
       {onStartOver && (<>
         <h3>{t("Empezar una casita nueva")}</h3>
-        <p className="sub">{t("Sales de esta casita y creas una nueva desde cero (con la pantalla limpia y la historia desde el principio). La partida actual no se borra del servidor, pero dejaréis de verla. Tu pareja tendrá que unirse a la casita nueva con su código (⚙️ → Casita actual).")}</p>
+        <p className="sub">{t("Sales de esta casita y creas una nueva desde cero (con la pantalla limpia y la historia desde el principio). La partida actual no se borra del servidor, pero dejarás de verla. Tu pareja tendrá que unirse a la casita nueva con su código (⚙️ → Casita actual).")}</p>
+        <p className="sub">{members < 2 ? t("Ojo: eres la única persona en esta casita. Si sales, la partida quedará guardada pero inaccesible: nadie podrá volver a entrar.") : t("Tu pareja se queda en la casita actual hasta que se una a la nueva; mientras tanto, tú podrías volver con el código si ella sigue dentro.")}</p>
         {startOverStep === 0
           ? <div className="row"><button className="btn ghost" onClick={() => setStartOverStep(1)}>{t("🧹 Empezar una casita nueva")}</button></div>
           : <div className="row"><button className="btn rec" disabled={joining} onClick={doStartOver}>{t("Sí, dejar esta casita y empezar de cero")}</button><button className="btn ghost" onClick={() => setStartOverStep(0)}>{t("Cancelar")}</button></div>}

@@ -86,15 +86,20 @@ const backend = {
   },
 
   /** Sale de una casita (se quita de los miembros). Se usa al cambiar a la casita de la pareja. */
-  async leaveHouse(user, coupleId) {
+  /** Sale de la casita. `clearUser`: además olvida el puntero `users/<uid>` (para «empezar de cero»: si no, al volver a entrar
+   *  se intentaría abrir la casita vieja, ya sin permiso). No se usa al cambiar de casita: ahí `join` ya reescribe el puntero. */
+  async leaveHouse(user, coupleId, { clearUser = false } = {}) {
     init();
-    await updateDoc(doc(fs, 'couples', coupleId), { members: arrayRemove(user.uid), [`players.${user.uid}`]: deleteField() });
+    const b = writeBatch(fs);
+    b.update(doc(fs, 'couples', coupleId), { members: arrayRemove(user.uid), [`players.${user.uid}`]: deleteField() });
+    if (clearUser) b.delete(doc(fs, 'users', user.uid));
+    await b.commit();
   },
 
   /** Suscripción incremental: la raíz completa y cambios (docChanges) por colección. */
   subscribe(coupleId, h) {
     init();
-    const unsubs = [onSnapshot(doc(fs, 'couples', coupleId), (s) => s.exists() && h.onCouple(s.data()))];
+    const unsubs = [onSnapshot(doc(fs, 'couples', coupleId), (s) => s.exists() && h.onCouple(s.data()), (e) => h.onError?.(e))];
     for (const col of COLLECTIONS) {
       const src = collection(fs, 'couples', coupleId, col);
       // el chat solo carga los últimos mensajes (el histórico no se descarga entero)

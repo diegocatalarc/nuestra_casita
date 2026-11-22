@@ -3,7 +3,7 @@ import { useGame, partnerUid } from './store/gameStore';
 import { loadBackend, getBackend, CLOUD_CONFIGURED } from './services/backend';
 import { generateWorld, zoneKey } from './game/worldGen';
 import { computeEnv, serverNow } from './game/time';
-import { exploreTick, autoCollectCrafts, recipeInfo, datesTick, checkGifts, ensureHouse, dailyLogin, rainWater, checkStars, checkBirth, autoFeedAnimals, checkSleepTogether, vitalsNotices, tickStory, syncTimezone } from './game/actions';
+import { exploreTick, autoCollectCrafts, recipeInfo, datesTick, checkGifts, ensureHouse, dailyLogin, rainWater, checkStars, checkBirth, autoFeedAnimals, checkSleepTogether, vitalsNotices, tickStory, syncTimezone, resetTimezoneSync } from './game/actions';
 import { me, others, doAnim } from './game/runtime';
 import { startAudio, updateAudio, toggleMute, isMuted, sfx } from './game/audio';
 import { notify } from './game/notify';
@@ -34,6 +34,8 @@ function enterGame(coupleId) {
       useGame.setState(patch);
     },
     onChanges: (col, ch) => useGame.getState().applyChanges(col, ch),
+    // sin permiso sobre la casita (p. ej. ya se salió de ella): a la pantalla de crear/unirse en vez de quedarse cargando
+    onError: (e) => { if (e?.code === 'permission-denied') useGame.setState({ phase: 'setup', coupleId: null, inviteCode: null }); },
   });
 }
 
@@ -61,6 +63,7 @@ async function switchHouse(code) {
   const id = await be.couple.join(s.user, code);   // si falla, no se pierde nada
   if (id !== old) { try { await be.leaveHouse(s.user, old); } catch (e) { console.warn('No se pudo salir de la casita anterior', e); } }
   unsubWorld?.();
+  resetTimezoneSync();
   useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, couple: null, world: null, panel: null, away: null, phase: 'loading', coupleId: id });
   enterGame(id);
 }
@@ -69,10 +72,12 @@ async function switchHouse(code) {
  *  No borra nada del servidor: la partida antigua queda guardada (se podría recuperar con su código); solo se abandona. */
 async function startOver() {
   const s = useGame.getState();
-  await getBackend().leaveHouse(s.user, s.coupleId);   // si falla, no se pierde nada
+  if (!s.coupleId) return;
+  await getBackend().leaveHouse(s.user, s.coupleId, { clearUser: true });   // si falla, no se pierde nada
   unsubWorld?.();
+  plot.chapter = null; resetTimezoneSync();
   try { localStorage.removeItem(`nc_tut_${s.user.uid}`); } catch { /* noop */ }
-  useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, panel: null, away: null, chatOpen: false, coupleId: null, inviteCode: null, phase: 'setup' }); // `couple` y `world` se dejan: la escena aún los lee un instante mientras se desmonta (si no, errores de null); se renuevan al entrar en la casita nueva
+  useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, panel: null, away: null, chatOpen: false, tool: 'interact', buildSel: null, decorSel: null, fishState: 'idle', boating: 0, coupleId: null, inviteCode: null, phase: 'setup' }); // `couple` y `world` se dejan: la escena aún los lee un instante mientras se desmonta (si no, errores de null); se renuevan al entrar en la casita nueva
 }
 
 async function signOut() {

@@ -319,9 +319,11 @@ export default function HUD({ onSignOut, onSwitchHouse, onStartOver }) {
   ];
   const VISIBLE = GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => unlocked(i[0])) })).filter((g) => g.items.length);
   // aviso cuando se desbloquea algo nuevo (no al cargar)
+  const dataReady = useGame((s) => ['animals', 'children', 'buildings', 'decor', 'memories', 'questLog', 'mailbox'].every((k) => s.loaded[k]));
   const known = useRef(null);
   const unlockKey = unlocked.ids().join(',');
   useEffect(() => {
+    if (!dataReady) return; // las colecciones llegan después de la pareja: no avisar por lo que ya se tenía al cargar
     const now = unlockKey ? unlockKey.split(',') : [];
     if (known.current && prog) {
       const added = now.filter((id) => !known.current.includes(id));
@@ -329,7 +331,7 @@ export default function HUD({ onSignOut, onSwitchHouse, onStartOver }) {
       if (names.length) useGame.getState().toast(t("🆕 Desbloqueado: {0}", [names.join(', ')]));
     }
     known.current = now;
-  }, [unlockKey]);
+  }, [unlockKey, dataReady]);
   return (
     <div className="hud">
       <div className="top-left">

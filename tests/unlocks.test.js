@@ -78,10 +78,17 @@ describe('pantalla limpia en partidas existentes: nunca oculta lo que ya se usa'
     expect(isUnlocked(old(1), 'dates', { ...FORCE, evidence: ev })).toBe(false);   // lo no usado sí se oculta
     expect(isUnlocked(old(1), 'inv', { ...FORCE, evidence: ev })).toBe(true);      // lo básico de quien ya jugó
   });
+  it('una partida existente conserva siempre lo básico, y quien compró terreno o vendió mantiene Terreno, Tienda, Mejoras y Eventos', async () => {
+    const { evidenceFeatures } = await import('../src/game/unlocks');
+    for (const id of ['today', 'inv', 'vitals', 'avatar', 'food', 'sleep']) expect(isUnlocked(old(1), id, { ...FORCE, evidence: evidenceFeatures({}) }), id).toBe(true);
+    const ev = evidenceFeatures({ zones: 1, sold: 3, discovered: 2, familyPlan: 1 });
+    for (const id of ['land', 'market_shop', 'market_up', 'events', 'explore_diary', 'family']) expect(isUnlocked(old(1), id, { ...FORCE, evidence: ev }), id).toBe(true);
+    expect(isUnlocked(fresh(1), 'inv', { ...FORCE, evidence: evidenceFeatures({}) })).toBe(false); // las parejas nuevas sí empiezan limpias
+  });
   it('sin actividad no se deduce nada; los recuentos a cero no cuentan', async () => {
     const { evidenceFeatures } = await import('../src/game/unlocks');
     expect(evidenceFeatures({}).size).toBe(0);
-    expect(evidenceFeatures({ animals: 0, children: 0, zones: 1 }).size).toBe(0);
+    expect(evidenceFeatures({ animals: 0, children: 0, zones: 0 }).size).toBe(0);
   });
   it('sin forzar, una pareja antigua lo ve todo, con o sin evidencias', async () => {
     const { evidenceFeatures } = await import('../src/game/unlocks');

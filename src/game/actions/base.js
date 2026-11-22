@@ -42,6 +42,8 @@ export function ensureHouse() {
 
 /** Guarda la zona horaria de este dispositivo en la entrada propia de `players` (solo el nombre de la zona). Una escritura por cambio. */
 let tzSent = null;
+/** Al cambiar de casita: la zona horaria hay que volver a escribirla en la nueva. */
+export const resetTimezoneSync = () => { tzSent = null; };
 export function syncTimezone() {
   const s = st();
   const uid = s.user?.uid, p = uid && s.couple?.players?.[uid];
