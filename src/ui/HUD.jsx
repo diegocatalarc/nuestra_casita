@@ -23,7 +23,7 @@ import { eventsFor, meteorActive, dayUTC } from '../game/logic';
 import NewsModal from './NewsModal';
 import { isNewTab, markTab, tabSeen } from './news';
 import { useUnlocked } from './useUnlocked';
-import { FEATURE_CHAPTER, progressiveMode, unlockedIds } from '../game/unlocks';
+import { FEATURE_CHAPTER, progressiveMode } from '../game/unlocks';
 import Tutorial from './Tutorial';
 import AwayModal from './AwayModal';
 import { weeklyGoals, weekKey } from '../game/logic';
@@ -320,7 +320,7 @@ export default function HUD({ onSignOut, onSwitchHouse, onStartOver }) {
   const VISIBLE = GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => unlocked(i[0])) })).filter((g) => g.items.length);
   // aviso cuando se desbloquea algo nuevo (no al cargar)
   const known = useRef(null);
-  const unlockKey = unlockedIds(couple).join(',');
+  const unlockKey = unlocked.ids().join(',');
   useEffect(() => {
     const now = unlockKey ? unlockKey.split(',') : [];
     if (known.current && prog) {

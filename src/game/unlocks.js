@@ -50,14 +50,42 @@ export function chapterOf(couple) {
   return n > CHAPTERS.length ? 99 : n;
 }
 
-/** ¿Está disponible la función `id`? Fuera del modo progresivo (o sin datos), todo lo está. */
+/**
+ * Funciones que una pareja YA usa, deducidas de su partida (para la pantalla limpia de partidas existentes: nunca se oculta lo que ya
+ * tienes, p. ej. un hijo o los animales). ev = { animals, children, buildings (sin la casa), decor, memories, quests, mails, fish,
+ * zones, discovered, dates, crafted, sold, hugs, ordered }: recuentos (números).
+ */
+export function evidenceFeatures(ev = {}) {
+  const out = new Set();
+  const has = (k) => (ev[k] || 0) > 0;
+  if (has('animals')) out.add('animals');
+  if (has('children')) out.add('family');
+  if (has('buildings')) { out.add('build'); out.add('food'); out.add('sleep'); }
+  if (has('decor')) out.add('decor');
+  if (has('crafted')) out.add('craft');
+  if (has('sold')) out.add('market');
+  if (has('fish')) out.add('fish');
+  if (has('memories')) out.add('mem');
+  if (has('quests')) out.add('quests');
+  if (has('mails')) out.add('mail');
+  if (has('hugs')) { out.add('hug'); out.add('wave'); out.add('emotes'); }
+  if (has('dates')) out.add('dates');
+  if (has('discovered')) out.add('explore');
+  if ((ev.zones || 0) > 1) out.add('land');
+  // quien ya ha jugado de verdad conserva también lo básico de la vida diaria
+  if (out.size) for (const id of ['today', 'inv', 'vitals', 'avatar']) out.add(id);
+  return out;
+}
+
+/** ¿Está disponible la función `id`? Fuera del modo progresivo (o sin datos), todo lo está. `opts.evidence`: Set de evidenceFeatures. */
 export function isUnlocked(couple, id, opts) {
   if (!progressiveMode(couple, opts)) return true;
+  if (opts?.evidence?.has(id)) return true;
   const need = FEATURE_CHAPTER[id];
   return need === undefined || chapterOf(couple) >= need;
 }
 
 /** Ids de las funciones desbloqueadas ahora (para detectar las nuevas). */
-export function unlockedIds(couple, opts) {
+export function unlockedIds(couple, opts) {  // opts incluye `evidence` si se quiere respetar lo ya usado
   return Object.keys(FEATURE_CHAPTER).filter((id) => isUnlocked(couple, id, opts));
 }

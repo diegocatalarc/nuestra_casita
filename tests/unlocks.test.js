@@ -67,3 +67,24 @@ describe('la historia nunca pide algo que aún no está desbloqueado', () => {
     expect(FEATURE_CHAPTER.build).toBeLessThanOrEqual(2); expect(FEATURE_CHAPTER.food).toBeLessThanOrEqual(2);
   });
 });
+
+describe('pantalla limpia en partidas existentes: nunca oculta lo que ya se usa', () => {
+  const FORCE = { showAll: false, force: true };
+  it('con un hijo y animales, Familia y Animales siguen visibles aunque el capítulo sea 1', async () => {
+    const { evidenceFeatures } = await import('../src/game/unlocks');
+    const ev = evidenceFeatures({ children: 1, animals: 2 });
+    expect(isUnlocked(old(1), 'family', { ...FORCE, evidence: ev })).toBe(true);
+    expect(isUnlocked(old(1), 'animals', { ...FORCE, evidence: ev })).toBe(true);
+    expect(isUnlocked(old(1), 'dates', { ...FORCE, evidence: ev })).toBe(false);   // lo no usado sí se oculta
+    expect(isUnlocked(old(1), 'inv', { ...FORCE, evidence: ev })).toBe(true);      // lo básico de quien ya jugó
+  });
+  it('sin actividad no se deduce nada; los recuentos a cero no cuentan', async () => {
+    const { evidenceFeatures } = await import('../src/game/unlocks');
+    expect(evidenceFeatures({}).size).toBe(0);
+    expect(evidenceFeatures({ animals: 0, children: 0, zones: 1 }).size).toBe(0);
+  });
+  it('sin forzar, una pareja antigua lo ve todo, con o sin evidencias', async () => {
+    const { evidenceFeatures } = await import('../src/game/unlocks');
+    expect(isUnlocked(old(1), 'dates', { showAll: false, force: false, evidence: evidenceFeatures({}) })).toBe(true);
+  });
+});

@@ -17,6 +17,7 @@ export default function HelpPanel({ onSignOut, onSwitchHouse, onStartOver }) {
   const s = useGame();
   const [res, setRes] = useState(null);
   const [busy, setBusy] = useState(false);
+  const cleanLegacy = (() => { try { return localStorage.getItem('nc_progressive') === '1'; } catch { return false; } })();
   const showAll = (() => { try { return localStorage.getItem('nc_showall') === '1'; } catch { return false; } })();
   const [notif, setNotif] = useState(notifState());
   const be = getBackend();
@@ -125,6 +126,13 @@ export default function HelpPanel({ onSignOut, onSwitchHouse, onStartOver }) {
         <button className={'btn ' + (s.quality ? 'primary' : 'ghost')} onClick={() => setQuality(true)}>{t("Alta")}</button>
       </div>
 
+      {(s.couple?.startedAt || 0) < LEGACY_BEFORE && (<>
+        <h3>{t("Pantalla limpia")}</h3>
+        <p className="sub">{t("Oculta lo que todavía no habéis usado y mantiene visible todo lo que ya usáis (animales, familia, construcciones…). Lo demás irá apareciendo según avanza la historia. Puedes volver atrás cuando quieras; no se pierde nada de la partida (solo en este dispositivo).")}</p>
+        <div className="row">
+          <button className={'btn ' + (cleanLegacy ? 'primary' : 'ghost')} onClick={() => { try { localStorage.setItem('nc_progressive', cleanLegacy ? '0' : '1'); localStorage.setItem('nc_showall', '0'); } catch { /* noop */ } s.set({ uiTick: (s.uiTick || 0) + 1 }); }}>{cleanLegacy ? t("Pantalla limpia activada · desactivar") : t("Activar pantalla limpia")}</button>
+        </div>
+      </>)}
       {(s.couple?.startedAt || 0) >= LEGACY_BEFORE && (<>
         <h3>{t("Pantalla limpia")}</h3>
         <p className="sub">{t("Las funciones aparecen poco a poco según avanza la historia. Actívalo para verlas todas desde ya (solo en este dispositivo).")}</p>
