@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { EffectComposer, Bloom, Vignette, ToneMapping, HueSaturation, BrightnessContrast } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
@@ -20,6 +20,9 @@ export default function Effects() {
   const lite = tier === 'media';
   const outline = useMemo(() => new OutlineEffect({ ...(COARSE ? { sharp: 0.2 } : {}), lite }), [lite]);
   useEffect(() => { setHullOutlines(false); return () => setHullOutlines(true); }, []);
+  // @react-three/postprocessing no libera el composer al desmontarlo: se hace a mano (búferes a pantalla completa, MSAA, pases)
+  const comp = useRef(null);
+  useEffect(() => () => { try { comp.current?.dispose?.(); } catch { /* ya liberado */ } comp.current = null; }, [tier]);
   useFrame((s) => {
     const dpr = s.gl.getPixelRatio();
     outline.setView(Math.max(1, 1.7 * dpr * (COARSE ? 0.8 : 1))); // ≈1,5-2 px de pantalla
@@ -27,7 +30,7 @@ export default function Effects() {
   if (tier === 'normal') return null;
   if (COARSE) {
     return (
-      <EffectComposer key={tier} multisampling={0} disableNormalPass>
+      <EffectComposer ref={comp} key={tier} multisampling={0} disableNormalPass>
         <primitive object={outline} dispose={null} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>
@@ -35,14 +38,14 @@ export default function Effects() {
   }
   if (lite) {
     return (
-      <EffectComposer key={tier} multisampling={2} disableNormalPass>
+      <EffectComposer ref={comp} key={tier} multisampling={2} disableNormalPass>
         <primitive object={outline} dispose={null} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>
     );
   }
   return (
-    <EffectComposer key={tier} multisampling={4} disableNormalPass>
+    <EffectComposer ref={comp} key={tier} multisampling={4} disableNormalPass>
       {/* el contorno va PRIMERO: solo el primer pase ve la profundidad de la escena (después los búferes se intercambian) */}
       <primitive object={outline} dispose={null} />
       <Bloom intensity={0.55} luminanceThreshold={0.82} luminanceSmoothing={0.25} mipmapBlur />

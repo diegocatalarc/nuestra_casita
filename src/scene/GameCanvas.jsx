@@ -9,6 +9,7 @@ import Lighting from './Lighting';
 import { Backdrop, CloudShadows } from './Sky';
 import BootProbe from './BootProbe';
 import QualityGovernor from './QualityGovernor';
+import { DPR_CAP } from '../game/quality';
 import Weather from './Weather';
 import LightPool from './LightPool';
 import Halos from './Halos';
@@ -70,14 +71,15 @@ function Prewarm() {
 // memo: App se vuelve a renderizar cada segundo (reloj); sin memo se reconciliaba toda la escena 3D cada vez.
 export default memo(function GameCanvas() {
   const fx = useGame((s) => s.quality);
+  const tier = useGame((s) => s.qualityTier);
   return (
     <Canvas
       shadows={{ type: THREE.PCFSoftShadowMap }}
       orthographic
-      dpr={typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches ? [1, 1.5] : [1, 2]}
+      dpr={[1, DPR_CAP[tier] || 1.5]} /* tope por escalón: se reaplica en cada reconfiguración del lienzo (redimensionar, cambiar de monitor) */
       camera={{ zoom: 46, position: [40, 40, 40], near: 0.1, far: 1000 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
-      onCreated={(state) => { try { state.gl.debug.onShaderError = () => { setQualityTier('normal'); }; } catch { /* sin depuración de shaders */ } if (location.search.includes('debug')) { window.__cam = state.camera; window.__gl = state.gl; window.__r3f = state; } }}
+      onCreated={(state) => { try { state.gl.debug.onShaderError = () => { setQualityTier('normal'); /* solo en memoria: puede ser transitorio */ }; } catch { /* sin depuración de shaders */ } if (location.search.includes('debug')) { window.__cam = state.camera; window.__gl = state.gl; window.__r3f = state; } }}
     >
       <color attach="background" args={['#bfe3f2']} />
       <CollisionSync />

@@ -6,6 +6,8 @@ export const DPR_CAP = { normal: 1.5, media: 1.25, alta: 1.5 };
 /** Mediana de tiempo por fotograma (ms) por encima de la cual se considera «a tirones» (< ~38 fps). */
 export const SLOW_MS = 26;
 export const MIN_SAMPLES = 90;
+/** Ventanas de medida por escalón (después se da por bueno y no se vuelve a medir). */
+export const MAX_WINDOWS = 4;
 /** Espera tras entrar en el juego (y tras cada bajada) antes de medir, en ms. */
 export const SETTLE_MS = 3000;
 

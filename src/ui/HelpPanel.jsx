@@ -121,7 +121,7 @@ export default function HelpPanel({ onSignOut, onSwitchHouse, onStartOver }) {
       </div>
 
       <h3>{t("Calidad gráfica")}</h3>
-      <p className="sub">{t("Alta: contorno fino, brillo y color de cine. Media: contorno ligero, mucho más fluida. Normal: la más rápida. Si el juego va a tirones, baja solo un escalón y te avisa.")}</p>
+      <p className="sub">{t("Alta: contorno fino, brillo y color de cine. Media: contorno ligero, mucho más fluida. Normal: la más rápida. Si no eliges tú, el juego baja un escalón solo cuando va a tirones y te avisa; a los 14 días vuelve a probar.")}</p>
       <div className="row">
         <button className={'btn ' + (s.qualityTier === 'normal' ? 'primary' : 'ghost')} onClick={() => setQuality('normal')}>{t("Normal")}</button>
         <button className={'btn ' + (s.qualityTier === 'media' ? 'primary' : 'ghost')} onClick={() => setQuality('media')}>{t("Media")}</button>

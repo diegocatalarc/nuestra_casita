@@ -5,20 +5,33 @@ import { t } from '../i18n';
 const WORLD_COLS = ['crops', 'buildings', 'decor', 'animals', 'memories', 'nodes', 'questLog', 'children', 'mailbox', 'activity', 'chat', 'soil', 'gifts', 'crafts'];
 
 const FX_CODE = { normal: '0', media: 'm', alta: '1' };
+const FX_TIER = { '0': 'normal', m: 'media', '1': 'alta' };
+const AUTO_DAYS = 14;
+const RANK = { normal: 0, media: 1, alta: 2 };
+/** Preferencia guardada (nc_fx) y, si es reciente, la bajada automática (nc_fxauto = «código|fecha»); gana la más baja. */
 function initialTier() {
   try {
-    const v = localStorage.getItem('nc_fx');
-    if (v === '0') return 'normal';
-    if (v === 'm') return 'media';
-    if (v === '1') return 'alta';
-    return window.matchMedia('(pointer: coarse)').matches ? 'normal' : 'alta';
+    const base = FX_TIER[localStorage.getItem('nc_fx')] || (window.matchMedia('(pointer: coarse)').matches ? 'normal' : 'alta');
+    const [code, at] = (localStorage.getItem('nc_fxauto') || '').split('|');
+    const auto = FX_TIER[code];
+    if (auto && Date.now() - (+at || 0) < AUTO_DAYS * 86400000 && RANK[auto] < RANK[base]) return auto;
+    return base;
   } catch { return 'alta'; }
 }
-/** Cambia la calidad gráfica y la recuerda en este dispositivo. `manual`: elegida por la persona (el regulador automático la respeta). */
-export function setQualityTier(tier, { manual = false } = {}) {
-  try { localStorage.setItem('nc_fx', FX_CODE[tier] || '1'); } catch { /* noop */ }
+/**
+ * Cambia la calidad gráfica. `manual`: elegida por la persona (se guarda en nc_fx y el regulador automático ya no la toca, tampoco
+ * en sesiones siguientes: nc_fxm). `auto`: bajada del regulador (se guarda aparte, caduca a los 14 días para volver a probar).
+ * Sin ninguno de los dos: solo en memoria (p. ej. error de shader).
+ */
+export function setQualityTier(tier, { manual = false, auto = false } = {}) {
+  try {
+    if (manual) { localStorage.setItem('nc_fx', FX_CODE[tier] || '1'); localStorage.setItem('nc_fxm', '1'); localStorage.removeItem('nc_fxauto'); }
+    else if (auto) localStorage.setItem('nc_fxauto', `${FX_CODE[tier] || '0'}|${Date.now()}`);
+  } catch { /* noop */ }
   useGame.setState({ qualityTier: tier, quality: tier !== 'normal', ...(manual ? { qualityManual: true } : {}) });
 }
+/** ¿La persona eligió la calidad a mano alguna vez en este dispositivo? */
+export const qualityChosenByUser = () => { try { return localStorage.getItem('nc_fxm') === '1'; } catch { return false; } };
 
 export const useGame = create((set, get) => ({
   // ---- sesión ----
