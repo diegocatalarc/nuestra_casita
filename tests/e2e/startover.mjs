@@ -15,10 +15,10 @@ async function main() {
     await startGame(page, vite.url);
     const nc = (fn, arg) => page.evaluate(fn, arg);
     await nc(() => window.__nc.useGame.getState().set({ panel: 'help' }));
-    await page.waitForTimeout(800);
+    await page.waitForSelector('button:has-text("Empezar una casita nueva")', { timeout: 20_000 }).catch(() => {});
     check(await page.locator('button:has-text("Empezar una casita nueva")').count() === 1, 'Ajustes ofrece «Empezar una casita nueva»');
     await page.evaluate(() => [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Empezar una casita nueva'))?.click());
-    await page.waitForTimeout(400);
+    await page.waitForSelector('button:has-text("Sí, dejar esta casita")', { timeout: 10_000 }).catch(() => {});
     check(await page.locator('button:has-text("Sí, dejar esta casita")').count() === 1, 'pide confirmación antes de salir');
     await page.evaluate(() => [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Cancelar'))?.click());
     await page.waitForTimeout(300);

@@ -72,7 +72,7 @@ async function startOver() {
   await getBackend().leaveHouse(s.user, s.coupleId);   // si falla, no se pierde nada
   unsubWorld?.();
   try { localStorage.removeItem(`nc_tut_${s.user.uid}`); } catch { /* noop */ }
-  useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, couple: null, world: null, panel: null, away: null, chatOpen: false, coupleId: null, inviteCode: null, phase: 'setup' });
+  useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, panel: null, away: null, chatOpen: false, coupleId: null, inviteCode: null, phase: 'setup' }); // `couple` y `world` se dejan: la escena aún los lee un instante mientras se desmonta (si no, errores de null); se renuevan al entrar en la casita nueva
 }
 
 async function signOut() {
