@@ -66,7 +66,7 @@ function MemoryObject({ m, slot }) {
       onPointerOut={() => { setHov(false); document.body.style.cursor = ''; }}
     >
       <Shape m={m} />
-      {hov && <Html position={[0, 0.75, 0]} center style={{ pointerEvents: 'none' }}><div className="bubble wide">{m.title || t("Recuerdo")}</div></Html>}
+      {hov && <Html position={[0, 0.75, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[4, 0]}><div className="bubble wide">{m.title || t("Recuerdo")}</div></Html>}
     </group>
   );
 }

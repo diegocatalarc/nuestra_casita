@@ -43,7 +43,7 @@ function Child({ c }) {
       <group scale={info.stage.scale}>
         <Avatar avatar={avatar} getAnim={() => anim.current} name={c.name} showName />
       </group>
-      {icon && !crib && <Html position={[0, info.stage.scale * 1.5 + 0.35, 0]} center style={{ pointerEvents: 'none' }}><div className="bubble">{icon}</div></Html>}
+      {icon && !crib && <Html position={[0, info.stage.scale * 1.5 + 0.35, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[4, 0]}><div className="bubble">{icon}</div></Html>}
     </group>
   );
 }

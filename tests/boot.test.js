@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { bootStatus, MAX_WAIT_MS, HARD_WAIT_MS } from '../src/game/boot';
 
 describe('pantalla de carga', () => {
+  it('hasta que se hace el precalentamiento de la GPU el mundo no cuenta como listo (evita «listo → cargando → listo»)', () => {
+    expect(bootStatus({ assetsDone: true, worldReady: true, smooth: true, prewarmed: false, elapsed: 1000 }).ready).toBe(false);
+    expect(bootStatus({ assetsDone: true, worldReady: true, smooth: true, prewarmed: true, elapsed: 1000 }).ready).toBe(true);
+  });
   it('no deja entrar hasta que todo está listo', () => {
     expect(bootStatus({ assetsDone: true, worldReady: true, smooth: false, elapsed: 1000 }).ready).toBe(false);
     expect(bootStatus({ assetsDone: false, worldReady: true, smooth: true, elapsed: 1000 }).ready).toBe(false);

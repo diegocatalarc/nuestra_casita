@@ -61,7 +61,7 @@ function Prewarm() {
     if ((n.current !== 60 && n.current !== 150) || useBoot.getState().entered) return; // solo mientras la pantalla de carga sigue encima
     const off = [];
     scene.traverse((o) => { if (o.frustumCulled && (o.isMesh || o.isPoints || o.isLine)) { o.frustumCulled = false; off.push(o); } });
-    try { gl.compile(scene, camera); gl.render(scene, camera); } catch { /* sin precalentar: no pasa nada */ } finally { off.forEach((o) => { o.frustumCulled = true; }); boot.smoothRun = 0; } // el fotograma largo del precalentamiento no cuenta para medir la fluidez
+    try { gl.compile(scene, camera); gl.render(scene, camera); } catch { /* sin precalentar: no pasa nada */ } finally { off.forEach((o) => { o.frustumCulled = true; }); boot.smoothRun = 0; if (n.current === 150) boot.prewarmed = true; } // el fotograma largo del precalentamiento no cuenta para medir la fluidez
   });
   return null;
 }

@@ -20,6 +20,9 @@ async function main() {
       check(await page.locator('.loading-screen').count() === 1, 'se ve la pantalla de carga');
       await page.waitForSelector('.loading-screen button', { timeout: 90_000 }).catch(() => {});
       check(await page.locator('.loading-screen button').count() === 1, 'la carga acaba pidiendo pulsar «Entrar al valle»');
+      await page.waitForTimeout(4000);
+      check(await page.locator('.loading-screen button').count() === 1, 'el botón «Entrar» no desaparece al cabo de unos segundos (sin parpadeos de listo/cargando)');
+      check(await page.evaluate(() => { const h = document.querySelectorAll('.loading-screen'); return h.length === 1 && getComputedStyle(h[0]).zIndex >= 100000000; }), 'la pantalla de carga queda por encima de las etiquetas del mundo');
       check(await page.locator('.story-scene').count() === 0, 'las escenas no empiezan hasta entrar');
       await page.screenshot({ path: '/tmp/claude-0/-home-user/ef51b309-d084-511b-8ea1-b09971a2f27c/scratchpad/loading.png' }).catch(() => {});
       await page.evaluate(() => document.querySelector('.loading-screen button')?.click());

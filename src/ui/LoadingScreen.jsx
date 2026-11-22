@@ -1,6 +1,6 @@
 // Pantalla de carga sobre el juego: se queda hasta que los modelos están cargados, el mundo listo y la imagen va fluida;
 // entonces pide pulsar «Entrar» (que además activa el sonido, que el navegador no deja sin un toque).
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useProgress } from '@react-three/drei';
 import { useBoot, boot, bootStatus, SMOOTH_FRAMES, enterGame } from '../game/boot';
 import { ctx } from '../game/movement';
@@ -12,11 +12,14 @@ export default function LoadingScreen() {
   const { active, total, progress } = useProgress();
   const [tick, setTick] = useState(0);
   const [t0] = useState(() => Date.now());
+  const latched = useRef(null); // cuando ya se pudo entrar, el botón se queda (nada de «listo → cargando → listo»)
   useEffect(() => { if (entered) return; const id = setInterval(() => setTick((n) => n + 1), 250); return () => clearInterval(id); }, [entered]);
   if (entered) return null;
   void tick;
   const assetsDone = boot.frames > 5 && !active && (total === 0 || progress >= 100);
-  const st = bootStatus({ assetsDone, worldReady: ctx.ready, smooth: boot.smoothRun >= SMOOTH_FRAMES, elapsed: Date.now() - t0 });
+  const live = bootStatus({ assetsDone, worldReady: ctx.ready, prewarmed: boot.prewarmed, smooth: boot.smoothRun >= SMOOTH_FRAMES, elapsed: Date.now() - t0 });
+  if (live.ready && !latched.current) latched.current = live;
+  const st = latched.current || live;
   const labels = [t("Cargando modelos y texturas"), t("Preparando el mundo"), t("Afinando la fluidez")];
   const go = () => { startAudio(); enterGame(); };
   return (

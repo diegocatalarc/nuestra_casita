@@ -106,7 +106,7 @@ export default function Interaction() {
         <group position={[ox + def.w / 2, 0, oz + def.d / 2]}>
           <mesh position={[0, 0.7, 0]}><boxGeometry args={[def.w - 0.04, 1.4, def.d - 0.04]} /><meshBasicMaterial color={v.ok ? '#4ade80' : '#ff5a5a'} transparent opacity={0.3} depthWrite={false} /></mesh>
           <mesh position={[0, 0.07, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[def.w, def.d]} /><meshBasicMaterial color={v.ok ? '#4ade80' : '#ff5a5a'} transparent opacity={0.45} depthWrite={false} /></mesh>
-          <Html position={[0, 1.8, 0]} center style={{ pointerEvents: 'none' }}><div className={`bubble wide ${v.ok ? '' : 'bad'}`}>{def.emoji} {def.label}{v.ok ? '' : ` · ${v.reason}`}</div></Html>
+          <Html position={[0, 1.8, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[4, 0]}><div className={`bubble wide ${v.ok ? '' : 'bad'}`}>{def.emoji} {def.label}{v.ok ? '' : ` · ${v.reason}`}</div></Html>
         </group>
       );
     } else if (tool === 'decor' && (decorSel || dragId)) {

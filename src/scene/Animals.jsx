@@ -158,7 +158,7 @@ function Animal({ a }) {
       onPointerOut={() => { document.body.style.cursor = ''; }}
     >
       <group ref={body}><Model type={a.type} t={a.id.length * 1.7} /></group>
-      {icon && <Html position={[0, 0.95, 0]} center style={{ pointerEvents: 'none' }}><div className="bubble">{icon}</div></Html>}
+      {icon && <Html position={[0, 0.95, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[4, 0]}><div className="bubble">{icon}</div></Html>}
     </group>
   );
 }

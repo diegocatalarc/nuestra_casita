@@ -399,7 +399,7 @@ input, textarea, .chatdock, .modal-body, .menu-list { -webkit-user-select: text;
 @media (max-width: 900px) { .objective { top: calc(96px + env(safe-area-inset-top, 0px)); max-width: calc(100vw - 24px); } }
 
 /* ---- pantalla de carga ---- */
-.loading-screen { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center; background: linear-gradient(180deg, #fde7d0, #f4c6c0); color: #4a3828; }
+.loading-screen { position: fixed; inset: 0; z-index: 2147483000; /* por encima de cualquier etiqueta flotante del mundo */ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center; background: linear-gradient(180deg, #fde7d0, #f4c6c0); color: #4a3828; }
 .loading-screen .logo { font-size: 72px; } .loading-screen h1 { margin: 0; font-size: 34px; color: #d9577e; } .loading-screen p { margin: 0; max-width: 420px; }
 .ls-bar { width: min(320px, 80vw); height: 12px; border-radius: 99px; background: rgba(255,255,255,.7); overflow: hidden; } .ls-bar i { display: block; height: 100%; background: #e8688a; border-radius: 99px; transition: width .4s; }
 .loading-screen ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 15px; text-align: left; } .loading-screen li:not(.ok) { opacity: .6; }
