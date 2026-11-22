@@ -18,7 +18,8 @@
     "emotes": "node tests/e2e/emotes.mjs",
     "scenes": "node tests/e2e/scenes.mjs",
     "progressive": "node tests/e2e/progressive.mjs",
-    "install-prompt": "node tests/e2e/install.mjs"
+    "install-prompt": "node tests/e2e/install.mjs",
+    "startover": "node tests/e2e/startover.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

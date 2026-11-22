@@ -13,7 +13,7 @@ import { t } from '../i18n';
 
 const Row = ({ ok, label, children }) => <li className={ok === false ? t("no") : ok ? 'ok' : ''}>{ok === undefined ? '•' : ok ? '✅' : '❌'} <b>{label}</b> {children}</li>;
 
-export default function HelpPanel({ onSignOut, onSwitchHouse }) {
+export default function HelpPanel({ onSignOut, onSwitchHouse, onStartOver }) {
   const s = useGame();
   const [res, setRes] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -27,6 +27,12 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
   const doJoin = async () => {
     setJoining(true); setErr('');
     try { await onSwitchHouse(code); } catch (e) { setErr(explainError(e)); setConfirm(false); }
+    setJoining(false);
+  };
+  const [startOverStep, setStartOverStep] = useState(0);
+  const doStartOver = async () => {
+    setJoining(true); setErr('');
+    try { await onStartOver(); } catch (e) { setErr(explainError(e)); setStartOverStep(0); }
     setJoining(false);
   };
   const setQuality = (on) => { try { localStorage.setItem('nc_fx', on ? '1' : '0'); } catch { /* noop */ } s.set({ quality: on }); };
@@ -79,6 +85,15 @@ export default function HelpPanel({ onSignOut, onSwitchHouse }) {
           {err && <div className="err">{err}</div>}
         </>
       )}
+
+      {onStartOver && (<>
+        <h3>{t("Empezar una casita nueva")}</h3>
+        <p className="sub">{t("Sales de esta casita y creas una nueva desde cero (con la pantalla limpia y la historia desde el principio). La partida actual no se borra del servidor, pero dejaréis de verla. Tu pareja tendrá que unirse a la casita nueva con su código (⚙️ → Casita actual).")}</p>
+        {startOverStep === 0
+          ? <div className="row"><button className="btn ghost" onClick={() => setStartOverStep(1)}>{t("🧹 Empezar una casita nueva")}</button></div>
+          : <div className="row"><button className="btn rec" disabled={joining} onClick={doStartOver}>{t("Sí, dejar esta casita y empezar de cero")}</button><button className="btn ghost" onClick={() => setStartOverStep(0)}>{t("Cancelar")}</button></div>}
+        {err && startOverStep === 0 && <div className="err">{err}</div>}
+      </>)}
 
       <h3>{t("Probar conexión")}</h3>
       <p className="sub">{t("Escribe y lee un dato de prueba en el servidor y comprueba la presencia en tiempo real.")}</p>

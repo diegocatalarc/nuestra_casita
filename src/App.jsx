@@ -65,6 +65,16 @@ async function switchHouse(code) {
   enterGame(id);
 }
 
+/** Sale de la casita actual y vuelve a la pantalla de «crear / unirse» para empezar una partida nueva.
+ *  No borra nada del servidor: la partida antigua queda guardada (se podría recuperar con su código); solo se abandona. */
+async function startOver() {
+  const s = useGame.getState();
+  await getBackend().leaveHouse(s.user, s.coupleId);   // si falla, no se pierde nada
+  unsubWorld?.();
+  try { localStorage.removeItem(`nc_tut_${s.user.uid}`); } catch { /* noop */ }
+  useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, couple: null, world: null, panel: null, away: null, chatOpen: false, coupleId: null, inviteCode: null, phase: 'setup' });
+}
+
 async function signOut() {
   try { await getBackend().auth.signOut(); } catch { /* noop */ }
   localStorage.removeItem('nc_cloud');
@@ -258,7 +268,7 @@ function Game() {
   return (
     <div className="game">
       <GameCanvas />
-      <HUD onSignOut={signOut} onSwitchHouse={switchHouse} />
+      <HUD onSignOut={signOut} onSwitchHouse={switchHouse} onStartOver={startOver} />
       <LoadingScreen />
       <button className="signout" onClick={signOut} title={t("Salir")}>⏏</button>
       <button className="signout sound" onClick={() => setMuted(toggleMute())} title={muted ? t("Activar sonido") : t("Silenciar")}>{muted ? '🔇' : '🔊'}</button>

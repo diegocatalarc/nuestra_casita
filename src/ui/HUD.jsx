@@ -260,7 +260,7 @@ function CraftChip() {
   return <button className="chip-top" onClick={() => useGame.getState().set({ panel: 'craft', craftTab: 'bench' })}>🛠️ {ready ? t("{0} listo(s) para recoger", [ready]) : ''}{ready && asks ? ' · ' : ''}{asks ? t("🙏 {0} petición(es)", [asks]) : ''}</button>;
 }
 
-export default function HUD({ onSignOut, onSwitchHouse }) {
+export default function HUD({ onSignOut, onSwitchHouse, onStartOver }) {
   useEffect(() => { prefetchPanels(); }, []);
   const env = useGame((s) => s.env);
   const couple = useGame((s) => s.couple);
@@ -423,7 +423,7 @@ export default function HUD({ onSignOut, onSwitchHouse }) {
       <button className="signout gear" onClick={open('help')} title={t("Ajustes y ayuda")}>⚙️</button>
       <ActionBar />
       <Suspense fallback={null}>
-      {panel === 'help' && <HelpPanel onSignOut={onSignOut} onSwitchHouse={onSwitchHouse} />}
+      {panel === 'help' && <HelpPanel onSignOut={onSignOut} onSwitchHouse={onSwitchHouse} onStartOver={onStartOver} />}
       </Suspense>
       <Tutorial />
       <AwayModal />
