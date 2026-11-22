@@ -4,6 +4,22 @@ import { t } from '../i18n';
 
 const WORLD_COLS = ['crops', 'buildings', 'decor', 'animals', 'memories', 'nodes', 'questLog', 'children', 'mailbox', 'activity', 'chat', 'soil', 'gifts', 'crafts'];
 
+const FX_CODE = { normal: '0', media: 'm', alta: '1' };
+function initialTier() {
+  try {
+    const v = localStorage.getItem('nc_fx');
+    if (v === '0') return 'normal';
+    if (v === 'm') return 'media';
+    if (v === '1') return 'alta';
+    return window.matchMedia('(pointer: coarse)').matches ? 'normal' : 'alta';
+  } catch { return 'alta'; }
+}
+/** Cambia la calidad gráfica y la recuerda en este dispositivo. `manual`: elegida por la persona (el regulador automático la respeta). */
+export function setQualityTier(tier, { manual = false } = {}) {
+  try { localStorage.setItem('nc_fx', FX_CODE[tier] || '1'); } catch { /* noop */ }
+  useGame.setState({ qualityTier: tier, quality: tier !== 'normal', ...(manual ? { qualityManual: true } : {}) });
+}
+
 export const useGame = create((set, get) => ({
   // ---- sesión ----
   phase: 'boot', // boot | login | setup | game
@@ -42,7 +58,10 @@ export const useGame = create((set, get) => ({
   tutorialSkip: false,
   tutorialHl: null,
   // efectos: en táctil (iPad/móvil) empiezan apagados salvo que la persona los active con ✨
-  quality: (() => { try { const v = localStorage.getItem('nc_fx'); if (v === '0') return false; if (v === '1') return true; return !(window.matchMedia('(pointer: coarse)').matches); } catch { return true; } })(),
+  // calidad gráfica: 'normal' (sin postproceso) · 'media' (contorno ligero, sin bloom) · 'alta' (todo). `quality` = tier !== 'normal'.
+  qualityTier: initialTier(),
+  quality: initialTier() !== 'normal',
+  qualityManual: false, // la persona la eligió en esta sesión: el regulador automático no la toca
 
   set: (patch) => set(patch),
 

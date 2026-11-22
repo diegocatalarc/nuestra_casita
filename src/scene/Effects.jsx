@@ -9,30 +9,40 @@ import { setHullOutlines } from './toon';
 const COARSE = typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
 
 /**
- * Postproceso. Calidad «Alta» (store.quality): contorno global por profundidad + nitidez + color.
- *  · Escritorio: bloom, color cálido, viñeta, ACES, MSAA x4 (el efecto maqueta TiltShift se quitó: desenfocaba los bordes).
- *  · Táctil (iPad): versión barata, UN pase (contorno + nitidez + ACES), sin bloom/viñeta y sin multisampling.
- * Con el contorno global activo se apagan los cascos invertidos de los personajes (no se ven dobles).
+ * Postproceso por escalón de calidad (store.qualityTier; «normal» no monta nada):
+ *  · «alta»: contorno global completo + nitidez, bloom, color cálido, viñeta, ACES y MSAA x4 (en táctil: un solo pase barato).
+ *  · «media»: contorno ligero (la mitad de lecturas), ACES y MSAA x2; sin bloom ni viñeta. Pensada para equipos que con «alta» van a tirones.
+ * El regulador automático (QualityGovernor) baja de escalón si el juego va a tirones. Con el contorno global activo se apagan los
+ * cascos invertidos de los personajes (no se ven dobles).
  */
 export default function Effects() {
-  const on = useGame((s) => s.quality);
-  const outline = useMemo(() => new OutlineEffect(COARSE ? { sharp: 0.2 } : {}), []);
+  const tier = useGame((s) => s.qualityTier);
+  const lite = tier === 'media';
+  const outline = useMemo(() => new OutlineEffect({ ...(COARSE ? { sharp: 0.2 } : {}), lite }), [lite]);
   useEffect(() => { setHullOutlines(false); return () => setHullOutlines(true); }, []);
   useFrame((s) => {
     const dpr = s.gl.getPixelRatio();
     outline.setView(Math.max(1, 1.7 * dpr * (COARSE ? 0.8 : 1))); // ≈1,5-2 px de pantalla
   });
-  if (!on) return null;
+  if (tier === 'normal') return null;
   if (COARSE) {
     return (
-      <EffectComposer multisampling={0} disableNormalPass>
+      <EffectComposer key={tier} multisampling={0} disableNormalPass>
+        <primitive object={outline} dispose={null} />
+        <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+      </EffectComposer>
+    );
+  }
+  if (lite) {
+    return (
+      <EffectComposer key={tier} multisampling={2} disableNormalPass>
         <primitive object={outline} dispose={null} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>
     );
   }
   return (
-    <EffectComposer multisampling={4} disableNormalPass>
+    <EffectComposer key={tier} multisampling={4} disableNormalPass>
       {/* el contorno va PRIMERO: solo el primer pase ve la profundidad de la escena (después los búferes se intercambian) */}
       <primitive object={outline} dispose={null} />
       <Bloom intensity={0.55} luminanceThreshold={0.82} luminanceSmoothing={0.25} mipmapBlur />

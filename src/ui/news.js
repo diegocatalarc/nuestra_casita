@@ -177,6 +177,12 @@ export const NEWS = [
       { emoji: '📲', text: t("En iPad, el juego te recuerda cómo instalarlo como app (Compartir → Añadir a pantalla de inicio) para abrirlo con un toque y a pantalla completa. También lo encuentras en Ajustes → «Cómo instalarlo».") },
     ],
   },
+  {
+    v: 25, title: t("Más fluido en cualquier equipo"),
+    items: [
+      { emoji: '⚡', text: t("Nueva calidad gráfica «Media» (contorno ligero, mucho más fluida) y un regulador automático: si la calidad Alta va a tirones, el juego baja solo un escalón y te lo avisa. Además limita la resolución en pantallas Retina, donde dibujar a doble resolución costaba cuatro veces más. Ajustes → Calidad gráfica.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

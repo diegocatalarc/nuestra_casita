@@ -35,16 +35,23 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     vec2 o = vec2(cos(a), sin(a)) * texelSize;
     // pares simétricos ±r: una pendiente (plano inclinado) se cancela; un escalón de profundidad no
     cnt += step(uSil, 2.0 * d - dz(uv + o * uThick) - dz(uv - o * uThick));
+#ifndef OUTLINE_LITE
     cnt += step(uSil, 2.0 * d - dz(uv + o * uThick * 0.5) - dz(uv - o * uThick * 0.5));
+#endif
   }
+#ifdef OUTLINE_LITE
+  float sil = smoothstep(0.05, 0.5, cnt / 4.0);
+#else
   float sil = smoothstep(0.05, 0.5, cnt / 8.0);
+#endif
   float e = clamp(sil * uStrength, 0.0, 1.0);
   outputColor = vec4(mix(col, uColor, e), inputColor.a);
 }`;
 
 export class OutlineEffect extends Effect {
-  constructor({ color = '#33201a', thick = 2.0, sil = 0.42, strength = 0.95, sharp = 0.35 } = {}) {
+  constructor({ color = '#33201a', thick = 2.0, sil = 0.42, strength = 0.95, sharp = 0.35, lite = false } = {}) {  // lite: la mitad de lecturas de profundidad (calidad «media»)
     super('OutlineEffect', frag, {
+      defines: new Map(lite ? [['OUTLINE_LITE', '1']] : []),
       attributes: EffectAttribute.DEPTH | EffectAttribute.CONVOLUTION,
       uniforms: new Map([
         ['uColor', new Uniform(new Color(color))], ['uThick', new Uniform(thick)], ['uSil', new Uniform(sil)],

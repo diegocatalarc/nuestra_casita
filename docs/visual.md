@@ -93,3 +93,8 @@ Escritorio queda por debajo del original (se quitó el TiltShift y el contorno e
 ## Retoques tras la revisión independiente
 - Chispas, mariposas y libélulas no escriben profundidad (el contorno global no las rodea). El «pop» inicial de un cultivo solo ocurre si se plantó hace < 8 s. Si falla la compilación de un shader, `quality` pasa a Normal automáticamente (`gl.debug.onShaderError`).
 - Pendiente de GPU real: contorno con MSAA×4 y dpr 2; coste del pase de contorno en iPad «Alta» (21 lecturas/píxel; si pesa, bajar muestras en táctil); cielo algo distinto entre Normal y Alta (`toneMapped:false` en el domo); materiales de Life/Details/Halos sin `dispose` al cambiar de casita (sin urgencia).
+
+## Calidad por escalones y regulador automático (v25)
+- `store.qualityTier`: `normal` (sin postproceso) · `media` (contorno ligero = mitad de lecturas de profundidad, MSAA×2, sin bloom/viñeta) · `alta` (todo, MSAA×4). `nc_fx`: `0`/`m`/`1`. Resolución máxima por escalón en `game/quality.js` (`DPR_CAP`: 1,5 / 1,25 / 1,5; antes 2 en escritorio: en Retina eran 4× los píxeles).
+- **Regulador** (`scene/QualityGovernor.jsx`): 3 s tras entrar en el juego mide 90 fotogramas; si la mediana pasa de 26 ms (< ~38 fps) baja un escalón, lo recuerda en este dispositivo (`nc_fx`) y avisa. No actúa si la persona eligió calidad a mano en la sesión, con `?debug` ni con `nc_nogov=1`.
+- **No medido en GPU real** (solo swiftshader): los umbrales (26 ms, 90 fotogramas, 3 s) son estimaciones. Para ajustar: `SLOW_MS`, `MIN_SAMPLES`, `SETTLE_MS` en `game/quality.js`.

@@ -1,6 +1,6 @@
 import { BUILD, deviceInfo, recentErrors, measureFps } from '../game/diagnostics';
 import { useState } from 'react';
-import { useGame } from '../store/gameStore';
+import { useGame, setQualityTier } from '../store/gameStore';
 import { getBackend } from '../services/backend';
 import { explainError } from '../game/errors';
 import { notifState, askNotify } from '../game/notify';
@@ -36,7 +36,7 @@ export default function HelpPanel({ onSignOut, onSwitchHouse, onStartOver }) {
     try { await onStartOver(); } catch (e) { setErr(explainError(e)); setStartOverStep(0); }
     setJoining(false);
   };
-  const setQuality = (on) => { try { localStorage.setItem('nc_fx', on ? '1' : '0'); } catch { /* noop */ } s.set({ quality: on }); };
+  const setQuality = (tier) => setQualityTier(tier, { manual: true });
   const members = s.couple?.members?.length || 1;
   const partner = s.partner;
 
@@ -57,7 +57,7 @@ export default function HelpPanel({ onSignOut, onSwitchHouse, onStartOver }) {
     `Versión: ${BUILD}`,
     (() => { const d = deviceInfo(); return `Dispositivo: ${d.screen} · ventana ${d.viewport} · táctil ${d.touch ? 'sí' : 'no'} · instalada ${d.standalone ? 'sí' : 'no'} · núcleos ${d.cores ?? '?'} · memoria ${d.memGb ?? '?'} GB · conexión ${d.online ? 'sí' : 'NO'} · ${d.lang}`; })(),
     `Navegador: ${deviceInfo().ua}`,
-    `Calidad gráfica: ${s.quality ? 'alta' : 'baja'}`,
+    `Calidad gráfica: ${s.qualityTier}`,
     fps ? `Fluidez (5 s): ${fps.fps} fps · fotograma medio ${fps.avg} ms · p95 ${fps.p95} ms · máx ${fps.max} ms · ${fps.long} fotogramas > 100 ms` : '',
     recentErrors().length ? `Errores recientes:\n  ${recentErrors().join('\n  ')}` : 'Errores recientes: ninguno',
   ].filter(Boolean).join('\n');
@@ -121,10 +121,11 @@ export default function HelpPanel({ onSignOut, onSwitchHouse, onStartOver }) {
       </div>
 
       <h3>{t("Calidad gráfica")}</h3>
-      <p className="sub">{t("Alta dibuja un contorno fino en todo el mundo, brillo y color de cine. En tablet gasta más batería: si va a tirones, vuelve a Normal.")}</p>
+      <p className="sub">{t("Alta: contorno fino, brillo y color de cine. Media: contorno ligero, mucho más fluida. Normal: la más rápida. Si el juego va a tirones, baja solo un escalón y te avisa.")}</p>
       <div className="row">
-        <button className={'btn ' + (s.quality ? 'ghost' : 'primary')} onClick={() => setQuality(false)}>{t("Normal")}</button>
-        <button className={'btn ' + (s.quality ? 'primary' : 'ghost')} onClick={() => setQuality(true)}>{t("Alta")}</button>
+        <button className={'btn ' + (s.qualityTier === 'normal' ? 'primary' : 'ghost')} onClick={() => setQuality('normal')}>{t("Normal")}</button>
+        <button className={'btn ' + (s.qualityTier === 'media' ? 'primary' : 'ghost')} onClick={() => setQuality('media')}>{t("Media")}</button>
+        <button className={'btn ' + (s.qualityTier === 'alta' ? 'primary' : 'ghost')} onClick={() => setQuality('alta')}>{t("Alta")}</button>
       </div>
 
       {(s.couple?.startedAt || 0) < LEGACY_BEFORE && (<>
