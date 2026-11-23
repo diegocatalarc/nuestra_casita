@@ -51,6 +51,27 @@ async function main() {
     check(mv.moved, 'moveBuilding cambia el edificio de sitio');
     check(mv.carried, 'la decoración de dentro se va con el edificio');
     check(mv.houseStill, 'la casa no se mueve');
+    const fx2 = await page.evaluate(async () => {
+      const { useGame, runtime, actions: a } = window.__nc;
+      const g = () => useGame.getState();
+      const bid = Object.keys(g().buildings).find((k) => g().buildings[k].type !== 'house' && k !== 'house');
+      // monedas negativas se corrigen a 0
+      useGame.setState({ couple: { ...g().couple, coins: -50 } });
+      a.healCoins(); await new Promise((r) => setTimeout(r, 600));
+      const coinsOk = !(g().couple.coins < 0);
+      // dormir en una cama de edificio: seguirla al moverse
+      const house = g().buildings.house;
+      const spot = { id: 'house:0', x: house.x + 0.95, z: house.z + 1.3, rot: 0 };
+      runtime.me.sleeping = true; runtime.me.sleepSpot = spot;
+      useGame.setState({ buildings: { ...g().buildings, house: { ...house, x: house.x + 3 } } });
+      a.checkSleepTogether();
+      const followed = runtime.me.sleepSpot.x === spot.x + 3;
+      useGame.setState({ buildings: { ...g().buildings, house } });
+      runtime.me.sleeping = false; runtime.me.sleepSpot = null;
+      return { coinsOk, followed, bid: !!bid };
+    });
+    check(fx2.coinsOk, 'monedas negativas se corrigen a 0');
+    check(fx2.followed, 'quien duerme en un edificio lo sigue si se mueve');
     await page.screenshot({ path: '/tmp/claude-0/-home-user/ef51b309-d084-511b-8ea1-b09971a2f27c/scratchpad/obj820.png' });
     const ov = await page.evaluate(() => {
       const o = document.querySelector('.objective')?.getBoundingClientRect();

@@ -350,7 +350,7 @@ export default function HUD({ onSignOut, onSwitchHouse, onStartOver }) {
       </div>
 
       <div className="top-right">
-        <div className="hearts" title={t("Corazones: se ganan con casi todo y se gastan en decoración del corazón, animales y familia")}>💗 <b>{couple?.hearts ?? 0}</b><span className="coins" title={t("Monedas")}>🪙 <b>{couple?.coins ?? 0}</b></span></div>
+        <div className="hearts" title={t("Corazones: se ganan con casi todo y se gastan en decoración del corazón, animales y familia")}>💗 <b>{couple?.hearts ?? 0}</b><span className="coins" title={t("Monedas")}>🪙 <b>{Math.max(0, couple?.coins ?? 0)}</b></span></div>
         {unlocked('vitals') && <Vitals />}
         <div className="res">
           {Object.entries(RESOURCES).filter(([k]) => !prog || (unlocked('build') && (inv[k] || 0) > 0)).map(([k, r]) => <span key={k} title={r.label}>{r.emoji} {inv[k] || 0}</span>)}

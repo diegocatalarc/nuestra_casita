@@ -90,3 +90,13 @@ export function contributeWeekly(item) {
 }
 
 
+
+/**
+ * Las monedas nunca deberían ser negativas, pero si los dos gastan a la vez con datos desactualizados el contador (incremental)
+ * puede pasarse. Se corrige a 0 (valor absoluto, sin carreras: si lo hacen los dos, el resultado es el mismo).
+ */
+export function healCoins() {
+  const c = st().couple;
+  if (!c || !(c.coins < 0)) return;
+  commit([{ op: 'patch', data: { coins: 0 } }]);
+}
