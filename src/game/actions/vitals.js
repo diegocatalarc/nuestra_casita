@@ -52,10 +52,10 @@ export function wake() {
 }
 
 let bothSince = 0;
-/** Si alguien mueve el edificio donde duermes, la cama se va con él: te acompaña en vez de quedarte en el sitio viejo. */
+/** Si alguien mueve el edificio (o la cama de decoración) donde duermes, la cama se va con él: te acompaña en vez de quedarte en el sitio viejo. */
 function followBed() {
   const spot = me.sleepSpot;
-  if (!me.sleeping || !spot || !String(spot.id).includes(':')) return;
+  if (!me.sleeping || !spot) return;
   const s = st();
   const now = bedSpots(s.buildings, s.decor).find((b) => b.id === spot.id);
   if (!now || (now.x === spot.x && now.z === spot.z)) return;
