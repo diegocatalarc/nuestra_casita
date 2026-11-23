@@ -19,8 +19,8 @@ function initialTier() {
   } catch { return 'alta'; }
 }
 /**
- * Cambia la calidad gráfica. `manual`: elegida por la persona (se guarda en nc_fx y el regulador automático ya no la toca, tampoco
- * en sesiones siguientes: nc_fxm). `auto`: bajada del regulador (se guarda aparte, caduca a los 14 días para volver a probar).
+ * Cambia la calidad gráfica. `manual`: elegida por la persona (se guarda en nc_fx y el regulador solo la baja si va injugable, y solo en
+ * esa sesión: nc_fxm). `auto`: bajada del regulador (se guarda aparte, caduca a los 14 días para volver a probar).
  * Sin ninguno de los dos: solo en memoria (p. ej. error de shader).
  */
 export function setQualityTier(tier, { manual = false, auto = false } = {}) {
@@ -74,7 +74,7 @@ export const useGame = create((set, get) => ({
   // calidad gráfica: 'normal' (sin postproceso) · 'media' (contorno ligero, sin bloom) · 'alta' (todo). `quality` = tier !== 'normal'.
   qualityTier: initialTier(),
   quality: initialTier() !== 'normal',
-  qualityManual: false, // la persona la eligió en esta sesión: el regulador automático no la toca
+  qualityManual: false, // la persona la eligió en esta sesión: el regulador solo baja si va injugable
 
   set: (patch) => set(patch),
 

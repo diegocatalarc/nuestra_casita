@@ -1,7 +1,7 @@
 // Regulador automático de calidad gráfica: si el juego va a tirones, baja un escalón (alta → media → normal) y avisa.
 // La resolución máxima por escalón se fija en la prop `dpr` del <Canvas> (GameCanvas.jsx), no aquí: R3F la reaplica al redimensionar.
 // Solo mide unas pocas ventanas tras entrar o cambiar de escalón, y exige DOS ventanas lentas seguidas antes de bajar (un parón
-// puntual no cuenta). No actúa si la persona eligió la calidad a mano (también en sesiones anteriores), con ?debug ni con nc_nogov=1.
+// puntual no cuenta). Si la persona eligió la calidad a mano, solo baja con un rendimiento injugable (SEVERE_MS) y solo en esa sesión. No actúa con ?debug ni con nc_nogov=1.
 import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGame, setQualityTier, qualityChosenByUser } from '../store/gameStore';
@@ -19,7 +19,7 @@ export default function QualityGovernor() {
   useEffect(() => { st.current = { samples: [], from: performance.now() + SETTLE_MS, slow: 0, windows: 0, size: `${innerWidth}x${innerHeight}` }; }, [tier, entered]);
   useFrame((_, dt) => {
     const s = st.current;
-    if (!entered || off() || useGame.getState().qualityManual || qualityChosenByUser() || s.windows >= MAX_WINDOWS) return;
+    if (!entered || off() || s.windows >= MAX_WINDOWS) return;
     const now = performance.now();
     if (document.hidden) { s.samples = []; s.from = now + SETTLE_MS; return; }
     if (now < s.from) return;
@@ -27,12 +27,13 @@ export default function QualityGovernor() {
     if (size !== s.size) { s.size = size; s.samples = []; s.from = now + SETTLE_MS; return; } // redimensionar o cambiar de monitor: no medir
     s.samples.push(dt * 1000);
     if (s.samples.length < MIN_SAMPLES) return;
-    const d = decide({ samples: s.samples, tier });
+    const manual = !!(useGame.getState().qualityManual || qualityChosenByUser());
+    const d = decide({ samples: s.samples, tier, manual });
     s.samples = []; s.windows++;
     if (d.action === 'down') {
       s.slow++;
       if (s.slow >= 2) {
-        setQualityTier(d.to, { auto: true });
+        setQualityTier(d.to, manual ? {} : { auto: true }); // elegida a mano: baja solo en esta sesión, sin pisar su preferencia
         useGame.getState().toast(t("Hemos bajado la calidad gráfica para que vaya fluido. Puedes cambiarla en ⚙️ Ajustes."));
       }
     } else s.slow = 0;

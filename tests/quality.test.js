@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { median, stepDown, decide, SLOW_MS, MIN_SAMPLES, DPR_CAP } from '../src/game/quality';
+import { median, stepDown, decide, SLOW_MS, MIN_SAMPLES, DPR_CAP, SEVERE_MS } from '../src/game/quality';
 
 const many = (ms, n = MIN_SAMPLES) => Array.from({ length: n }, () => ms);
 describe('regulador de calidad gráfica', () => {
@@ -19,5 +19,11 @@ describe('regulador de calidad gráfica', () => {
     const s = [...many(14, 100), ...many(900, 10)];
     expect(decide({ samples: s, tier: 'alta' }).action).toBe('ok');
   });
+  it('elegida a mano: solo baja si es injugable', () => {
+    expect(decide({ samples: many(SLOW_MS + 6), tier: 'alta', manual: true }).action).toBe('ok');
+    expect(decide({ samples: many(SEVERE_MS + 20), tier: 'alta', manual: true }).action).toBe('down');
+  });
+  it('bajar de escalón nunca sube la resolución', () => { expect(DPR_CAP.normal).toBeLessThanOrEqual(DPR_CAP.media); expect(DPR_CAP.media).toBeLessThanOrEqual(DPR_CAP.alta); });
+  it('el umbral de 40 ms es exacto', () => { expect(decide({ samples: many(SEVERE_MS), tier: 'alta', manual: true }).action).toBe('ok'); expect(decide({ samples: many(SEVERE_MS + 1), tier: 'alta', manual: true }).action).toBe('down'); });
   it('la resolución máxima es razonable en pantallas Retina', () => { for (const v of Object.values(DPR_CAP)) { expect(v).toBeGreaterThanOrEqual(1); expect(v).toBeLessThanOrEqual(1.5); } });
 });
