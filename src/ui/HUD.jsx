@@ -104,6 +104,7 @@ function ModeBar() {
   const seed = useGame((s) => s.seedSel);
   const season = useGame((s) => s.env.season);
   const buildSel = useGame((s) => s.buildSel);
+  const buildMoving = useGame((s) => !!s.moveBuildId);
   const decorSel = useGame((s) => s.decorSel);
   const dragId = useGame((s) => s.dragId);
   const selId = useGame((s) => s.selId);
@@ -129,7 +130,7 @@ function ModeBar() {
     );
   }
   if (tool === 'fish') return <div className="modebar"><b>{t("🎣 Pesca")}</b><small className="hint">{t("Clic en el agua para lanzar · Espacio/clic para tirar cuando salga ❗ · Esc salir")}</small><button className="btn ghost" onClick={() => g().set({ panel: 'fishing' })}>{t("📖 Diario")}</button></div>;
-  if (tool === 'build' && buildSel) return <div className="modebar"><b>{BUILDINGS[buildSel].emoji} {BUILDINGS[buildSel].label}</b><small className="hint">{t("Clic para construir · Esc cancela")}</small></div>;
+  if (tool === 'build' && buildSel) return <div className="modebar"><b>{BUILDINGS[buildSel].emoji} {BUILDINGS[buildSel].label}</b><small className="hint">{buildMoving ? t("Toca el sitio nuevo para mover el edificio · Esc cancela") : t("Clic para construir · Esc cancela")}</small></div>;
   if (tool === 'decor') {
     const editing = !decorSel;
     const name = decorSel ? `${DECOR[decorSel].emoji} ${DECOR[decorSel].label}` : selType ? `${DECOR[selType].emoji} ${DECOR[selType].label}` : t("🛋️ Editar decoración");

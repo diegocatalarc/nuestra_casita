@@ -95,7 +95,7 @@ export function animalPos(a, t) {
 // ---------- Validación de colocación ----------
 export const canAfford = (inv, cost) => Object.entries(cost).every(([k, v]) => (inv?.[k] || 0) >= v);
 
-export function validateBuilding(world, st, type, x, z, now) {
+export function validateBuilding(world, st, type, x, z, now, ignoreId = null) {
   const def = BUILDINGS[type];
   const { w, d } = def;
   if (x < 2 || z < 2 || x + w > MAP - 2 || z + d > MAP - 2) return { ok: false, reason: t("Fuera del terreno") };
@@ -110,7 +110,8 @@ export function validateBuilding(world, st, type, x, z, now) {
     }
   }
   if (touchesVillageProp(x, z, w, d)) return { ok: false, reason: t("Hay una fuente o un puesto del pueblo") };
-  for (const b of Object.values(st.buildings)) {
+  for (const [bid, b] of Object.entries(st.buildings)) {
+    if (bid === ignoreId) continue;
     if (x < b.x + b.w && x + w > b.x && z < b.z + b.d && z + d > b.z) return { ok: false, reason: t("Se solapa con otro edificio") };
   }
   for (const o of Object.values(st.decor)) {

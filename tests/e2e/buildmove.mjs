@@ -1,0 +1,64 @@
+// Mover un edificio ya construido + la guía de misión no tapa el HUD en pantalla estrecha. Uso: npm run buildmove
+import { startVite, launch, newContext, watchErrors, startGame } from './harness.mjs';
+
+const failures = [];
+const check = (ok, msg) => { if (!ok) failures.push(msg); console.log(`${ok ? 'OK  ' : 'FAIL'} ${msg}`); };
+
+async function main() {
+  const vite = await startVite();
+  const browser = await launch();
+  try {
+    const ctx = await newContext(browser, { viewport: { width: 820, height: 1100 } });
+    const page = await ctx.newPage();
+    const errors = watchErrors(page);
+    await startGame(page, vite.url);
+    const r = await page.evaluate(async () => {
+      const { useGame } = window.__nc, a = window.__nc.actions, lg = window.__nc.logic;
+      const c = useGame.getState().couple;
+      const big = Object.fromEntries(Object.keys(c.inventory || {}).map((k) => [k, 999]));
+      useGame.setState({ couple: { ...c, inventory: { ...c.inventory, ...big, wood: 999, stone: 999, plank: 999, brick: 999, fiber: 999 } } });
+      const s = () => useGame.getState();
+      const type = 'barn' in (window.__nc.BUILDINGS || {}) ? 'barn' : null;
+      return { hasType: !!type, keys: Object.keys(a).filter((k) => /Building/.test(k)), lg: Object.keys(lg || {}).includes('validateBuilding') };
+    });
+    check(r.keys.includes('moveBuilding'), 'la acción moveBuilding existe (' + r.keys.join(',') + ')');
+    const mv = await page.evaluate(async () => {
+      const { useGame } = window.__nc, a = window.__nc.actions, lg = window.__nc.logic;
+      const g = () => useGame.getState();
+      const spots = [];
+      const type = 'workshop';
+      const def = (await import('/src/game/constants.js')).BUILDINGS;
+      const tp = def[type] && !def[type].fixed ? type : Object.keys(def).find((k) => !def[k].fixed);
+      for (let z = 8; z < 40 && spots.length < 2; z++) for (let x = 8; x < 40 && spots.length < 2; x++) if (lg.validateBuilding(g().world, g(), tp, x, z, Date.now()).ok && !spots.some((p) => Math.abs(p.x - x) < 8 && Math.abs(p.z - z) < 8)) spots.push({ x, z });
+      a.placeBuilding(tp, spots[0].x, spots[0].z);
+      await new Promise((r) => setTimeout(r, 800));
+      const id = Object.keys(g().buildings).find((k) => g().buildings[k].type === tp);
+      if (!id) return { err: 'no se construyó', inv: g().couple.inventory };
+      a.moveBuilding(id, spots[1].x, spots[1].z);
+      await new Promise((r) => setTimeout(r, 800));
+      const b = g().buildings[id];
+      const h0 = { ...g().buildings.house };
+      a.moveBuilding('house', 30, 30);
+      await new Promise((r) => setTimeout(r, 300));
+      return { moved: b.x === spots[1].x && b.z === spots[1].z, houseStill: g().buildings.house.x === h0.x && g().buildings.house.z === h0.z, to: spots[1], now: { x: b.x, z: b.z } };
+    });
+    console.log(JSON.stringify(mv));
+    check(mv.moved, 'moveBuilding cambia el edificio de sitio');
+    check(mv.houseStill, 'la casa no se mueve');
+    await page.screenshot({ path: '/tmp/claude-0/-home-user/ef51b309-d084-511b-8ea1-b09971a2f27c/scratchpad/obj820.png' });
+    const ov = await page.evaluate(() => {
+      const o = document.querySelector('.objective')?.getBoundingClientRect();
+      const others = ['.resbar', '.chips', '.vitals', '.topbar', '.hud-right'].map((q) => [q, document.querySelector(q)?.getBoundingClientRect()]).filter(([, r]) => r);
+      const hit = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+      return { obj: o && { l: o.left, t: o.top, r: o.right, b: o.bottom }, overlaps: o ? others.filter(([, r]) => hit(o, r)).map(([q]) => q) : [] };
+    });
+    console.log(JSON.stringify(ov));
+    check(!!ov.obj, 'hay guía de misión');
+    check(ov.obj && ov.obj.r < 820 / 2 + 40, 'la guía queda en el lado izquierdo (no centrada sobre el HUD)');
+    check(ov.overlaps.length === 0, `la guía no se solapa con otros elementos (${ov.overlaps})`);
+    check(errors.length === 0, `sin errores de página ${errors.slice(0, 2).join(' | ')}`);
+  } finally { await browser.close(); await vite.close(); }
+  if (failures.length) { console.log(`\n${failures.length} fallo(s)`); process.exit(1); }
+  console.log('\nTodo OK');
+}
+main().catch((e) => { console.error(e); process.exit(1); });

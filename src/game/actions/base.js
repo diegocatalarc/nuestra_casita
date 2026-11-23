@@ -166,6 +166,20 @@ export function placeBuilding(type, x, z) {
   s.setTool('interact');
 }
 
+/** Cambia de sitio un edificio ya construido (gratis; la casa y los edificios fijos no se mueven). */
+export function moveBuilding(id, x, z) {
+  const s = st();
+  const b = s.buildings[id];
+  if (!b || id === 'house' || BUILDINGS[b.type]?.fixed) return toast(t("Ese edificio no se puede mover"));
+  const v = validateBuilding(s.world, s, b.type, x, z, serverNow(), id);
+  if (!v.ok) return toast(v.reason);
+  if (x === b.x && z === b.z) { s.setTool('interact'); return; }
+  commit([{ op: 'set', col: 'buildings', id, data: { x, z } }]);
+  logActivity('build', t("{0} cambiado de sitio", [BUILDINGS[b.type].label]));
+  fx(`${BUILDINGS[b.type].emoji} ✓`, x + b.w / 2, z + b.d / 2);
+  s.setTool('interact');
+}
+
 // ---------- Decoración ----------
 export function placeDecor(type, x, z, rot, variant) {
   const s = st();

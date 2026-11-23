@@ -18,6 +18,7 @@ npm run lint                     # eslint src: solo regla no-undef (detecta impo
 npm run build                    # vite build → dist/
 npm run smoke                    # e2e: arranque, todos los paneles, chat, táctil (Playwright, ~5 min)
 npm run story                    # e2e: historia (arranque, aportes a proyectos, reclamar capítulo)
+npm run buildmove                # e2e: mover un edificio y la guía de misión en pantalla estrecha
 npm run emotes                   # e2e con dos jugadores: presencia, emotes, chat
 npm run bench                    # medición orientativa de ms por fotograma
 npm run perf -- --label x        # arnés de rendimiento (draw calls, JS por fotograma, carga, paneles); ver docs/rendimiento.md

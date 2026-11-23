@@ -172,3 +172,7 @@ En 🛋️ *Decorar* (sin elegir objeto nuevo): **toca un objeto para selecciona
 
 ## Instálalo como app (v24)
 - En iPad (Safari, fuera del modo app) el juego muestra una vez la tarjeta «Para Bri 💗» con los pasos de Compartir → «Añadir a pantalla de inicio». «Entendido» la pospone 14 días; «No volver a mostrar» la silencia. También en Ajustes → «Cómo instalarlo». Lógica en `src/game/install.js`; `?ipad` en la URL la fuerza (pruebas).
+
+## Mover edificios y guía compacta (v26)
+- **Cambiar un edificio de sitio:** 🔨 Construir → «Cambiar un edificio de sitio» → elegir el edificio → tocar el lugar nuevo (verde = válido). Gratis; la casa y los edificios fijos no se mueven. Acción `moveBuilding` (`game/actions/base.js`); `validateBuilding(..., ignoreId)` ignora el propio edificio. Test: `tests/buildings-move.test.js`, e2e `npm run buildmove`.
+- **Guía de misión en pantallas estrechas (≤900 px):** compacta, a la izquierda bajo el estado de la pareja, 2 líneas, para no tapar recursos ni vitales.

@@ -183,6 +183,13 @@ export const NEWS = [
       { emoji: '⚡', text: t("Nueva calidad gráfica «Media» (contorno ligero, mucho más fluida) y un regulador automático: si la calidad Alta va a tirones, el juego baja solo un escalón y te lo avisa. Además limita la resolución en pantallas Retina, donde dibujar a doble resolución costaba cuatro veces más. Ajustes → Calidad gráfica.") },
     ],
   },
+  {
+    v: 26, title: t("Edificios que se mueven"),
+    items: [
+      { emoji: '✋', text: t("Ya puedes cambiar un edificio de sitio, gratis: 🔨 Construir → «Cambiar un edificio de sitio», y toca el lugar nuevo (verde = se puede). La casa no se mueve.") },
+      { emoji: '🎯', text: t("En pantallas pequeñas (iPad en vertical) la guía de la misión ya no tapa la vista: ahora es más compacta y va en la esquina.") },
+    ],
+  },
 ];
 export const NEWS_VERSION = NEWS[NEWS.length - 1].v;
 

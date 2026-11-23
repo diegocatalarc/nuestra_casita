@@ -7,7 +7,7 @@ import { BUILDINGS, DECOR, MAP, TILE } from '../game/constants';
 import { tileAt } from '../game/worldGen';
 import { me } from '../game/runtime';
 import { isPlantable, validateBuilding, validateDecor, decorSize } from '../game/logic';
-import { walkTo, plantAt, placeBuilding, placeDecor, moveDecor, removeDecor, hug, wave, tillAt, untillAt, rotateDecor, recolorDecor, deleteSelectedDecor, castLine, reelIn, cancelFish, leaveBoat } from '../game/actions';
+import { walkTo, plantAt, placeBuilding, moveBuilding, placeDecor, moveDecor, removeDecor, hug, wave, tillAt, untillAt, rotateDecor, recolorDecor, deleteSelectedDecor, castLine, reelIn, cancelFish, leaveBoat } from '../game/actions';
 import { serverNow } from '../game/time';
 import { isTyping } from '../game/input';
 import { Ghost } from './Decor';
@@ -23,8 +23,8 @@ let lastDrop = 0;
 
 export default function Interaction() {
   // Selector fino: antes `useGame()` suscribía a TODO el estado (reloj, chat, jugadores…) y re-renderizaba cada segundo.
-  const { tool, buildSel, decorSel, dragId, hover, decorRot, decorVariant, seedSel, world } = useGame((st) => ({
-    tool: st.tool, buildSel: st.buildSel, decorSel: st.decorSel, dragId: st.dragId, hover: st.hover, decorRot: st.decorRot,
+  const { tool, buildSel, moveBuildId, decorSel, dragId, hover, decorRot, decorVariant, seedSel, world } = useGame((st) => ({
+    tool: st.tool, buildSel: st.buildSel, moveBuildId: st.moveBuildId, decorSel: st.decorSel, dragId: st.dragId, hover: st.hover, decorRot: st.decorRot,
     decorVariant: st.decorVariant, seedSel: st.seedSel, world: st.world,
     // solo para volver a validar el fantasma cuando cambian estos datos
     soil: st.soil, crops: st.crops, buildings: st.buildings, decor: st.decor, nodes: st.nodes,
@@ -84,7 +84,8 @@ export default function Interaction() {
     else if (g.tool === 'plant') { if (g.seedSel === 'till') tillAt(tx, tz); else if (g.seedSel === 'untill') untillAt(tx, tz); else plantAt(tx, tz, g.seedSel); }
     else if (g.tool === 'build' && g.buildSel) {
       const def = BUILDINGS[g.buildSel];
-      placeBuilding(g.buildSel, tx - Math.floor(def.w / 2), tz - Math.floor(def.d / 2));
+      const ox = tx - Math.floor(def.w / 2), oz = tz - Math.floor(def.d / 2);
+      if (g.moveBuildId) moveBuilding(g.moveBuildId, ox, oz); else placeBuilding(g.buildSel, ox, oz);
     } else if (g.tool === 'decor' && g.decorSel && g.hover) placeDecor(g.decorSel, g.hover.x, g.hover.z, g.decorRot, g.decorVariant);
     else if (g.tool === 'decor' && !g.decorSel && g.selId && performance.now() - lastDrop > 400) g.set({ selId: null });
   };
@@ -101,7 +102,7 @@ export default function Interaction() {
     } else if (tool === 'build' && buildSel) {
       const def = BUILDINGS[buildSel];
       const ox = hover.tx - Math.floor(def.w / 2), oz = hover.tz - Math.floor(def.d / 2);
-      const v = validateBuilding(world, s, buildSel, ox, oz, now);
+      const v = validateBuilding(world, s, buildSel, ox, oz, now, moveBuildId);
       overlay = (
         <group position={[ox + def.w / 2, 0, oz + def.d / 2]}>
           <mesh position={[0, 0.7, 0]}><boxGeometry args={[def.w - 0.04, 1.4, def.d - 0.04]} /><meshBasicMaterial color={v.ok ? '#4ade80' : '#ff5a5a'} transparent opacity={0.3} depthWrite={false} /></mesh>

@@ -54,6 +54,7 @@ export const useGame = create((set, get) => ({
   tool: 'interact', // interact | plant | build | decor
   seedSel: 'lettuce',
   buildSel: null,
+  moveBuildId: null, // edificio que se está cambiando de sitio (tool 'build')
   decorSel: null, decorRot: 0, decorVariant: 0,
   dragId: null, selId: null, moveMode: false, dragStart: null,
   hover: null, // {x,z,tx,tz}
@@ -99,7 +100,7 @@ export const useGame = create((set, get) => ({
   },
 
   setTool(tool, extra = {}) {
-    set({ tool, buildSel: null, decorSel: null, dragId: null, selId: null, moveMode: false, ...extra });
+    set({ tool, buildSel: null, moveBuildId: null, decorSel: null, dragId: null, selId: null, moveMode: false, ...extra });
   },
 
   resetSession() {
