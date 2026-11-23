@@ -34,16 +34,22 @@ async function main() {
       await new Promise((r) => setTimeout(r, 800));
       const id = Object.keys(g().buildings).find((k) => g().buildings[k].type === tp);
       if (!id) return { err: 'no se construyó', inv: g().couple.inventory };
+      const bx = g().buildings[id];
+      const lampId = 'testdecor1';
+      a.commit([{ op: 'set', col: 'decor', id: lampId, data: { type: 'lamp', x: bx.x + 0.5, z: bx.z + 0.5, rot: 0, variant: 0 } }]);
+      await new Promise((r) => setTimeout(r, 500));
       a.moveBuilding(id, spots[1].x, spots[1].z);
       await new Promise((r) => setTimeout(r, 800));
       const b = g().buildings[id];
+      const carried = !!g().decor.testdecor1 && Math.abs(g().decor.testdecor1.x - (spots[1].x + 0.5)) < 0.01;
       const h0 = { ...g().buildings.house };
       a.moveBuilding('house', 30, 30);
       await new Promise((r) => setTimeout(r, 300));
-      return { moved: b.x === spots[1].x && b.z === spots[1].z, houseStill: g().buildings.house.x === h0.x && g().buildings.house.z === h0.z, to: spots[1], now: { x: b.x, z: b.z } };
+      return { carried, moved: b.x === spots[1].x && b.z === spots[1].z, houseStill: g().buildings.house.x === h0.x && g().buildings.house.z === h0.z, to: spots[1], now: { x: b.x, z: b.z } };
     });
     console.log(JSON.stringify(mv));
     check(mv.moved, 'moveBuilding cambia el edificio de sitio');
+    check(mv.carried, 'la decoración de dentro se va con el edificio');
     check(mv.houseStill, 'la casa no se mueve');
     await page.screenshot({ path: '/tmp/claude-0/-home-user/ef51b309-d084-511b-8ea1-b09971a2f27c/scratchpad/obj820.png' });
     const ov = await page.evaluate(() => {

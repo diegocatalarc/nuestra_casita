@@ -105,6 +105,8 @@ export function validateBuilding(world, st, type, x, z, now, ignoreId = null) {
       if (tl === TILE.VOID) return { ok: false, reason: t("🔒 Terreno sin comprar") };
       if (tl !== TILE.GRASS && tl !== TILE.MEADOW && tl !== TILE.FOREST) return { ok: false, reason: t("Terreno no apto") };
       if (st.soil?.[`${i}_${j}`]) return { ok: false, reason: t("Hay tierra arada") };
+      const cr = st.crops?.[`${i}_${j}`];
+      if (cr && !cr.harvested) return { ok: false, reason: t("Hay cultivos en medio") };
       const n = world.byTile.get(`${i}_${j}`);
       if (n && nodeAlive(n, st.nodes, now)) return { ok: false, reason: t("Hay un recurso en el camino") };
     }

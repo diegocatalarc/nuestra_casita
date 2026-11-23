@@ -77,7 +77,7 @@ async function startOver() {
   unsubWorld?.();
   plot.chapter = null; resetTimezoneSync();
   try { localStorage.removeItem(`nc_tut_${s.user.uid}`); } catch { /* noop */ }
-  useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, panel: null, away: null, chatOpen: false, tool: 'interact', buildSel: null, decorSel: null, fishState: 'idle', boating: 0, coupleId: null, inviteCode: null, phase: 'setup' }); // `couple` y `world` se dejan: la escena aún los lee un instante mientras se desmonta (si no, errores de null); se renuevan al entrar en la casita nueva
+  useGame.setState({ crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {}, panel: null, away: null, chatOpen: false, tool: 'interact', buildSel: null, moveBuildId: null, decorSel: null, fishState: 'idle', boating: 0, coupleId: null, inviteCode: null, phase: 'setup' }); // `couple` y `world` se dejan: la escena aún los lee un instante mientras se desmonta (si no, errores de null); se renuevan al entrar en la casita nueva
 }
 
 async function signOut() {

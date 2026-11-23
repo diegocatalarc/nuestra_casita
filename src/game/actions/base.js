@@ -174,7 +174,12 @@ export function moveBuilding(id, x, z) {
   const v = validateBuilding(s.world, s, b.type, x, z, serverNow(), id);
   if (!v.ok) return toast(v.reason);
   if (x === b.x && z === b.z) { s.setTool('interact'); return; }
-  commit([{ op: 'set', col: 'buildings', id, data: { x, z } }]);
+  const inside = (px, pz) => px >= b.x && px < b.x + b.w && pz >= b.z && pz < b.z + b.d;
+  if (Object.values(s.crops).some((c) => !c.harvested && inside(c.x, c.z))) return toast(t("Cosecha antes los cultivos de ese edificio"));
+  const dx = x - b.x, dz = z - b.z;
+  // la decoración de dentro (camas, lámparas, muebles) se va con el edificio
+  const carried = Object.entries(s.decor).filter(([, o]) => inside(o.x, o.z)).map(([did, o]) => ({ op: 'set', col: 'decor', id: did, data: { x: o.x + dx, z: o.z + dz } }));
+  commit([{ op: 'set', col: 'buildings', id, data: { x, z } }, ...carried]);
   logActivity('build', t("{0} cambiado de sitio", [BUILDINGS[b.type].label]));
   fx(`${BUILDINGS[b.type].emoji} ✓`, x + b.w / 2, z + b.d / 2);
   s.setTool('interact');

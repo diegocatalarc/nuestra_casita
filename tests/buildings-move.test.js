@@ -17,13 +17,18 @@ describe('mover edificios', () => {
   it('sin ignoreId, el edificio se solapa consigo mismo', () => {
     expect(validateBuilding(world, st, type, x, z, 0).ok).toBe(false);
   });
-  it('con ignoreId, se puede recolocar encima de su sitio y desplazarlo un poco', () => {
+  it('con ignoreId, se puede recolocar encima de su propio sitio', () => {
     expect(validateBuilding(world, st, type, x, z, 0, 'b1').ok).toBe(true);
-    const near = validateBuilding(world, st, type, x + 1, z, 0, 'b1');
-    expect(near.ok || near.reason !== 'Se solapa con otro edificio').toBe(true);
   });
-  it('un edificio ajeno sigue bloqueando', () => {
-    const st2 = { ...st, buildings: { ...st.buildings, b2: { type, x: x + w, z, w, d } } };
-    expect(validateBuilding(world, st2, type, x + 1, z, 0, 'b1').ok).toBe(false);
+  it('un edificio ajeno sigue bloqueando (por solape, no por otra causa)', () => {
+    const st2 = { ...st, buildings: { ...st.buildings, b2: { type, x: x + 1, z, w, d } } };
+    const r = validateBuilding(world, st2, type, x, z, 0, 'b1');
+    expect(r.ok).toBe(false); expect(r.reason).toBe('Se solapa con otro edificio');
+  });
+  it('un cultivo sin cosechar bloquea el destino; cosechado, no', () => {
+    const live = { ...st, buildings: {}, crops: { [`${x}_${z}`]: { x, z, harvested: false } } };
+    expect(validateBuilding(world, live, type, x, z, 0).reason).toBe('Hay cultivos en medio');
+    const done = { ...st, buildings: {}, crops: { [`${x}_${z}`]: { x, z, harvested: true } } };
+    expect(validateBuilding(world, done, type, x, z, 0).ok).toBe(true);
   });
 });

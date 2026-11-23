@@ -107,7 +107,7 @@ export const useGame = create((set, get) => ({
     set({
       phase: 'login', user: null, coupleId: null, couple: null, inviteCode: null,
       crops: {}, buildings: {}, decor: {}, animals: {}, memories: {}, nodes: {}, questLog: {}, children: {}, mailbox: {}, activity: {}, chat: {}, soil: {}, gifts: {}, crafts: {}, loaded: {},
-      world: null, panel: null, tool: 'interact', buildSel: null, decorSel: null, chatOpen: false, fishState: 'idle', boating: 0,
+      world: null, panel: null, tool: 'interact', buildSel: null, moveBuildId: null, decorSel: null, chatOpen: false, fishState: 'idle', boating: 0,
     });
   },
 }));
