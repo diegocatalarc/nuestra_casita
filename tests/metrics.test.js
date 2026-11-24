@@ -57,6 +57,8 @@ describe('métricas semanales', () => {
   it('una suite que no carga cuenta como fallo y el redondeo no lo esconde', () => {
     const s = summarizeVitest({ numTotalTests: 5000, numPassedTests: 5000, numFailedTests: 0, numFailedTestSuites: 1, testResults: [] });
     expect(s.failed).toBe(1); expect(s.passPct).toBe(99.9);
+    expect(summarizeVitest({ numTotalTests: 0, numPassedTests: 0, numFailedTests: 0, numFailedTestSuites: 2, testResults: [] }).passPct).toBe(0);
+    expect(summarizeVitest({ numTotalTests: 10, numPassedTests: 8, numFailedTests: 0, numPendingTests: 2, testResults: [] }).passPct).toBe(100);
   });
   it('salidas de error de npm (sin red) no se toman por cero problemas', () => {
     expect(summarizeAudit({ error: { code: 'ENOTFOUND' } })).toBeNull();

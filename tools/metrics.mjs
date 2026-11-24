@@ -33,7 +33,8 @@ report.tests = await step('tests unitarios', () => {
   run('npx', ['vitest', 'run', '--reporter=json', `--outputFile=${f2}`]);
   const a = readJson(f1);
   if (!a) throw new Error('vitest no produjo resultados');
-  report.flaky = flakyTests(a, readJson(f2));
+  const b = readJson(f2);
+  report.flaky = b ? flakyTests(a, b) : null; // sin segunda pasada no se sabe: null, no 0
   report.coverage = coveragePct(readJson(path.join(tmp, 'cov', 'coverage-summary.json')));
   return { ...summarizeVitest(a), seconds };
 });
@@ -42,7 +43,7 @@ report.tests = await step('tests unitarios', () => {
 // `audit` = lo que llega al navegador de las personas (dependencias de producción: manda para el semáforo); `auditAll` = incluye herramientas de desarrollo (informativo)
 report.audit = await step('npm audit (producción)', () => summarizeAudit(JSON.parse(run('npm', ['audit', '--omit=dev', '--json']).stdout || 'null')));
 report.auditAll = await step('npm audit (todo)', () => summarizeAudit(JSON.parse(run('npm', ['audit', '--json']).stdout || 'null')));
-report.outdated = await step('npm outdated', () => majorOutdated(JSON.parse(run('npm', ['outdated', '--json']).stdout || '{}')));
+report.outdated = await step('npm outdated', () => { const r = run('npm', ['outdated', '--json']); if (!r.stdout.trim() && r.status !== 0) throw new Error('npm outdated falló'); return majorOutdated(JSON.parse(r.stdout || '{}')); });
 
 // 3. Secretos (gitleaks, si está instalado) y CodeQL (alertas de GitHub, si hay gh y token)
 report.secrets = await step('gitleaks', () => {

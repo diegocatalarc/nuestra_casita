@@ -26,8 +26,9 @@ export function summarizeVitest(json) {
   const total = json.numTotalTests ?? 0, passed = json.numPassedTests ?? 0;
   const failedSuites = json.numFailedTestSuites ?? 0; // un archivo que no carga (error de import) no cuenta como test fallido pero SÍ es un fallo
   const failed = (json.numFailedTests ?? 0) + failedSuites;
-  let passPct = pct(passed, total);
-  if (failed > 0 && passPct != null && passPct >= 100) passPct = 99.9; // el redondeo nunca esconde un fallo
+  const ran = passed + (json.numFailedTests ?? 0); // los omitidos (skip/todo) no cuentan como fallo ni como acierto
+  let passPct = pct(passed, ran);
+  if (failed > 0 && (passPct == null || passPct >= 100)) passPct = passPct == null ? 0 : 99.9; // ni el redondeo ni un archivo que no carga esconden un fallo
   return { total, passed, failed, failedSuites, passPct, modules: mods };
 }
 

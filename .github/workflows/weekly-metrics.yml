@@ -51,8 +51,8 @@ jobs:
       - name: Restaurar el historial de métricas (si ya existe la rama)
         run: |
           set -e
-          if git ls-remote --exit-code --heads origin metrics-data >/dev/null 2>&1; then
-            git fetch origin metrics-data   # si falla, el trabajo falla: no se publica sin historial
+          # fetch-depth: 0 ya trajo todas las ramas remotas (sin credenciales: no depende de poder consultar el remoto)
+          if git rev-parse --verify -q origin/metrics-data >/dev/null; then
             git checkout origin/metrics-data -- metrics/latest.json metrics/runs
           fi
       - run: node tools/metrics.mjs --perf --rules
