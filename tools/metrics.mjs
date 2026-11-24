@@ -20,6 +20,7 @@ const run = (cmd, args, o = {}) => spawnSync(cmd, args, { cwd: ROOT, encoding: '
 const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return null; } };
 const step = async (name, fn) => { const t = Date.now(); try { const v = await fn(); console.log(`✔ ${name} (${((Date.now() - t) / 1000).toFixed(1)} s)`); return v; } catch (e) { console.log(`✖ ${name}: ${String(e.message || e).split('\n')[0]}`); return null; } };
 
+if (!fs.existsSync(path.join(ROOT, 'dist'))) console.log('⚠ no hay dist/: ejecuta `npm run build` antes (bundle y rendimiento dependen de ello)');
 const report = { date: new Date().toISOString(), commit: run('git', ['rev-parse', '--short', 'HEAD']).stdout.trim(), node: process.version };
 
 // 1. Tests unitarios (dos pasadas: la segunda detecta flaky) + cobertura de la lógica
@@ -31,6 +32,7 @@ report.tests = await step('tests unitarios', () => {
   const seconds = Math.round((Date.now() - t0) / 100) / 10;
   run('npx', ['vitest', 'run', '--reporter=json', `--outputFile=${f2}`]);
   const a = readJson(f1);
+  if (!a) throw new Error('vitest no produjo resultados');
   report.flaky = flakyTests(a, readJson(f2));
   report.coverage = coveragePct(readJson(path.join(tmp, 'cov', 'coverage-summary.json')));
   return { ...summarizeVitest(a), seconds };
@@ -47,15 +49,19 @@ report.secrets = await step('gitleaks', () => {
   const f = path.join(tmp, 'gl.json');
   const r = run('gitleaks', ['detect', '--no-banner', '--redact', '--report-format', 'json', '--report-path', f]);
   if (r.error) throw new Error('gitleaks no está instalado');
-  return (readJson(f) || []).length;
+  if (r.status === 0) return 0;
+  const leaks = readJson(f);
+  if (r.status === 1 && Array.isArray(leaks)) return leaks.length;
+  throw new Error(`gitleaks falló (código ${r.status})`);
 });
 report.codeql = await step('CodeQL (alertas abiertas)', () => {
-  const repo = process.env.GITHUB_REPOSITORY || 'diegocatalarc/nuestra_casita';
-  const r = run('gh', ['api', `repos/${repo}/code-scanning/alerts?state=open&per_page=100`]);
+  const fromGit = /github\.com[:/](.+?)(?:\.git)?$/.exec(run('git', ['remote', 'get-url', 'github']).stdout.trim() || run('git', ['remote', 'get-url', 'origin']).stdout.trim());
+  const repo = process.env.GITHUB_REPOSITORY || fromGit?.[1];
+  if (!repo) throw new Error('no se sabe qué repositorio consultar');
+  const r = run('gh', ['api', '--paginate', `repos/${repo}/code-scanning/alerts?state=open&per_page=100`, '--jq', '.[] | (.rule.security_severity_level // .rule.severity)']);
   if (r.status !== 0) throw new Error('sin acceso a code scanning');
-  const alerts = JSON.parse(r.stdout);
-  const sev = (a) => a.rule?.security_severity_level || a.rule?.severity;
-  return { open: alerts.length, high: alerts.filter((a) => ['critical', 'high', 'error'].includes(sev(a))).length };
+  const sev = r.stdout.split('\n').filter(Boolean);
+  return { open: sev.length, high: sev.filter((x) => ['critical', 'high', 'error'].includes(x)).length };
 });
 
 // 4. Reglas de Firestore (emulador; necesita Java y red para firebase-tools)
@@ -68,8 +74,10 @@ report.bundleGzipKb = await step('peso del bundle', () => {
   return Math.round(total / 1024);
 });
 if (has('perf')) report.perf = await step('rendimiento (perf)', () => {
+  const pf = path.join(ROOT, 'perf-results', 'metrics.json');
+  fs.rmSync(pf, { force: true }); // nunca leer un resultado antiguo si el arnés falla
   run('npm', ['run', '--silent', 'perf', '--', '--quick', '--no-build', '--label', 'metrics']);
-  const j = readJson(path.join(ROOT, 'perf-results', 'metrics.json'));
+  const j = readJson(pf);
   const d = j?.desktop;
   if (!d) throw new Error('el arnés no produjo resultados');
   return { drawCalls: d.idle.drawCalls.p50, jsFrameMs: Math.round((d.idle.useFrameMs.p50 + d.idle.glRenderJsMs.p50) * 100) / 100, loadSeconds: Math.round((j.load?.tEnterMs || 0) / 100) / 10 || null, note: j.note };

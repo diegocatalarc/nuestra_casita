@@ -32,9 +32,37 @@ describe('métricas semanales', () => {
     expect(evaluate({ ...base, rulesDeployed: 'no-desplegadas' }, base).reds[0]).toMatch(/desplegadas/);
     expect(evaluate({ ...base, flaky: 1 }, base).status).toBe('ambar');
   });
-  it('la primera semana (sin anterior) solo evalúa metas; lo no medido se lista', () => {
-    const r = evaluate({ ...base, drawCalls: null }, null);
+  it('la primera semana (sin anterior) solo evalúa metas; lo no medido se lista (el rendimiento no medido no bloquea)', () => {
+    const r = evaluate({ ...base, drawCalls: null, codeqlHigh: 0, firebaseKeyRestricted: true }, null);
     expect(r.status).toBe('verde'); expect(r.missing).toContain('drawCalls');
+  });
+  it('un KPI esencial sin medir NO es verde', () => {
+    for (const k of ['testsPassPct', 'vulnsHighCrit', 'secrets', 'codeqlHigh', 'rulesTestsPct']) {
+      const r = evaluate({ ...base, codeqlHigh: 0, firebaseKeyRestricted: true, [k]: null }, base);
+      expect(r.status).toBe('ambar'); expect(r.ambers.join()).toMatch(new RegExp(k));
+    }
+  });
+  it('cada meta incumplida da rojo', () => {
+    const ok = { ...base, codeqlHigh: 0, firebaseKeyRestricted: true };
+    for (const [k, v] of [['testsPassPct', 99.9], ['secrets', 1], ['codeqlHigh', 1], ['rulesTestsPct', 90], ['vulnsHighCrit', 1]]) expect(evaluate({ ...ok, [k]: v }, ok).status).toBe('rojo');
+  });
+  it('umbral exacto: +10 % no es ámbar, +11 % sí', () => {
+    const ok = { ...base, codeqlHigh: 0, firebaseKeyRestricted: true };
+    expect(evaluate({ ...ok, bundleGzipKb: 1100 }, ok).status).toBe('verde');
+    expect(evaluate({ ...ok, bundleGzipKb: 1110 }, ok).status).toBe('ambar');
+  });
+  it('la clave de Firebase sin restringir avisa en ámbar', () => {
+    expect(evaluate({ ...base, codeqlHigh: 0, firebaseKeyRestricted: false }, base).ambers.join()).toMatch(/clave web/);
+  });
+  it('una suite que no carga cuenta como fallo y el redondeo no lo esconde', () => {
+    const s = summarizeVitest({ numTotalTests: 5000, numPassedTests: 5000, numFailedTests: 0, numFailedTestSuites: 1, testResults: [] });
+    expect(s.failed).toBe(1); expect(s.passPct).toBe(99.9);
+  });
+  it('salidas de error de npm (sin red) no se toman por cero problemas', () => {
+    expect(summarizeAudit({ error: { code: 'ENOTFOUND' } })).toBeNull();
+    expect(majorOutdated({ error: { code: 'ENOTFOUND' } })).toBeNull();
+    expect(flatten({ audit: null, auditAll: { highCrit: 4 } }).vulnsDevHighCrit).toBeNull();
+    expect(flatten({ audit: { highCrit: 1 }, auditAll: { highCrit: 4 } }).vulnsDevHighCrit).toBe(3);
   });
   it('flatten aplana el informe', () => {
     const f = flatten({ tests: { total: 5, passPct: 100, seconds: 2 }, flaky: [], audit: { highCrit: 0, moderate: 1 }, manual: { rulesDeployed: 'no-desplegadas' }, outdated: ['x'], perf: { drawCalls: 9 }, bundleGzipKb: 700 });

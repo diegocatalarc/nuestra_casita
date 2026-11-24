@@ -6,6 +6,8 @@ export const GOALS = { vulnsHighCrit: 0, secrets: 0, codeqlHigh: 0, testsPassPct
 /** Empeoramientos relativos frente a la semana anterior que ponen el informe en ámbar. */
 export const WORSEN = { bundleGzipKb: 0.10, drawCalls: 0.10, jsFrameMs: 0.20, testSeconds: 0.30, loadSeconds: 0.30 };
 
+/** KPI imprescindibles: si faltan, el informe no puede ser verde. */
+export const ESSENTIAL = ['testsPassPct', 'vulnsHighCrit', 'secrets', 'codeqlHigh', 'rulesTestsPct'];
 const num = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 const pct = (ok, total) => (total > 0 ? Math.round((ok / total) * 1000) / 10 : null);
 
@@ -22,7 +24,11 @@ export function summarizeVitest(json) {
     m.ms += Math.max(0, (f.endTime || 0) - (f.startTime || 0));
   }
   const total = json.numTotalTests ?? 0, passed = json.numPassedTests ?? 0;
-  return { total, passed, failed: json.numFailedTests ?? 0, passPct: pct(passed, total), modules: mods };
+  const failedSuites = json.numFailedTestSuites ?? 0; // un archivo que no carga (error de import) no cuenta como test fallido pero SÍ es un fallo
+  const failed = (json.numFailedTests ?? 0) + failedSuites;
+  let passPct = pct(passed, total);
+  if (failed > 0 && passPct != null && passPct >= 100) passPct = 99.9; // el redondeo nunca esconde un fallo
+  return { total, passed, failed, failedSuites, passPct, modules: mods };
 }
 
 /** Tests que dieron resultado distinto en dos ejecuciones seguidas (señal de flaky). */
@@ -34,6 +40,7 @@ export function flakyTests(a, b) {
 
 /** Vulnerabilidades de `npm audit --json`. */
 export function summarizeAudit(json) {
+  if (json?.error) return null;
   const v = json?.metadata?.vulnerabilities;
   if (!v) return null;
   return { critical: v.critical || 0, high: v.high || 0, moderate: v.moderate || 0, low: v.low || 0, highCrit: (v.critical || 0) + (v.high || 0) };
@@ -41,7 +48,7 @@ export function summarizeAudit(json) {
 
 /** Dependencias con salto de versión mayor, de `npm outdated --json`. */
 export function majorOutdated(json) {
-  if (!json) return null;
+  if (!json || json.error) return null;
   const major = (s) => parseInt(String(s).split('.')[0], 10);
   return Object.entries(json).filter(([, o]) => o.current && o.latest && major(o.latest) > major(o.current)).map(([n]) => n).sort();
 }
@@ -61,8 +68,9 @@ export function flatten(r) {
   return {
     testsTotal: r.tests?.total ?? null, testsPassPct: r.tests?.passPct ?? null, testSeconds: r.tests?.seconds ?? null,
     flaky: r.flaky?.length ?? null, coveragePct: r.coverage ?? null,
-    vulnsHighCrit: r.audit?.highCrit ?? null, vulnsModerate: r.audit?.moderate ?? null, vulnsDevHighCrit: r.auditAll ? r.auditAll.highCrit - (r.audit?.highCrit ?? 0) : null,
+    vulnsHighCrit: r.audit?.highCrit ?? null, vulnsModerate: r.audit?.moderate ?? null, vulnsDevHighCrit: r.auditAll && r.audit ? r.auditAll.highCrit - r.audit.highCrit : null,
     secrets: r.secrets ?? null, codeqlHigh: r.codeql?.high ?? null,
+    firebaseKeyRestricted: typeof r.manual?.firebaseKeyRestricted === 'boolean' ? r.manual.firebaseKeyRestricted : null,
     rulesTestsPct: r.rules?.pct ?? null, rulesDeployed: r.manual?.rulesDeployed ?? 'sin-comprobar',
     majorOutdated: r.outdated?.length ?? null,
     drawCalls: r.perf?.drawCalls ?? null, jsFrameMs: r.perf?.jsFrameMs ?? null, loadSeconds: r.perf?.loadSeconds ?? null,
@@ -79,6 +87,7 @@ export function evaluate(cur, prev) {
   if (bad(cur.codeqlHigh, GOALS.codeqlHigh, 'max')) reds.push(`Hallazgos altos de CodeQL: ${cur.codeqlHigh}`);
   if (bad(cur.testsPassPct, GOALS.testsPassPct, 'min')) reds.push(`Tests que pasan: ${cur.testsPassPct} %`);
   if (bad(cur.rulesTestsPct, GOALS.rulesTestsPct, 'min')) reds.push(`Tests de reglas de Firestore: ${cur.rulesTestsPct} %`);
+  if (cur.firebaseKeyRestricted === false) ambers.push('La clave web de Firebase aún no está restringida a tu dominio (manual.json)');
   if (cur.rulesDeployed && cur.rulesDeployed !== 'al-dia') reds.push(`Reglas de Firestore desplegadas: ${cur.rulesDeployed}`);
   if (prev) for (const [k, lim] of Object.entries(WORSEN)) {
     const a = cur[k], b = prev[k];
@@ -87,5 +96,7 @@ export function evaluate(cur, prev) {
   if (cur.flaky > 0) ambers.push(`Tests flaky: ${cur.flaky}`);
   if (prev && cur.majorOutdated != null && prev.majorOutdated != null && cur.majorOutdated > prev.majorOutdated) ambers.push(`Dependencias con salto mayor: ${prev.majorOutdated} → ${cur.majorOutdated}`);
   const missing = Object.entries(cur).filter(([, v]) => v == null).map(([k]) => k);
+  // Un KPI de seguridad o de tests que NO se pudo medir no puede dar «verde»: «sin medir» no es «0 problemas».
+  for (const k of ESSENTIAL) if (cur[k] == null) ambers.push(`No se pudo medir: ${k}`);
   return { status: reds.length ? 'rojo' : ambers.length ? 'ambar' : 'verde', reds, ambers, missing };
 }
