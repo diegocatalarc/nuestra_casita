@@ -17,3 +17,7 @@ dist
 vite.config.js.timestamp-*.mjs
 perf-results
 shots/
+
+# métricas generadas (viven en la rama metrics-data)
+metrics/latest.json
+metrics/runs/

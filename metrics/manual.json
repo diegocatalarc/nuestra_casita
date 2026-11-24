@@ -1,0 +1,5 @@
+{
+  "rulesDeployed": "no-desplegadas",
+  "firebaseKeyRestricted": false,
+  "nota": "Actualiza a mano: rulesDeployed = 'al-dia' cuando despliegues firestore.rules; firebaseKeyRestricted = true cuando restrinjas la clave web a tu dominio de Netlify."
+}
